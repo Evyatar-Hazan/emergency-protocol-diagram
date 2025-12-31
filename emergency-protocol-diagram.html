@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דיאגרמת פרוטוקול טיפול חירום</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            direction: rtl;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .mermaid {
+            text-align: center;
+            direction: ltr;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>דיאגרמת פרוטוקול טיפול חירום</h1>
+        <div class="mermaid">
+flowchart TD
+
+EXIT([דיווח יציאה למקרה])
+START([דיווח הגעה למקרה])
+
+GOAL(["🎯 מטרה:<br/>לאסוף מידע מדויק, לזהות מצבים מסכני חיים<br/>ולהתחיל טיפול במקביל לשיחה ולבדיקה"])
+
+SAFE["S - Safety | בטיחות"]
+SAFE_check(["צורת בדיקה:<br/>- הסתכל סביב (חשמל, אש, תנועה, חומרים)<br/>- הרגש קרקע (רעידות, חום, רטיבות)<br/>- האזן לרעשים חריגים"])
+SAFE_find(["מה מחפש:<br/>- אזור בטוח להגעה<br/>- אין סיכון נוסף"])
+SAFE_equip(["ציוד:<br/>1. שטח פנוי<br/>2. אייפוד<br/>3. כפפות"])
+SAFE --> SAFE_check
+SAFE_check --> SAFE_find
+SAFE_find --> SAFE_equip
+
+%% ===== תחנות אנמזה =====
+ANAMNESE_INITIAL(["🛡️ אנמנזה - סבב ראשוני<br/>בטיחות ושאלות מקדימות"])
+style ANAMNESE_INITIAL fill:#ffe6e6,stroke:#333,stroke-width:2px
+
+ANAMNESE_Q1(["שאלות בטיחות:<br/>1. מה רואים בזירה<br/>2. איך המטופל פונה לעזרה<br/>3. גיל המטופל<br/>4. מתי זה התחיל<br/>5. תנוחת המטופל<br/>6. מה בזירה (תרופות, אלכוהול, סמים)"])
+style ANAMNESE_Q1 fill:#fff0f0,stroke:#333,stroke-width:1px
+
+SAFE_equip --> ANAMNESE_INITIAL
+ANAMNESE_INITIAL --> ANAMNESE_Q1
+
+%% ===== בדיקת הכרה AVPU =====
+AVPU{"AVPU - בדיקת הכרה"}
+style AVPU fill:#eef,stroke:#333,stroke-width:2px
+ANAMNESE_Q1 --> AVPU
+AVPU_check(["צורת בדיקה:<br/>A-Alert: דיבור רגיל מול המטופל<br/>V-Voice: פניה בקול ברור וחזק<br/>P-Pain: מבוגר/ילד - טפיחה על השכמות+צביטת טרפז<br/>תינוק - צביטה/לחיצה בעקב<br/>U-Unresponsive: אין תגובה כלל"])
+AVPU_find(["מה מחפש:<br/>- רמת תגובה לגירוי מילולי/כאב<br/>- סימני הכרה/חוסר הכרה"])
+AVPU --> AVPU_check
+AVPU_check --> AVPU_find
+AVPU_check --> AVPU_find
+AVPU_find -->|Alert - ערני| RESPONSIVE_ALERT[מגיב - ערני]
+AVPU_find -->|Verbal - מגיב לקול| RESPONSIVE_VERBAL[מגיב לקול]
+AVPU_find -->|Pain - מגיב לכאב| RESPONSIVE_PAIN[מגיב לכאב]
+AVPU_find -->|Unresponsive - לא מגיב| RESPONSIVE_NONE[לא מגיב]
+
+BREATHING{נשימה תקינה?}
+BREATHING_note([בדיקה פיזית: האזן למטופל במשך 10 שניות ובדוק תנועות חזה בלבד])
+BREATHING --> BREATHING_note
+
+PULSE{דופק מרכזי?}
+PULSE_note([בדיקה פיזית: בדוק דופק קרוטיד או פריפרי])
+PULSE --> PULSE_note
+
+%% ===== החייאה =====
+CPR_START[החייאת BLS]
+CPR_START_note([בדיקה פיזית: עיסויי חזה בקצב נכון 30:2, הקפדה על עומק עיסוי])
+CPR_START --> CPR_START_note
+CALL_HELP[הזעקת עזרה + AED]
+CHEST_COMP["עיסויי חזה<br/>30:2"]
+AED_CHECK{AED זמין?}
+SHOCK{קצב בר הלם?}
+SHOCK_DELIVER[מתן הלם]
+CPR_CONTINUE["המשך עיסויים<br/>2 דקות"]
+ROSC{חזרת דופק?}
+POST_ROSC[טיפול לאחר החייאה]
+
+%% ===== ABCDE =====
+A["🅰 A - Airway | נתיב אוויר"]
+A_check(["צורת בדיקה:<br/>- התקרב לפנים<br/>- האזן לקולות (נחירות, צפצופים, חרחורים)<br/>- הסתכל על חלל הפה והאף<br/>- שאל את המטופל לדבר"])
+A_find(["מה מחפש:<br/>- נתיב פתוח (מדבר בקלות)<br/>- אין גוף זר/הפרשות<br/>- אין חסימה חלקית/מלאה"])
+A_questions(["שאלות A:<br/>1. רמת הכרה AVPU<br/>2. יכולת דיבור (ברור/מקוטע/לא מסוגל)<br/>3. חסימה (אין/חלקית/מלאה)<br/>4. הפרשות בפה (רוק/דם/קיא/אין)<br/>5. גוף זר בפה<br/>6. ריחות מהפה<br/>7. נפיחות בפה/שפתיים/לשון"])
+A_treatment(["טיפול A:<br/>חנק - היימליך נטן<br/>אנאפילקסיס - אפיפן<br/>(לאחר פרכוס/הרעלות)"])
+style A_treatment fill:#ffcccc,stroke:#333,stroke-width:2px
+A_equip(["מכשירים:<br/>1. סקשיין (ידני או חשמלי)"])
+A --> A_check
+A_check --> A_find
+A_find --> A_questions
+A_questions --> A_diagnosis
+
+A_diagnosis{"אבחון A"}
+style A_diagnosis fill:#ff9999,stroke:#333,stroke-width:3px
+
+A_diagnosis -->|חסימה מלאה + גוף זר| A_CHOKING
+A_diagnosis -->|נפיחות שפתיים/לשון + אלרגיה| A_ANAPHYLAXIS
+A_diagnosis -->|חסימה חלקית + הפרשות| A_SECRETIONS
+A_diagnosis -->|לאחר פרכוס/הרעלה| A_POST_SEIZURE
+
+A_CHOKING["🚨 חנק"]
+A_CHOKING_TX["טיפול: היימליך<br/>אם מחוסר הכרה: 5 דחיסות חזה<br/>נטן: סקשיין + אינטובציה"]
+style A_CHOKING fill:#ff6666,stroke:#333,stroke-width:2px
+style A_CHOKING_TX fill:#ff4444,stroke:#333,stroke-width:2px
+
+A_ANAPHYLAXIS["🚨 אנאפילקסיס"]
+A_ANAPHYLAXIS_TX["טיפול מיידי:<br/>1. אפיפן 0.3mg IM (ירך)<br/>2. חמצן גבוה<br/>3. נטן: נוזלים IV, נבולייזר<br/>4. פינוי דחוף"]
+style A_ANAPHYLAXIS fill:#ff6666,stroke:#333,stroke-width:2px
+style A_ANAPHYLAXIS_TX fill:#ff4444,stroke:#333,stroke-width:2px
+
+A_SECRETIONS["הפרשות בנתיב אוויר"]
+A_SECRETIONS_TX["טיפול:<br/>1. סקשיין (יד/חשמלי)<br/>2. הטיית ראש לצד<br/>3. מנח החלמה אם מחוסר הכרה"]
+style A_SECRETIONS fill:#ffaa66,stroke:#333,stroke-width:2px
+style A_SECRETIONS_TX fill:#ff9944,stroke:#333,stroke-width:2px
+
+A_POST_SEIZURE["פוסט פרכוס/הרעלה"]
+A_POST_SEIZURE_TX["טיפול:<br/>1. בדוק נתיב אוויר<br/>2. מנח החלמה<br/>3. סקשיין אם נדרש<br/>4. חמצן<br/>5. נטן"]
+style A_POST_SEIZURE fill:#ffaa66,stroke:#333,stroke-width:2px
+style A_POST_SEIZURE_TX fill:#ff9944,stroke:#333,stroke-width:2px
+
+A_CHOKING --> A_CHOKING_TX
+A_ANAPHYLAXIS --> A_ANAPHYLAXIS_TX
+A_SECRETIONS --> A_SECRETIONS_TX
+A_POST_SEIZURE --> A_POST_SEIZURE_TX
+
+A_CHOKING_TX --> A_equip
+A_ANAPHYLAXIS_TX --> A_equip
+A_SECRETIONS_TX --> A_equip
+A_POST_SEIZURE_TX --> A_equip
+
+B["🅱 B - Breathing | נשימה"]
+B_check(["צורת בדיקה:<br/>- הסתכל על תנועת בית החזה<br/>- הנח יד על החזה להרגשת תנועה<br/>- ספר קצב נשימות ל-15 שניות × 4<br/>- חבר סטורציה אם יש"])
+B_find(["מה מחפש:<br/>- עסק (עומק, סדירות, קצב)<br/>- מאמץ נשימתי (שרירי עזר, נחיריים)<br/>- סטורציה תקינה (>94%)"])
+B_questions(["שאלות B:<br/>1. התרשמות (תקינה/מצוקה)<br/>2. קצב (12-20 תקין/טכיפנאה/ברדיפנאה)<br/>3. עומק (שטחית/עמוקה)<br/>4. סטורציה (95-100% תקין/<90% היפוקסיה)<br/>5. סטורציה אחרי חמצן<br/>6. קולות נשימה<br/>7. צבע שפתיים (ורוד/כחול ציאנוזיס)"])
+B_diseases(["מחלות נשימתיות - עסק:<br/>1. אסטמה - צפצוף, משאף, הארכת נשיפה<br/>2. COPD - כרוני, מחולל חמצן, עישון<br/>3. דלקת ריאות - חום, שיעול, ליחה<br/>4. תסחיף ריאתי PE - פתאומי, כאב, טריגר<br/>5. בצקת ריאות - קרדיאלי, בעבוע, לד גבוה<br/>6. אנאפילקסיס - אורטיקריה, נפיחות<br/>7. HY - נימול, משתפר בהרגעה<br/>8. חנק - סיפור מקרה<br/>9. דיסקציה - כאב חד מקרין לגב"])
+style B_diseases fill:#e6f7ff,stroke:#333,stroke-width:2px
+B_sounds(["קולות נשימה:<br/>צפצופים - אסטמה/אלרגיה<br/>חרחורים - דלקת/בצקת ריאות<br/>בעבוע - בצקת<br/>ללא קולות: HY, COPD, חנק, PE, דיסקציה"])
+style B_sounds fill:#fff9e6,stroke:#333,stroke-width:1px
+B_equip(["מכשירים:<br/>1. מיכל חמצן<br/>2. מסכת כיס<br/>3. מסכת עזר<br/>4. אמבו<br/>5. סטורציה"])
+B --> B_check
+B_check --> B_find
+B_find --> B_questions
+B_questions --> B_diseases
+B_diseases --> B_sounds
+B_sounds --> B_diagnosis
+
+B_diagnosis{"אבחון B"}
+style B_diagnosis fill:#66ccff,stroke:#333,stroke-width:3px
+
+B_diagnosis -->|צפצוף + משאף + נשיפה ארוכה| B_ASTHMA
+B_diagnosis -->|צפצוף + חרחורים + קרדיאלי| B_PULM_EDEMA
+B_diagnosis -->|חרחורים + חום + ליחה| B_PNEUMONIA
+B_diagnosis -->|כאב פתאומי + טריגר + ללא קולות| B_PE
+B_diagnosis -->|כרוני + עישון + מחולל O2| B_COPD
+B_diagnosis -->|צפצוף + אורטיקריה + נפיחות| B_ANAPHYLAXIS
+B_diagnosis -->|נימול + חרדה + משתפר בהרגעה| B_HYPERVENT
+B_diagnosis -->|סיפור אכילה + חסימה חלקית| B_CHOKING
+B_diagnosis -->|כאב חד לגב + פתאומי| B_DISSECTION
+
+B_ASTHMA["🫁 אסטמה"]
+B_ASTHMA_TX["טיפול:<br/>1. ישיבה<br/>2. O2 גבוה<br/>3. משאף ב2 (אם יש)<br/>4. נטן: נבולייזר סלבוטמול<br/>5. אם חמור: אדרנלין"]
+style B_ASTHMA fill:#66aaff,stroke:#333,stroke-width:2px
+style B_ASTHMA_TX fill:#4488ff,stroke:#333,stroke-width:2px
+
+B_PULM_EDEMA["🫁 בצקת ריאות"]
+B_PULM_EDEMA_TX["טיפול:<br/>1. ישיבה 90°<br/>2. O2 גבוה<br/>3. ניטרו אם לד >100<br/>4. נטן: CPAP/BiPAP<br/>5. פינוי דחוף"]
+style B_PULM_EDEMA fill:#66aaff,stroke:#333,stroke-width:2px
+style B_PULM_EDEMA_TX fill:#4488ff,stroke:#333,stroke-width:2px
+
+B_PNEUMONIA["🫁 דלקת ריאות"]
+B_PNEUMONIA_TX["טיפול:<br/>1. O2 לפי סטורציה<br/>2. נטן: נוזלים IV<br/>3. פינוי לבדיקות<br/>4. אנטיביוטיקה בביה"]
+style B_PNEUMONIA fill:#66aaff,stroke:#333,stroke-width:2px
+style B_PNEUMONIA_TX fill:#4488ff,stroke:#333,stroke-width:2px
+
+B_PE["🫁 תסחיף ריאתי PE"]
+B_PE_TX["טיפול:<br/>1. O2 גבוה<br/>2. שכיבה<br/>3. פינוי דחוף<br/>4. נטן: נוזלים, הפרין<br/>5. ביה: CT אנגיו"]
+style B_PE fill:#ff6666,stroke:#333,stroke-width:2px
+style B_PE_TX fill:#ff4444,stroke:#333,stroke-width:2px
+
+B_COPD["🫁 COPD"]
+B_COPD_TX["טיפול:<br/>1. O2 מבוקר 2-4L<br/>2. ישיבה<br/>3. נבולייזר אם יש<br/>4. נטן: נבולייזר, סטרואידים"]
+style B_COPD fill:#66aaff,stroke:#333,stroke-width:2px
+style B_COPD_TX fill:#4488ff,stroke:#333,stroke-width:2px
+
+B_ANAPHYLAXIS["🫁 אנאפילקסיס נשימתי"]
+B_ANAPHYLAXIS_TX["טיפול:<br/>1. אפיפן 0.3mg IM<br/>2. O2 גבוה<br/>3. נבולייזר אדרנלין<br/>4. פינוי דחוף"]
+style B_ANAPHYLAXIS fill:#ff6666,stroke:#333,stroke-width:2px
+style B_ANAPHYLAXIS_TX fill:#ff4444,stroke:#333,stroke-width:2px
+
+B_HYPERVENT["הייפרוונטילציה"]
+B_HYPERVENT_TX["טיפול:<br/>1. הרגעה<br/>2. נשימות איטיות<br/>3. שקית נייר אם צריך<br/>4. רר אם לא משתפר"]
+style B_HYPERVENT fill:#aaddff,stroke:#333,stroke-width:2px
+style B_HYPERVENT_TX fill:#88ccff,stroke:#333,stroke-width:2px
+
+B_CHOKING["חנק חלקי"]
+B_CHOKING_TX["טיפול:<br/>1. עודד שיעול<br/>2. ישיבה קדימה<br/>3. אל תעשה היימליך<br/>4. O2<br/>5. פינוי"]
+style B_CHOKING fill:#ffaa66,stroke:#333,stroke-width:2px
+style B_CHOKING_TX fill:#ff9944,stroke:#333,stroke-width:2px
+
+B_DISSECTION["💔 דיסקציה אאורטלית"]
+B_DISSECTION_TX["טיפול:<br/>1. שכיבה<br/>2. O2<br/>3. פינוי חירום קוד אדום<br/>4. ניטור לד<br/>5. אל תיתן ניטרו"]
+style B_DISSECTION fill:#ff0000,stroke:#333,stroke-width:3px
+style B_DISSECTION_TX fill:#cc0000,stroke:#333,stroke-width:3px
+
+B_ASTHMA --> B_ASTHMA_TX
+B_PULM_EDEMA --> B_PULM_EDEMA_TX
+B_PNEUMONIA --> B_PNEUMONIA_TX
+B_PE --> B_PE_TX
+B_COPD --> B_COPD_TX
+B_ANAPHYLAXIS --> B_ANAPHYLAXIS_TX
+B_HYPERVENT --> B_HYPERVENT_TX
+B_CHOKING --> B_CHOKING_TX
+B_DISSECTION --> B_DISSECTION_TX
+
+B_ASTHMA_TX --> B_equip
+B_PULM_EDEMA_TX --> B_equip
+B_PNEUMONIA_TX --> B_equip
+B_PE_TX --> B_equip
+B_COPD_TX --> B_equip
+B_ANAPHYLAXIS_TX --> B_equip
+B_HYPERVENT_TX --> B_equip
+B_CHOKING_TX --> B_equip
+B_DISSECTION_TX --> B_equip
+
+C["🅲 C - Circulation | מחזור דם"]
+C_check(["צורת בדיקה:<br/>- דופק קרוטידי (2-3 אצבעות על צידי צוואר)<br/>- דופק רדיאלי (2-3 אצבעות שורש כף יד)<br/>- מילוי קפילרי (לחץ על ציפורן)<br/>- בדוק עור (מגע ביד על מצח/ידיים)"])
+C_find(["מה מחפש:<br/>- עסק (דופק) - עוצמה, סדירות, קצב<br/>- צטל (עור) - צבע, טמפרטורה, לחות<br/>- מילוי קפילרי ≤ 2 שניות<br/>- אין דימום מסכן חיים"])
+C_questions(["שאלות C:<br/>1. דופק (60-100 תקין/טכיקרדיה/ברדיקרדיה)<br/>2. סדירות דופק<br/>3. עוצמת דופק (חלש/חזק)<br/>4. לחץ דם (120/80 תקין/גבוה/נמוך)<br/>5. טמפרטורה (36-37.5 תקין/חום/היפותרמיה)<br/>6. עור (ורוד/חיוור/אפרפר/כחול, יבש/לח)<br/>7. כאב (מיקום, סוג, עוצמה 1-10)<br/>8. פריחה או בצקות"])
+C_pain(["שאלות על כאב:<br/>- התחיל במאמץ?<br/>- הכאב מוכר?<br/>- הכאב מקרין?<br/>- היסטוריה משפחתית?<br/>- מיקום (סימן לוין)?<br/>- סולם כאב 1-10<br/>- סוג כאב (תאר)<br/>- חרדה?"])
+style C_pain fill:#ffe6f0,stroke:#333,stroke-width:1px
+C_aspirin(["שולל אספירין:<br/>1. ניתוח בשבועיים<br/>2. הריון<br/>3. כיב קיבה<br/>4. ילד<br/>5. אלרגיה<br/>6. מדללי דם"])
+style C_aspirin fill:#fff0e6,stroke:#333,stroke-width:1px
+C_tzatal(["צטל - צבע טמפרטורה לחות<br/>שאל משפחה: חריג בצבע?<br/>מילוי קפילרי<br/>עד נטן: הגבהת רגליים, נוזלים"])
+style C_tzatal fill:#e6ffe6,stroke:#333,stroke-width:1px
+C_equip(["מכשירים:<br/>1. דפיברילטור<br/>2. לחץ דם + סטטוסקופ"])
+C --> C_check
+C_check --> C_find
+C_find --> C_questions
+C_questions --> C_pain
+C_pain --> C_aspirin
+C_aspirin --> C_tzatal
+C_tzatal --> C_diagnosis
+
+C_diagnosis{"אבחון C"}
+style C_diagnosis fill:#ff99cc,stroke:#333,stroke-width:3px
+
+C_diagnosis -->|כאב לוחץ במאמץ + מקרין + לוין| C_ACS
+C_diagnosis -->|דופק מהיר לא סדיר + סחרחורת| C_AFIB
+C_diagnosis -->|דופק איטי <50 + חולשה| C_BRADY
+C_diagnosis -->|לד נמוך + חיוור + מזיע| C_SHOCK
+C_diagnosis -->|כאב חד לגב + הפרש לד בידיים| C_DISSECTION
+C_diagnosis -->|חום + דופק מהיר + זיהום| C_SEPSIS
+
+C_ACS["💔 תסמונת כלילית חריפה ACS"]
+C_ACS_TX["טיפול:<br/>1. ישיבה/חצי שכיבה<br/>2. O2 אם סט<94%<br/>3. אספירין 300mg (שולל קודם)<br/>4. ניטרו 0.4mg תת לשוני (אם לד>100)<br/>5. נטן: מורפיום, ECG 12, קטטר<br/>6. פינוי קוד אדום לקטטר"]
+style C_ACS fill:#ff6666,stroke:#333,stroke-width:2px
+style C_ACS_TX fill:#ff4444,stroke:#333,stroke-width:2px
+
+C_AFIB["💓 פרפור פרוזדורים"]
+C_AFIB_TX["טיפול:<br/>1. ניטור ECG<br/>2. אם יציב: פינוי רגיל<br/>3. אם לא יציב (כאב/לד נמוך/קוצר): נטן קרדיווורסיה<br/>4. נוזלים IV"]
+style C_AFIB fill:#ffaa66,stroke:#333,stroke-width:2px
+style C_AFIB_TX fill:#ff9944,stroke:#333,stroke-width:2px
+
+C_BRADY["💓 ברדיקרדיה"]
+C_BRADY_TX["טיפול:<br/>1. שכיבה + הגבהת רגליים<br/>2. נוזלים IV<br/>3. אם חמור: נטן אטרופין<br/>4. ניטור ECG<br/>5. פינוי"]
+style C_BRADY fill:#ffaa66,stroke:#333,stroke-width:2px
+style C_BRADY_TX fill:#ff9944,stroke:#333,stroke-width:2px
+
+C_SHOCK["🚨 הלם"]
+C_SHOCK_TX["טיפול:<br/>1. שכיבה + רגליים גבוה<br/>2. O2 גבוה<br/>3. נטן: נוזלים IV מהיר 500-1000ml<br/>4. שמור חום<br/>5. חפש מקור דימום<br/>6. פינוי דחוף"]
+style C_SHOCK fill:#ff0000,stroke:#333,stroke-width:3px
+style C_SHOCK_TX fill:#cc0000,stroke:#333,stroke-width:3px
+
+C_DISSECTION_C["💔 דיסקציה אאורטלית"]
+C_DISSECTION_C_TX["טיפול:<br/>1. שכיבה<br/>2. O2<br/>3. אל תיתן ניטרו/אספירין<br/>4. ניטור לד שתי ידיים<br/>5. פינוי קוד אדום<br/>6. נטן: שליטה על לד"]
+style C_DISSECTION_C fill:#ff0000,stroke:#333,stroke-width:3px
+style C_DISSECTION_C_TX fill:#cc0000,stroke:#333,stroke-width:3px
+
+C_SEPSIS["🦠 ספסיס"]
+C_SEPSIS_TX["טיפול:<br/>1. O2<br/>2. נוזלים IV מהיר<br/>3. טיפול בחום (פרצטמול)<br/>4. פינוי דחוף<br/>5. ביה: אנטיביוטיקה"]
+style C_SEPSIS fill:#ff6666,stroke:#333,stroke-width:2px
+style C_SEPSIS_TX fill:#ff4444,stroke:#333,stroke-width:2px
+
+C_ACS --> C_ACS_TX
+C_AFIB --> C_AFIB_TX
+C_BRADY --> C_BRADY_TX
+C_SHOCK --> C_SHOCK_TX
+C_DISSECTION_C --> C_DISSECTION_C_TX
+C_SEPSIS --> C_SEPSIS_TX
+
+C_ACS_TX --> C_equip
+C_AFIB_TX --> C_equip
+C_BRADY_TX --> C_equip
+C_SHOCK_TX --> C_equip
+C_DISSECTION_C_TX --> C_equip
+C_SEPSIS_TX --> C_equip
+
+D["🅳 D - Disability | מצב נוירולוגי"]
+D_check(["צורת בדיקה:<br/>- בדוק אישונים עם פנס<br/>- FAST: פנים (חיוך/עצימה)<br/>- ידיים (הרמה, לחיצה, נפילה)<br/>- דיבור (חזרה על משפט, מיקום)<br/>- זמן (מתי התחיל)"])
+D_find(["מה מחפש:<br/>- חוסר סימטריה בפנים/ידיים<br/>- שינוי בדיבור<br/>- אישונים: קוטר, שוויון, תגובה לאור<br/>- מצב הכרה לפי AVPU/GCS"])
+D_questions(["שאלות D:<br/>1. הכרה לפי AVPU<br/>2. סוכר (70-140 תקין/היפו/היפר)<br/>3. FAST (תקין/חולשה פנים/יד/דיבור)<br/>4. אישונים (שווים ריאקטיביים/לא שווים/מורחבים/מכווצים)"])
+D_sugar(["בדיקת סוכר:<br/>השווה לבסיס (שאל על אינסולין)<br/>אם גבוה (300): יש מחלת סוכר?<br/>נטן - גלוקוג׳ל"])
+style D_sugar fill:#fff0f5,stroke:#333,stroke-width:1px
+D_poisoning(["הרעלות:<br/>- סימנים: בליעה/שאיפה/הזרקה/ספיגה<br/>- אישונים בצורת סיכה (אופיאטים)<br/>- קושי נשימה, בלבול, ריור<br/>- דופק איטי/מהיר<br/>- טיפול: נתיב אוויר, תמיכה, פינוי"])
+style D_poisoning fill:#ffe6e6,stroke:#333,stroke-width:2px
+D_equip(["מכשירים:<br/>1. מד סוכר"])
+D --> D_check
+D_check --> D_find
+D_find --> D_questions
+D_questions --> D_sugar
+D_sugar --> D_poisoning
+D_poisoning --> D_diagnosis
+
+D_diagnosis{"אבחון D"}
+style D_diagnosis fill:#cc99ff,stroke:#333,stroke-width:3px
+
+D_diagnosis -->|סוכר <70 + הזעה + רעד| D_HYPOGLYCEMIA
+D_diagnosis -->|סוכר >250 + צמא + בלבול| D_HYPERGLYCEMIA
+D_diagnosis -->|FAST+ פנים/יד/דיבור| D_STROKE
+D_diagnosis -->|אישונים סיכה + נשימה איטית| D_OPIOID
+D_diagnosis -->|בלבול + חום + צוואר נוקשה| D_MENINGITIS
+D_diagnosis -->|פרכוס + פוסט איקטלי| D_SEIZURE
+
+D_HYPOGLYCEMIA["🍬 היפוגליקמיה"]
+D_HYPOGLYCEMIA_TX["טיפול:<br/>1. אם בהכרה: סוכר/מיץ דרך הפה<br/>2. אם מחוסר הכרה: גלוקוג'ל בין חניכיים<br/>3. נטן: גלוקוז 10% IV<br/>4. בדוק סוכר שוב אחרי 15 דק<br/>5. תן ארוחה"]
+style D_HYPOGLYCEMIA fill:#ff6666,stroke:#333,stroke-width:2px
+style D_HYPOGLYCEMIA_TX fill:#ff4444,stroke:#333,stroke-width:2px
+
+D_HYPERGLYCEMIA["🍬 היפרגליקמיה"]
+D_HYPERGLYCEMIA_TX["טיפול:<br/>1. נוזלים IV<br/>2. אם אינסולין: שאל מתי לקח<br/>3. פינוי לבדיקות<br/>4. ביה: אינסולין IV<br/>5. בדוק קטונים אם אפשר"]
+style D_HYPERGLYCEMIA fill:#ffaa66,stroke:#333,stroke-width:2px
+style D_HYPERGLYCEMIA_TX fill:#ff9944,stroke:#333,stroke-width:2px
+
+D_STROKE["🧠 שבץ מוחי"]
+D_STROKE_TX["טיפול:<br/>1. רשום זמן תחילת תסמינים<br/>2. סוכר מיידי<br/>3. O2 אם סט<94%<br/>4. שכיבה ראש 30°<br/>5. אל תיתן אספירין/אוכל/שתייה<br/>6. פינוי קוד אדום למוח<br/>7. חלון 4.5 שעות לטיפול"]
+style D_STROKE fill:#ff0000,stroke:#333,stroke-width:3px
+style D_STROKE_TX fill:#cc0000,stroke:#333,stroke-width:3px
+
+D_OPIOID["💊 הרעלת אופיאטים"]
+D_OPIOID_TX["טיפול:<br/>1. נתיב אוויר<br/>2. O2 גבוה<br/>3. נטן: נרקן (Naloxone) 0.4mg IV/IM<br/>4. אמבו אם נשימה <10<br/>5. ניטור רציף<br/>6. פינוי"]
+style D_OPIOID fill:#ff6666,stroke:#333,stroke-width:2px
+style D_OPIOID_TX fill:#ff4444,stroke:#333,stroke-width:2px
+
+D_MENINGITIS["🦠 דלקת קרום מוח"]
+D_MENINGITIS_TX["טיפול:<br/>1. פינוי דחוף<br/>2. O2<br/>3. נוזלים IV<br/>4. חיטוי ציוד<br/>5. ביה: אנטיביוטיקה דחופה<br/>6. ניטור הכרה"]
+style D_MENINGITIS fill:#ff0000,stroke:#333,stroke-width:3px
+style D_MENINGITIS_TX fill:#cc0000,stroke:#333,stroke-width:3px
+
+D_SEIZURE["⚡ פרכוס"]
+D_SEIZURE_TX["טיפול:<br/>1. הגן על הראש<br/>2. מנח צד אחרי פרכוס<br/>3. סוכר<br/>4. O2<br/>5. אם ממושך >5 דק: נטן מידזולם<br/>6. אל תכניס דבר לפה<br/>7. פינוי"]
+style D_SEIZURE fill:#ffaa66,stroke:#333,stroke-width:2px
+style D_SEIZURE_TX fill:#ff9944,stroke:#333,stroke-width:2px
+
+D_HYPOGLYCEMIA --> D_HYPOGLYCEMIA_TX
+D_HYPERGLYCEMIA --> D_HYPERGLYCEMIA_TX
+D_STROKE --> D_STROKE_TX
+D_OPIOID --> D_OPIOID_TX
+D_MENINGITIS --> D_MENINGITIS_TX
+D_SEIZURE --> D_SEIZURE_TX
+
+D_HYPOGLYCEMIA_TX --> D_equip
+D_HYPERGLYCEMIA_TX --> D_equip
+D_STROKE_TX --> D_equip
+D_OPIOID_TX --> D_equip
+D_MENINGITIS_TX --> D_equip
+D_SEIZURE_TX --> D_equip
+
+E["🅴 E - Exposure | הפשטה"]
+E_check(["צורת בדיקה:<br/>- הפשטה מבוקרת (שמור פרטיות וחום)<br/>- הסתכל/משש לכל אורך הגוף"])
+E_find(["מה מחפש:<br/>- פציעות נסתרות<br/>- פריחות, אלרגיה, צמיד רפואי<br/>- סימני טראומה נוספים"])
+E_equip(["מכשירים:<br/>1. מספריים"])
+E --> E_check
+E_check --> E_find
+E_find --> E_equip
+
+%% ===== איסוף מידע SAMPLE & OPQRST =====
+SAMPLE(["📋 SAMPLE - איסוף מידע<br/>צורת בדיקה: תשאול המטופל/עדים<br/>מה מחפש:<br/>S-Symptoms (סימנים)<br/>A-Allergies (אלרגיות)<br/>M-Medications (תרופות)<br/>P-Past medical history (היסטוריה)<br/>L-Last meal (זמן אכילה)<br/>E-Events (סיבת האירוע)"])
+
+OPQRST(["📍 OPQRST - בירור כאב/בעיה<br/>צורת בדיקה: תשאול ישיר<br/>מה מחפש:<br/>O-Onset (מתי התחיל)<br/>P-Provokes/Palliates (מה מחמיר/מקל)<br/>Q-Quality (סוג הכאב)<br/>R-Region/Radiation (מיקום/הקרנה)<br/>S-Severity (עוצמה)<br/>T-Time (משך/שינוי)"])
+
+ANAMNESE_ADDITIONAL(["❓ אנמנזה - שאלות נוספות (22 שאלות)"])
+style ANAMNESE_ADDITIONAL fill:#e6f3ff,stroke:#333,stroke-width:2px
+
+ANAMNESE_Q_PART1(["שאלות 1-11:<br/>1. חולשה כללית/חד-צדדית<br/>2. מחלות רקע (סוכרת/לחץ/לב/אסתמה/אפילפסיה)<br/>3. תרופות קבועות<br/>4. אלרגיות<br/>5. אכילה אחרונה<br/>6. בחילות/הקאות<br/>7. גירוד בשפתיים/לשון<br/>8. היסטוריה משפחתית<br/>9. כאב מקרין (יד/גב/לסת)<br/>10. האם הכאב משתנה במנוחה/תזוזה/מגע<br/>11. סימן לוין"])
+style ANAMNESE_Q_PART1 fill:#f0f8ff,stroke:#333,stroke-width:1px
+
+ANAMNESE_Q_PART2(["שאלות 12-22:<br/>12. פעילות/מאמץ לפני תסמינים<br/>13. טיסות/נסיעות ארוכות (PE)<br/>14. בצקות ברגליים<br/>15. סמים/אלכוהול<br/>16. פעילות ספורטיבית<br/>17. עישון<br/>18. קבלת תרופות לווריד<br/>19. עקיצה/פגיעה<br/>20. משהו שמקל על כאב<br/>21. מבנה גוף (רזה/מלא/שמן)<br/>22. האם קרה בעבר אירוע דומה"])
+style ANAMNESE_Q_PART2 fill:#f0f8ff,stroke:#333,stroke-width:1px
+
+APPROACH(["💡 גישה נכונה לתהליך:<br/>- ABC קודם - הצלת חיים לפני הכל<br/>- תשאול תוך כדי טיפול<br/>- תצפית תמידית (נשימה, צבע, שפת גוף)<br/>- איסוף מידע ממקורות נוספים<br/>- התאמת הבדיקה למטופל"])
+
+E_equip --> SAMPLE
+SAMPLE --> OPQRST
+OPQRST --> ANAMNESE_ADDITIONAL
+ANAMNESE_ADDITIONAL --> ANAMNESE_Q_PART1
+ANAMNESE_Q_PART1 --> ANAMNESE_Q_PART2
+ANAMNESE_Q_PART2 --> APPROACH
+APPROACH --> TRUTH_Q
+
+TRUTH_Q(["🔍 שאלות אמת - למילוי אנמנזה מלאה:<br/>1. אלרגיות - אתה אלרגי למשהו?<br/>2. מחלות רקע - יש לך מחלות כרוניות?<br/>3. תרופות קבועות - אתה נוטל תרופות באופן קבוע?<br/>4. אמת - מתי הרגשת לאחרונה בריא לחלוטין?"])
+style TRUTH_Q fill:#f0fff0,stroke:#333,stroke-width:2px
+
+TRUTH_Q --> EXIT
+
+%% ===== חיבורים =====
+EXIT --> START
+START --> GOAL
+GOAL --> SAFE
+RESPONSIVE_ALERT --> A
+RESPONSIVE_VERBAL --> A
+RESPONSIVE_PAIN --> A
+RESPONSIVE_NONE --> BREATHING
+BREATHING --> PULSE
+PULSE --> CPR_START
+BREATHING -- כן --> A
+PULSE -- כן --> A
+
+%% ===== פלואו החייאה =====
+CPR_START --> CALL_HELP --> CHEST_COMP --> AED_CHECK
+AED_CHECK -- כן --> SHOCK
+AED_CHECK -- לא --> CPR_CONTINUE
+SHOCK -- כן --> SHOCK_DELIVER --> CPR_CONTINUE
+SHOCK -- לא --> CPR_CONTINUE
+CPR_CONTINUE --> ROSC
+ROSC -- לא --> CHEST_COMP
+ROSC -- כן --> POST_ROSC --> A
+
+%% ===== רצף ABCDE =====
+A_equip --> B
+B_equip --> C
+C_equip --> D
+D_equip --> E
+
+%% ===== צבעים =====
+style EXIT fill:#f9c,stroke:#333,stroke-width:2px
+style START fill:#9cf,stroke:#333,stroke-width:2px
+style GOAL fill:#ffd700,stroke:#333,stroke-width:3px
+style SAFE fill:#fc9,stroke:#333,stroke-width:2px
+style SAFE_check fill:#fdb,stroke:#333,stroke-width:1px
+style SAFE_find fill:#fdb,stroke:#333,stroke-width:1px
+style SAFE_equip fill:#fec,stroke:#333,stroke-width:1px
+style ANAMNESE_INITIAL fill:#ffe6e6,stroke:#333,stroke-width:2px
+style ANAMNESE_Q1 fill:#fff0f0,stroke:#333,stroke-width:1px
+style AVPU fill:#eef,stroke:#333,stroke-width:2px
+style AVPU_check fill:#ddf,stroke:#333,stroke-width:1px
+style AVPU_find fill:#ddf,stroke:#333,stroke-width:1px
+style RESPONSIVE_ALERT fill:#6f6,stroke:#333,stroke-width:2px
+style RESPONSIVE_VERBAL fill:#6cf,stroke:#333,stroke-width:2px
+style RESPONSIVE_PAIN fill:#9cf,stroke:#333,stroke-width:2px
+style RESPONSIVE_NONE fill:#fcc,stroke:#333,stroke-width:2px
+style BREATHING fill:#fcf,stroke:#333,stroke-width:2px
+style BREATHING_note fill:#fcf,stroke:#333,stroke-width:2px
+style PULSE fill:#ccf,stroke:#333,stroke-width:2px
+style PULSE_note fill:#ccf,stroke:#333,stroke-width:2px
+style CPR_START fill:#f66,stroke:#333,stroke-width:2px
+style CPR_START_note fill:#f66,stroke:#333,stroke-width:2px
+style CALL_HELP fill:#f96,stroke:#333,stroke-width:2px
+style CHEST_COMP fill:#f93,stroke:#333,stroke-width:2px
+style AED_CHECK fill:#ff9,stroke:#333,stroke-width:2px
+style SHOCK fill:#f99,stroke:#333,stroke-width:2px
+style SHOCK_DELIVER fill:#f66,stroke:#333,stroke-width:2px
+style CPR_CONTINUE fill:#f96,stroke:#333,stroke-width:2px
+style ROSC fill:#6f6,stroke:#333,stroke-width:2px
+style POST_ROSC fill:#6cf,stroke:#333,stroke-width:2px
+style A fill:#6cf,stroke:#333,stroke-width:2px
+style A_check fill:#adf,stroke:#333,stroke-width:1px
+style A_find fill:#adf,stroke:#333,stroke-width:1px
+style A_questions fill:#cef,stroke:#333,stroke-width:1px
+style A_diagnosis fill:#ff9999,stroke:#333,stroke-width:3px
+style A_CHOKING fill:#ff6666,stroke:#333,stroke-width:2px
+style A_CHOKING_TX fill:#ff4444,stroke:#333,stroke-width:2px
+style A_ANAPHYLAXIS fill:#ff6666,stroke:#333,stroke-width:2px
+style A_ANAPHYLAXIS_TX fill:#ff4444,stroke:#333,stroke-width:2px
+style A_SECRETIONS fill:#ffaa66,stroke:#333,stroke-width:2px
+style A_SECRETIONS_TX fill:#ff9944,stroke:#333,stroke-width:2px
+style A_POST_SEIZURE fill:#ffaa66,stroke:#333,stroke-width:2px
+style A_POST_SEIZURE_TX fill:#ff9944,stroke:#333,stroke-width:2px
+style A_equip fill:#cef,stroke:#333,stroke-width:1px
+style B fill:#6ff,stroke:#333,stroke-width:2px
+style B_check fill:#aef,stroke:#333,stroke-width:1px
+style B_find fill:#aef,stroke:#333,stroke-width:1px
+style B_questions fill:#cff,stroke:#333,stroke-width:1px
+style B_diseases fill:#e6f7ff,stroke:#333,stroke-width:2px
+style B_sounds fill:#fff9e6,stroke:#333,stroke-width:1px
+style B_diagnosis fill:#66ccff,stroke:#333,stroke-width:3px
+style B_ASTHMA fill:#66aaff,stroke:#333,stroke-width:2px
+style B_ASTHMA_TX fill:#4488ff,stroke:#333,stroke-width:2px
+style B_PULM_EDEMA fill:#66aaff,stroke:#333,stroke-width:2px
+style B_PULM_EDEMA_TX fill:#4488ff,stroke:#333,stroke-width:2px
+style B_PNEUMONIA fill:#66aaff,stroke:#333,stroke-width:2px
+style B_PNEUMONIA_TX fill:#4488ff,stroke:#333,stroke-width:2px
+style B_PE fill:#ff6666,stroke:#333,stroke-width:2px
+style B_PE_TX fill:#ff4444,stroke:#333,stroke-width:2px
+style B_COPD fill:#66aaff,stroke:#333,stroke-width:2px
+style B_COPD_TX fill:#4488ff,stroke:#333,stroke-width:2px
+style B_ANAPHYLAXIS fill:#ff6666,stroke:#333,stroke-width:2px
+style B_ANAPHYLAXIS_TX fill:#ff4444,stroke:#333,stroke-width:2px
+style B_HYPERVENT fill:#aaddff,stroke:#333,stroke-width:2px
+style B_HYPERVENT_TX fill:#88ccff,stroke:#333,stroke-width:2px
+style B_CHOKING fill:#ffaa66,stroke:#333,stroke-width:2px
+style B_CHOKING_TX fill:#ff9944,stroke:#333,stroke-width:2px
+style B_DISSECTION fill:#ff0000,stroke:#333,stroke-width:3px
+style B_DISSECTION_TX fill:#cc0000,stroke:#333,stroke-width:3px
+style B_equip fill:#cff,stroke:#333,stroke-width:1px
+style C fill:#9cf,stroke:#333,stroke-width:2px
+style C_check fill:#bdf,stroke:#333,stroke-width:1px
+style C_find fill:#bdf,stroke:#333,stroke-width:1px
+style C_questions fill:#def,stroke:#333,stroke-width:1px
+style C_pain fill:#ffe6f0,stroke:#333,stroke-width:1px
+style C_aspirin fill:#fff0e6,stroke:#333,stroke-width:1px
+style C_tzatal fill:#e6ffe6,stroke:#333,stroke-width:1px
+style C_diagnosis fill:#ff99cc,stroke:#333,stroke-width:3px
+style C_ACS fill:#ff6666,stroke:#333,stroke-width:2px
+style C_ACS_TX fill:#ff4444,stroke:#333,stroke-width:2px
+style C_AFIB fill:#ffaa66,stroke:#333,stroke-width:2px
+style C_AFIB_TX fill:#ff9944,stroke:#333,stroke-width:2px
+style C_BRADY fill:#ffaa66,stroke:#333,stroke-width:2px
+style C_BRADY_TX fill:#ff9944,stroke:#333,stroke-width:2px
+style C_SHOCK fill:#ff0000,stroke:#333,stroke-width:3px
+style C_SHOCK_TX fill:#cc0000,stroke:#333,stroke-width:3px
+style C_DISSECTION_C fill:#ff0000,stroke:#333,stroke-width:3px
+style C_DISSECTION_C_TX fill:#cc0000,stroke:#333,stroke-width:3px
+style C_SEPSIS fill:#ff6666,stroke:#333,stroke-width:2px
+style C_SEPSIS_TX fill:#ff4444,stroke:#333,stroke-width:2px
+style C_equip fill:#def,stroke:#333,stroke-width:1px
+style D fill:#ccf,stroke:#333,stroke-width:2px
+style D_check fill:#ddf,stroke:#333,stroke-width:1px
+style D_find fill:#ddf,stroke:#333,stroke-width:1px
+style D_questions fill:#eef,stroke:#333,stroke-width:1px
+style D_sugar fill:#fff0f5,stroke:#333,stroke-width:1px
+style D_poisoning fill:#ffe6e6,stroke:#333,stroke-width:2px
+style D_diagnosis fill:#cc99ff,stroke:#333,stroke-width:3px
+style D_HYPOGLYCEMIA fill:#ff6666,stroke:#333,stroke-width:2px
+style D_HYPOGLYCEMIA_TX fill:#ff4444,stroke:#333,stroke-width:2px
+style D_HYPERGLYCEMIA fill:#ffaa66,stroke:#333,stroke-width:2px
+style D_HYPERGLYCEMIA_TX fill:#ff9944,stroke:#333,stroke-width:2px
+style D_STROKE fill:#ff0000,stroke:#333,stroke-width:3px
+style D_STROKE_TX fill:#cc0000,stroke:#333,stroke-width:3px
+style D_OPIOID fill:#ff6666,stroke:#333,stroke-width:2px
+style D_OPIOID_TX fill:#ff4444,stroke:#333,stroke-width:2px
+style D_MENINGITIS fill:#ff0000,stroke:#333,stroke-width:3px
+style D_MENINGITIS_TX fill:#cc0000,stroke:#333,stroke-width:3px
+style D_SEIZURE fill:#ffaa66,stroke:#333,stroke-width:2px
+style D_SEIZURE_TX fill:#ff9944,stroke:#333,stroke-width:2px
+style D_equip fill:#eef,stroke:#333,stroke-width:1px
+style E fill:#cff,stroke:#333,stroke-width:2px
+style E_check fill:#dff,stroke:#333,stroke-width:1px
+style E_find fill:#dff,stroke:#333,stroke-width:1px
+style E_equip fill:#eff,stroke:#333,stroke-width:1px
+style SAMPLE fill:#ffe6cc,stroke:#333,stroke-width:2px
+style OPQRST fill:#ffe6cc,stroke:#333,stroke-width:2px
+style ANAMNESE_ADDITIONAL fill:#e6f3ff,stroke:#333,stroke-width:2px
+style ANAMNESE_Q_PART1 fill:#f0f8ff,stroke:#333,stroke-width:1px
+style ANAMNESE_Q_PART2 fill:#f0f8ff,stroke:#333,stroke-width:1px
+style APPROACH fill:#d4f1d4,stroke:#333,stroke-width:2px
+style TRUTH_Q fill:#f0fff0,stroke:#333,stroke-width:2px
+        </div>
+    </div>
+</body>
+</html>
