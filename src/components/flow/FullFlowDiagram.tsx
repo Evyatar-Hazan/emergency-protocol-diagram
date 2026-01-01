@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import ReactFlow, {
   type Node as FlowNode,
   type Edge,
@@ -27,6 +27,44 @@ const nodeTypes = {
  * כל הצמתים מכל הפרוטוקולים מוצגים יחד במסך אחד עם React Flow
  */
 export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps) {
+  // State לניהול צמתים מוסתרים
+  const [collapsedNodes, setCollapsedNodes] = useState<Set<string>>(new Set());
+  
+  // פונקציה לקבלת כל הצאצאים של צומת
+  const getNodeDescendants = useCallback((nodeId: string, allNodes: FlowNode[], allEdges: Edge[]): Set<string> => {
+    const descendants = new Set<string>();
+    const queue = [nodeId];
+    
+    while (queue.length > 0) {
+      const currentId = queue.shift()!;
+      
+      // מצא את כל הקצוות שיוצאים מהצומת הנוכחי
+      const outgoingEdges = allEdges.filter(edge => edge.source === currentId);
+      
+      outgoingEdges.forEach(edge => {
+        if (!descendants.has(edge.target)) {
+          descendants.add(edge.target);
+          queue.push(edge.target);
+        }
+      });
+    }
+    
+    return descendants;
+  }, []);
+  
+  // פונקציה לטיפול בלחיצה על כפתור הסגירה/פתיחה
+  const handleToggleCollapse = useCallback((nodeId: string) => {
+    setCollapsedNodes(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(nodeId)) {
+        newSet.delete(nodeId);
+      } else {
+        newSet.add(nodeId);
+      }
+      return newSet;
+    });
+  }, []);
+  
   // המרת הצמתים מכל הפרוטוקולים לפורמט של React Flow
   const { nodes: flowNodes, edges: flowEdges } = useMemo(() => {
     const nodes: FlowNode[] = [];
@@ -72,6 +110,8 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
             severity,
             protocolId,
             onClick: () => onNodeClick?.(fullNodeId),
+            onToggleCollapse: () => handleToggleCollapse(fullNodeId),
+            isCollapsed: collapsedNodes.has(fullNodeId),
           },
           style: {
             background: severityColors[severity],
@@ -155,16 +195,46 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
     });
 
     return { nodes, edges };
-  }, [protocols, onNodeClick]);
+  }, [protocols, onNodeClick, handleToggleCollapse, collapsedNodes]);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(flowNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(flowEdges);
-
-  // עדכון כאשר הפרוטוקול משתנה
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  
+  // סינון צמתים וקצוות בהתאם למצב ה-collapse
+  const visibleNodes = useMemo(() => {
+    const hiddenDescendants = new Set<string>();
+    
+    // עבור על כל הצמתים המכווצים
+    collapsedNodes.forEach(collapsedNodeId => {
+      const descendants = getNodeDescendants(collapsedNodeId, flowNodes, flowEdges);
+      descendants.forEach(desc => hiddenDescendants.add(desc));
+    });
+    
+    // החזר רק צמתים שלא מוסתרים
+    return flowNodes.map(node => ({
+      ...node,
+      hidden: hiddenDescendants.has(node.id),
+    }));
+  }, [flowNodes, flowEdges, collapsedNodes, getNodeDescendants]);
+  
+  // סינון קצוות - הסתר קצוות שהצמתים שלהם מוסתרים
+  const visibleEdges = useMemo(() => {
+    const hiddenNodeIds = new Set(visibleNodes.filter(n => n.hidden).map(n => n.id));
+    
+    return flowEdges.map(edge => ({
+      ...edge,
+      hidden: hiddenNodeIds.has(edge.source) || hiddenNodeIds.has(edge.target),
+    }));
+  }, [flowEdges, visibleNodes]);
+  
+  // עדכון הצמתים כשיש שינוי ב-collapse
   useEffect(() => {
-    setNodes(flowNodes);
-    setEdges(flowEdges);
-  }, [flowNodes, flowEdges, setNodes, setEdges]);
+    setNodes(visibleNodes);
+  }, [visibleNodes, setNodes]);
+  
+  useEffect(() => {
+    setEdges(visibleEdges);
+  }, [visibleEdges, setEdges]);
 
   return (
     <div className="w-full h-screen" dir="ltr">

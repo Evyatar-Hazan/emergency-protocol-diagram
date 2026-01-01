@@ -8,6 +8,8 @@ interface CustomNodeProps {
     label: string;
     severity: string;
     onClick?: () => void;
+    onToggleCollapse?: () => void;
+    isCollapsed?: boolean;
   };
 }
 
@@ -15,7 +17,7 @@ interface CustomNodeProps {
  * קומפוננטת CustomNode - צומת מותאם אישית לתרשים הזרימה
  */
 export const CustomNode = memo(({ data }: CustomNodeProps) => {
-  const { node } = data;
+  const { node, onToggleCollapse, isCollapsed } = data;
   
   // אייקונים לפי סוג
   const icons: Record<Node['type'], string> = {
@@ -43,6 +45,20 @@ export const CustomNode = memo(({ data }: CustomNodeProps) => {
   return (
     <div className="relative" dir="rtl">
       <Handle type="target" position={Position.Top} />
+      
+      {/* כפתור כיווץ/פתיחה */}
+      {(node.next || node.conditions) && onToggleCollapse && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleCollapse();
+          }}
+          className="absolute -top-2 -left-2 z-10 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition-all"
+          title={isCollapsed ? "הצג צמתים מתחת" : "הסתר צמתים מתחת"}
+        >
+          {isCollapsed ? '▼' : '▲'}
+        </button>
+      )}
       
       <div className="p-4 min-w-[350px] max-w-[450px]">
         {/* Header */}

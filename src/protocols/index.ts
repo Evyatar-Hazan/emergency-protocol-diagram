@@ -1,19 +1,21 @@
 import type { FlowData, Protocol } from '../types/protocol';
-import cpr from './cpr.json';
-import abcdeMedical from './abcde-medical.json';
+// import cpr from './cpr.json';
+// import abcdeMedical from './abcde-medical.json';
 import unifiedFlow from './unified-flow.json';
 
 /**
  * כל הפרוטוקולים הקליניים במערכת
  * זהו המקור היחיד לדאטא - כל הלוגיקה הקלינית כאן
+ * 
+ * הערה: CPR ו-ABCDE מושבתים זמנית בזמן בניית הפרוטוקול החדש
  */
 export const protocolsData: FlowData = {
-  version: '1.0.0',
+  version: '2.0.0',
   language: 'he',
   protocols: {
     unified_flow: unifiedFlow as Protocol,  // הפרוטוקול המאוחד - זרימה אחת מלאה
-    cpr: cpr as Protocol,
-    abcde_medical: abcdeMedical as Protocol,
+    // cpr: cpr as Protocol,
+    // abcde_medical: abcdeMedical as Protocol,
   },
 };
 

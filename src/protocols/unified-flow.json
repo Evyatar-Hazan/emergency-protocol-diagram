@@ -1,16 +1,58 @@
 {
   "id": "unified_flow",
   "name": "פרוטוקול אחוד - זרימה מלאה",
-  "description": "פרוטוקול אחד רציף המתחיל מבטיחות ומסתעף דינמית לפי ממצאים בשטח",
-  "version": "1.0.0",
-  "startNode": "safety",
+  "description": "פרוטוקול אחד רציף המתחיל מדיווח יציאה למקרה ומסתעף דינמית לפי ממצאים בשטח",
+  "version": "2.0.0",
+  "startNode": "report_departure",
   "metadata": {
     "author": "מערכת פרוטוקולים רפואיים",
     "lastUpdated": "2026-01-01",
     "tags": ["unified", "dynamic", "field-assessment"],
-    "notes": "פרוטוקול זה מאחד את כל הפרוטוקולים לזרימה אחת. מתחיל מבטיחות, עובר להערכה ראשונית, ומסתעף דינמית ל-CPR או ABCDE לפי ממצאים"
+    "notes": "פרוטוקול חדש שנבנה צעד אחר צעד עם תיעוד מלא"
   },
   "nodes": {
+    "report_departure": {
+      "id": "report_departure",
+      "type": "action",
+      "title": "דיווח יציאה למקרה",
+      "description": "דיווח ראשוני לחדר בקרה על יציאה לאירוע",
+      "severity": "urgent",
+      "content": {
+        "checkMethod": "דווח לחדר בקרה באמצעות רדיו/טלפון",
+        "whatToLookFor": [
+          "אישור קבלת הקריאה",
+          "פרטי האירוע",
+          "כתובת מדויקת",
+          "סוג האירוע (רפואי/טראומה)"
+        ],
+        "questions": [
+          "מה סוג האירוע?",
+          "כמה נפגעים?",
+          "האם יש סכנה בזירה?",
+          "האם יש צורך בגיבויים?"
+        ]
+      },
+      "next": "report_arrival"
+    },
+    
+    "report_arrival": {
+      "id": "report_arrival",
+      "type": "action",
+      "title": "דיווח הגעה למקרה",
+      "description": "דיווח לחדר בקרה על הגעה לזירה והערכה ראשונית",
+      "severity": "urgent",
+      "content": {
+        "checkMethod": "דווח לחדר בקרה:\n- הגעה לזירה\n- מספר נפגעים\n- מצב ראשוני\n- צורך בגיבויים",
+        "whatToLookFor": [
+          "זירה בטוחה/לא בטוחה",
+          "מספר נפגעים",
+          "מצב כללי של המקום",
+          "גורמים נוספים נדרשים"
+        ]
+      },
+      "next": "safety"
+    },
+    
     "safety": {
       "id": "safety",
       "type": "check",
@@ -18,87 +60,588 @@
       "description": "בדיקת בטיחות סביבתית לפני גישה למטופל",
       "severity": "critical",
       "content": {
-        "checkMethod": "הסתכל סביב (חשמל, אש, תנועה, חומרים)\nהרגש קרקע (רעידות, חום, רטיבות)\nהאזן לרעשים חריגים",
-        "whatToLookFor": "אזור בטוח להגעה\nאין סיכון נוסף\nניתן לגשת למטופל"
-      },
-      "next": "initial_assessment"
-    },
-    "initial_assessment": {
-      "id": "initial_assessment",
-      "type": "check",
-      "title": "הערכה ראשונית",
-      "description": "הערכת מצב המטופל - הכרה, נשימה, דופק",
-      "severity": "critical",
-      "content": {
-        "checkMethod": "1. בדוק הכרה - דבר אליו בקול רם\n2. בדוק נשימה - הסתכל, הרגש, הקשב\n3. בדוק דופק צווארי - 10 שניות",
-        "whatToLookFor": "מטופל מגיב/לא מגיב\nנושם/לא נושם\nיש דופק/אין דופק"
-      },
-      "next": "check_pulse"
-    },
-    "check_pulse": {
-      "id": "check_pulse",
-      "type": "decision",
-      "title": "יש דופק?",
-      "description": "בדיקת נוכחות דופק צווארי",
-      "severity": "critical",
-      "content": {
-        "checkMethod": "מישוש דופק צווארי למשך 10 שניות",
-        "whatToLookFor": "דופק מוחשי\nעוצמת הדופק\nקצב הדופק"
-      },
-      "conditions": [
-        {
-          "label": "אין דופק - התחל החייאה",
-          "target": "cpr:start_cpr"
-        },
-        {
-          "label": "יש דופק - המשך הערכה",
-          "target": "mechanism_assessment"
-        }
-      ]
-    },
-    "mechanism_assessment": {
-      "id": "mechanism_assessment",
-      "type": "question",
-      "title": "מנגנון הפציעה/אירוע",
-      "description": "קביעת מסלול הערכה - טראומה או רפואי",
-      "severity": "urgent",
-      "content": {
+        "checkMethod": "הסתכל סביב - חשמל, אש, תנועה, חומרים מסוכנים\nהרגש קרקע - רעידות, חום, רטיבות\nהאזן לרעשים חריגים - צינורות גז, קריסות\nהריח - גז, עשן, כימיקלים",
+        "whatToLookFor": [
+          "אזור בטוח להגעה",
+          "אין סיכון נוסף למצילים",
+          "ניתן לגשת למטופל בבטחה",
+          "אין צורך בפינוי מיידי"
+        ],
+        "equipment": ["כפפות", "משקפי מגן", "אפוד זוהר"],
         "questions": [
-          "האם יש מנגנון טראומטי? (נפילה, תאונה, פגיעה, דקירה, ירי)",
-          "האם יש סימני חבלה חיצוניים?",
-          "האם המטופל דיווח על אירוע רפואי? (כאב חזה, קוצר נשימה, חולשה)"
+          "האם יש סכנה מיידית?",
+          "האם צריך לפנות את המטופל לפני טיפול?",
+          "האם יש צורך בכוחות נוספים? (משטרה, כבאים)"
+        ]
+      },
+      "next": "scene_assessment"
+    },
+    
+    "scene_assessment": {
+      "id": "scene_assessment",
+      "type": "question",
+      "title": "לאן הגעתי ומה אני רואה",
+      "description": "הערכת הזירה והרושם הראשוני - טראומה או חולה",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "סרוק את הזירה במבט כללי:\n- מצב המטופל (עומד/יושב/שוכב)\n- תנוחת הגוף\n- סימנים חיצוניים\n- סביבת האירוע",
+        "whatToLookFor": [
+          "סימני טראומה (דימום, עיוותים, חבלות)",
+          "מצב המטופל (מודע/מבולבל/מחוסר הכרה)",
+          "סביבה (זירת תאונה, בית, רחוב)",
+          "חפצים בזירה (תרופות, אלכוהול, כלי נשק)"
+        ],
+        "questions": [
+          "האם יש סימני טראומה ברורים? (נפילה, תאונה, פציעה חיצונית)",
+          "האם יש מנגנון פציעה ברור? (גובה, מהירות, אובייקט שפגע)",
+          "האם המטופל מתלונן על מצב רפואי? (כאב חזה, קוצר נשימה, חולשה)",
+          "מה מספרים העדים על האירוע?",
+          "האם המטופל מודע למתרחש?"
         ]
       },
       "conditions": [
         {
-          "label": "טראומה - ABCDE Trauma",
-          "target": "abcde_trauma:airway_trauma"
+          "label": "טראומה - יש מנגנון פציעה/סימני חבלה",
+          "target": "trauma_protocol"
         },
         {
-          "label": "רפואי - ABCDE Medical",
-          "target": "abcde_medical:airway_check"
+          "label": "חולה - אירוע רפואי ללא טראומה",
+          "target": "medical_protocol"
         }
       ]
-    }
-  },
-  "crossProtocolLinks": {
-    "description": "קישורים בין-פרוטוקוליים - צמתים שמפנים לפרוטוקולים אחרים",
-    "links": {
-      "cpr:start_cpr": {
-        "protocolId": "cpr",
-        "nodeId": "start_cpr",
-        "description": "מעבר לפרוטוקול החייאה"
+    },
+    
+    "trauma_protocol": {
+      "id": "trauma_protocol",
+      "type": "check",
+      "title": "בדיקת דימומים פורצים",
+      "description": "בטראומה - בדיקה מהירה לדימומים מסכני חיים לפני הערכת הכרה",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "סריקה חזותית מהירה של כל הגוף:\n- ראש ופנים\n- צוואר\n- בית החזה\n- בטן\n- אגן וגפיים\n\nחפש: דם זורם, בגדים ספוגים בדם, שלוליות דם",
+        "whatToLookFor": [
+          "דימום עורקי (אדום בהיר, פועם)",
+          "דימום ורידי (אדום כהה, זורם)",
+          "דימום חיצוני מסיבי",
+          "בגדים ספוגים בדם"
+        ],
+        "equipment": ["כפפות", "תחבושות", "טורניקט", "גזה"],
+        "questions": [
+          "האם יש דימום פעיל?",
+          "מהיכן הדימום?",
+          "כמה דם נאבד?"
+        ]
       },
-      "abcde_medical:airway_check": {
-        "protocolId": "abcde_medical",
-        "nodeId": "airway_check",
-        "description": "מעבר לפרוטוקול ABCDE רפואי"
+      "conditions": [
+        {
+          "label": "יש דימום פורץ - עצור מיידית",
+          "target": "stop_bleeding"
+        },
+        {
+          "label": "אין דימום פורץ - המשך להכרה",
+          "target": "avpu_check"
+        }
+      ]
+    },
+    
+    "stop_bleeding": {
+      "id": "stop_bleeding",
+      "type": "action",
+      "title": "X - eXsanguination | עצירת דימום מסכן חיים",
+      "description": "טיפול מיידי בדימום פורץ לפני כל בדיקה אחרת",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "זהה מקור הדימום והפעל לחץ ישיר",
+        "treatment": [
+          "לחץ ישיר על מקור הדימום",
+          "אם גפה - שקול טורניקט מעל הפצע",
+          "אם בטן/חזה - לחץ ישיר + תחבושת לחץ",
+          "העלה גפה אם אפשרי",
+          "אל תבזבז זמן - עצור את הדימום מהר!"
+        ],
+        "equipment": ["טורניקט", "גזה", "תחבושת לחץ", "כפפות"]
       },
-      "abcde_trauma:airway_trauma": {
-        "protocolId": "abcde_trauma",
-        "nodeId": "airway_trauma",
-        "description": "מעבר לפרוטוקול ABCDE טראומה (יווצר בעתיד)"
-      }
+      "next": "avpu_check"
+    },
+    
+    "medical_protocol": {
+      "id": "medical_protocol",
+      "type": "info",
+      "title": "מסלול חולה - ללא דימומים",
+      "description": "אירוע רפואי - מעבר ישיר לבדיקת הכרה",
+      "severity": "urgent",
+      "content": {
+        "treatment": "במקרה רפואי ללא טראומה - עובר ישירות לבדיקת AVPU"
+      },
+      "next": "avpu_check"
+    },
+    
+    "avpu_check": {
+      "id": "avpu_check",
+      "type": "check",
+      "title": "A - Alert | בדיקת ערנות",
+      "description": "בדיקה ראשונית - האם המטופל ערני ומגיב",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "דבר למטופל בקול רגיל:\n'שלום, אני פרמדיק, איך קוראים לך?'\n'מה קרה לך?'",
+        "whatToLookFor": [
+          "עיניים פתוחות",
+          "מדבר ומגיב",
+          "מבין שאלות ועונה",
+          "מודע לסביבה"
+        ],
+        "questions": [
+          "איך קוראים לך?",
+          "מה קרה?",
+          "איפה אתה?",
+          "איזה יום היום?"
+        ]
+      },
+      "conditions": [
+        {
+          "label": "Alert - ערני ומגיב",
+          "target": "abcde_assessment"
+        },
+        {
+          "label": "לא ערני - בדוק תגובה לקול",
+          "target": "voice_check"
+        }
+      ]
+    },
+    
+    "voice_check": {
+      "id": "voice_check",
+      "type": "check",
+      "title": "V - Voice | בדיקת תגובה לקול",
+      "description": "המטופל לא ערני - בדיקה אם מגיב לקריאה בקול",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "קרא למטופל בקול חזק:\n'תפתח עיניים!'\n'תשמע אותי!'\nדבר ליד האוזן",
+        "whatToLookFor": [
+          "פותח עיניים לקול",
+          "מזיז יד/רגל",
+          "משנה הבעת פנים",
+          "מנסה לדבר"
+        ]
+      },
+      "conditions": [
+        {
+          "label": "מגיב לקול - יש תגובה",
+          "target": "abcde_assessment"
+        },
+        {
+          "label": "לא מגיב לקול - בדוק כאב",
+          "target": "pain_check"
+        }
+      ]
+    },
+    
+    "pain_check": {
+      "id": "pain_check",
+      "type": "check",
+      "title": "P - Pain | בדיקת תגובה לכאב",
+      "description": "המטופל לא מגיב לקול - בדיקת תגובה לגירוי כואב",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "צביטת טרפז (שריר בין הצוואר לכתף)\nאו\nלחיצה על בסיס הציפורן",
+        "whatToLookFor": [
+          "פותח עיניים",
+          "מושך את הגוף/יד",
+          "הבעת פנים של כאב",
+          "נאנח/מוציא קול"
+        ]
+      },
+      "conditions": [
+        {
+          "label": "מגיב לכאב - יש תגובה",
+          "target": "abcde_assessment"
+        },
+        {
+          "label": "אין תגובה כלל - Unresponsive",
+          "target": "unresponsive_check"
+        }
+      ]
+    },
+    
+    "unresponsive_check": {
+      "id": "unresponsive_check",
+      "type": "info",
+      "title": "U - Unresponsive | חסר הכרה מוחלט",
+      "description": "המטופל חסר הכרה לחלוטין - מעבר לבדיקת נשימה",
+      "severity": "critical",
+      "content": {
+        "treatment": "המטופל לא מגיב לשום גירוי - יש לבדוק נשימה ודופק"
+      },
+      "next": "breathing_check"
+    },
+    
+    "breathing_check": {
+      "id": "breathing_check",
+      "type": "check",
+      "title": "בדיקת נשימה",
+      "description": "בדיקת נשימה למטופל חסר הכרה",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "הסתכל, הרגש, הקשב (Look, Listen, Feel):\n\n- הסתכל על תנועת חזה\n- הרגש אוויר מהאף/פה (קרב את הלחי)\n- הקשב לקולות נשימה\n- 10 שניות לפחות",
+        "whatToLookFor": [
+          "נושם תקין - חזה עולה ויורד בקצב סדיר",
+          "נשימה לא תקינה - נחירות, צפצופים, אגונל",
+          "לא נושם - אין תנועת חזה, אין אוויר"
+        ],
+        "equipment": ["שעון", "סטטוסקופ (אם יש)"]
+      },
+      "conditions": [
+        {
+          "label": "יש נשימה - מעבר ל-ABCDE",
+          "target": "breathing_present"
+        },
+        {
+          "label": "אין נשימה - בדוק דופק",
+          "target": "pulse_check"
+        }
+      ]
+    },
+    
+    "breathing_present": {
+      "id": "breathing_present",
+      "type": "action",
+      "title": "חסר הכרה עם נשימה",
+      "description": "המטופל חסר הכרה אבל נושם - טיפול ראשוני",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "שמור על נתיב אוויר פתוח",
+          "במידה ואין חשד לטראומה - מצב התאוששות (על הצד)",
+          "אם טראומה - ייצוב עמוד שדרה, אל תזיז",
+          "חמצן 15 ליטר עם מסכה",
+          "ניטור רציף של נשימה",
+          "בדוק דופק"
+        ],
+        "equipment": ["חמצן", "מסכת חמצן", "סקשיין", "צווארון (אם טראומה)"]
+      },
+      "next": "abcde_assessment"
+    },
+    
+    "pulse_check": {
+      "id": "pulse_check",
+      "type": "check",
+      "title": "בדיקת דופק",
+      "description": "בדיקת דופק צווארי למטופל חסר הכרה",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "מישוש דופק צווארי:\n1. מצא את תפוח האדם\n2. החלק 2 אצבעות לצד הצוואר\n3. לחץ בעדינות\n4. ספור 10 שניות מלאות",
+        "whatToLookFor": [
+          "דופק מורגש - חזק/חלש",
+          "קצב - מהיר/איטי/תקין",
+          "אין דופק - לא מרגיש כלום"
+        ],
+        "equipment": ["שעון"]
+      },
+      "conditions": [
+        {
+          "label": "אין דופק - התחל החייאה מיידית",
+          "target": "cpr_protocol"
+        },
+        {
+          "label": "יש דופק - חסר הכרה עם דופק",
+          "target": "unconscious_with_pulse"
+        }
+      ]
+    },
+    
+    "unconscious_with_pulse": {
+      "id": "unconscious_with_pulse",
+      "type": "action",
+      "title": "חסר הכרה עם דופק",
+      "description": "מטופל חסר הכרה אבל עם דופק - טיפול ראשוני",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "שמור על נתיב אוויר פתוח",
+          "במידה ואין חשד לטראומה - מצב התאוששות (על הצד)",
+          "אם טראומה - ייצוב עמוד שדרה, אל תזיז",
+          "חמצן 15 ליטר עם מסכה",
+          "ניטור רציף של נשימה ודופק",
+          "הכן להחייאה במקרה של דום לב"
+        ],
+        "equipment": ["חמצן", "מסכת חמצן", "סקשיין", "צווארון (אם טראומה)"]
+      },
+      "next": "abcde_assessment"
+    },
+    
+    "cpr_protocol": {
+      "id": "cpr_protocol",
+      "type": "action",
+      "title": "דיווח - זקוק ל-ALS",
+      "description": "דיווח מיידי לחדר בקרה על צורך ב-Advanced Life Support",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "דווח לחדר בקרה: 'זקוק ל-ALS מיידי'",
+          "מסור מיקום מדויק",
+          "דווח על דום לב",
+          "בקש גיבוי נוסף"
+        ]
+      },
+      "next": "defib_check"
+    },
+    
+    "defib_check": {
+      "id": "defib_check",
+      "type": "decision",
+      "title": "האם יש דפיברילטור?",
+      "description": "בדיקה אם יש דפיברילטור זמין במקום",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "חפש דפיברילטור:\n- באמבולנס\n- בבניין (AED ציבורי)\n- שאל עוברי אורח",
+        "whatToLookFor": [
+          "דפיברילטור ידני (על אמבולנס)",
+          "AED אוטומטי (במקומות ציבוריים)",
+          "מישהו מביא דפיברילטור"
+        ]
+      },
+      "conditions": [
+        {
+          "label": "יש דפיברילטור - חבר מיידית",
+          "target": "attach_defib"
+        },
+        {
+          "label": "אין דפיברילטור - התחל עיסויים",
+          "target": "start_compressions"
+        }
+      ]
+    },
+    
+    "attach_defib": {
+      "id": "attach_defib",
+      "type": "action",
+      "title": "C - חיבור דפיברילטור",
+      "description": "חיבור מדבקות דפיברילטור למטופל",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "חשוף חזה לחלוטין",
+          "נגב אם רטוב",
+          "הדבק מדבקה 1: מתחת לבית שחי ימין",
+          "הדבק מדבקה 2: צלע שמאלית תחתונה",
+          "חבר כבלים למכשיר",
+          "הפעל דפיברילטור"
+        ],
+        "equipment": ["דפיברילטור", "מדבקות", "מספריים", "מגבת"]
+      },
+      "next": "start_compressions"
+    },
+    
+    "start_compressions": {
+      "id": "start_compressions",
+      "type": "action",
+      "title": "C - Compressions | עיסויים",
+      "description": "התחלת עיסוי לב חיצוני",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "מיקום ידיים:\n- מרכז החזה, בין הפטמות\n- עומק: 5-6 ס״מ\n- קצב: 100-120 לדקה\n- תן לחזה לחזור לחלוטין",
+        "treatment": [
+          "30 עיסויים",
+          "עומק 5-6 ס״מ",
+          "קצב 100-120 לדקה",
+          "אל תפסיק!"
+        ],
+        "equipment": ["שעון", "משטח קשה"],
+        "questions": [
+          "האם יש מישהו נוסף שיכול להחליף?",
+          "האם הדפיברילטור מחובר?"
+        ]
+      },
+      "next": "airway_check_cpr"
+    },
+    
+    "airway_check_cpr": {
+      "id": "airway_check_cpr",
+      "type": "check",
+      "title": "A - Airway | בדיקת נתיב אוויר",
+      "description": "בדיקת נתיב אוויר בזמן החייאה",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "בדוק במהירות:\n- חפש גוף זר בפה\n- הוצא אם רואה משהו\n- אל תבזבז זמן!",
+        "whatToLookFor": [
+          "פה נקי",
+          "אין גוף זר",
+          "אין הקאות"
+        ],
+        "equipment": ["סקשיין", "כפפות"]
+      },
+      "next": "ventilations"
+    },
+    
+    "ventilations": {
+      "id": "ventilations",
+      "type": "action",
+      "title": "B - Breathing | הנשמות",
+      "description": "מתן הנשמות בזמן החייאה",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "ללא טראומה:\n- הטיית ראש לאחור (Head Tilt)\n- הרמת סנטר (Chin Lift)\n\nעם טראומה:\n- דחיקת לסת (Jaw Thrust)\n- ללא הטיית ראש!",
+        "treatment": [
+          "2 הנשמות",
+          "כל הנשמה שנייה אחת",
+          "עד שרואים חזה עולה",
+          "באמבו או פה-לפה"
+        ],
+        "equipment": ["אמבו", "מסכה", "חמצן"],
+        "questions": [
+          "האם יש חשד לטראומה? (דחיקת לסת בלבד)"
+        ]
+      },
+      "next": "cpr_cycle"
+    },
+    
+    "cpr_cycle": {
+      "id": "cpr_cycle",
+      "type": "info",
+      "title": "מחזור החייאה: 30:2",
+      "description": "30 עיסויים + 2 הנשמות - חזור על זה",
+      "severity": "critical",
+      "content": {
+        "treatment": "חזור על המחזור: 30 עיסויים ← 2 הנשמות ← 30 עיסויים..."
+      },
+      "next": "defib_analysis_check"
+    },
+    
+    "defib_analysis_check": {
+      "id": "defib_analysis_check",
+      "type": "decision",
+      "title": "האם עברו 2 דקות?",
+      "description": "בדיקה אם הגיע הזמן לאנליזה של הדפיברילטור",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "שים לב לדפיברילטור:\n- הוא יתריע אחרי 2 דקות\n- או ספור בעצמך (5 מחזורים של 30:2)",
+        "whatToLookFor": [
+          "דפיברילטור אומר 'עצור עיסויים'",
+          "עברו 2 דקות (כ-5 מחזורים)",
+          "המטופל מתחיל לזוז"
+        ]
+      },
+      "conditions": [
+        {
+          "label": "עברו 2 דקות - אנליזה",
+          "target": "defib_analysis"
+        },
+        {
+          "label": "המטופל זז - בדוק דופק",
+          "target": "rosc_check"
+        },
+        {
+          "label": "המשך החייאה",
+          "target": "start_compressions"
+        }
+      ]
+    },
+    
+    "defib_analysis": {
+      "id": "defib_analysis",
+      "type": "action",
+      "title": "אנליזת קצב - Analyze",
+      "description": "הדפיברילטור מנתח את קצב הלב",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "עצור עיסויים",
+          "אל תיגע במטופל!",
+          "המתן לאנליזה",
+          "עקוב אחר הוראות הדפיברילטור"
+        ],
+        "questions": [
+          "האם כולם הרחק מהמטופל?",
+          "האם המדבקות מחוברות היטב?"
+        ]
+      },
+      "conditions": [
+        {
+          "label": "Shock Advised - דפוק!",
+          "target": "deliver_shock"
+        },
+        {
+          "label": "No Shock - המשך עיסויים",
+          "target": "start_compressions"
+        }
+      ]
+    },
+    
+    "deliver_shock": {
+      "id": "deliver_shock",
+      "type": "action",
+      "title": "מתן הלם חשמלי - Shock",
+      "description": "מתן דפיברילציה",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "וודא שאף אחד לא נוגע!",
+          "קרא בקול: 'כולם הרחק!'",
+          "לחץ על כפתור ההלם",
+          "חזור מיידית לעיסויים!"
+        ]
+      },
+      "next": "start_compressions"
+    },
+    
+    "rosc_check": {
+      "id": "rosc_check",
+      "type": "check",
+      "title": "בדיקת ROSC - חזרת מחזור דם",
+      "description": "המטופל זז - בדיקה אם חזר דופק",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "בדוק דופק צווארי:\n- 10 שניות מלאות\n- האם חזק ותקין?",
+        "whatToLookFor": [
+          "דופק מורגש",
+          "המטופל נושם מעצמו",
+          "צבע עור משתפר",
+          "תנועות ספונטניות"
+        ]
+      },
+      "conditions": [
+        {
+          "label": "אין דופק - המשך החייאה",
+          "target": "start_compressions"
+        },
+        {
+          "label": "יש דופק - ROSC! עצור החייאה",
+          "target": "post_rosc"
+        }
+      ]
+    },
+    
+    "post_rosc": {
+      "id": "post_rosc",
+      "type": "action",
+      "title": "Post-ROSC - אחרי החזרת דופק",
+      "description": "טיפול לאחר החזרת מחזור דם",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "כבה דפיברילטור (השאר מדבקות!)",
+          "שמור על נתיב אוויר",
+          "חמצן 15 ליטר",
+          "ניטור מתמיד",
+          "היערך להחייאה חוזרת",
+          "מעבר להערכת ABCDE מלאה"
+        ],
+        "equipment": ["חמצן", "מוניטור", "אמבו"]
+      },
+      "next": "abcde_assessment"
+    },
+    
+
+    "abcde_assessment": {
+      "id": "abcde_assessment",
+      "type": "info",
+      "title": "מעבר לבדיקת ABCDE מלאה",
+      "description": "המטופל מגיב או יציב - המשך הערכה שיטתית",
+      "severity": "urgent",
+      "content": {
+        "treatment": "פרוטוקול ABCDE מלא יבנה בשלב הבא"
+      },
+      "next": null
     }
   }
 }
