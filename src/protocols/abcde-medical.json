@@ -1,0 +1,859 @@
+{
+  "id": "abcde_medical",
+  "name": "ABCDE - טיפול ראשוני בחולה",
+  "description": "פרוטוקול בדיקה שיטתי למטופל רפואי",
+  "version": "1.0.0",
+  "startNode": "airway",
+  "metadata": {
+    "author": "מערכת פרוטוקולים רפואיים",
+    "lastUpdated": "2026-01-01",
+    "tags": ["abcde", "medical", "assessment"]
+  },
+  "nodes": {
+    "airway": {
+      "id": "airway",
+      "type": "check",
+      "title": "A - Airway | נתיב אוויר",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "התקרב לפנים\nהאזן לקולות (נחירות, צפצופים, חרחורים)\nהסתכל על חלל הפה והאף\nשאל את המטופל לדבר",
+        "whatToLookFor": "נתיב פתוח (מדבר בקלות)\nאין גוף זר/הפרשות\nאין חסימה חלקית/מלאה",
+        "questions": [
+          "רמת הכרה AVPU",
+          "יכולת דיבור (ברור/מקוטע/לא מסוגל)",
+          "חסימה (אין/חלקית/מלאה)",
+          "הפרשות בפה (רוק/דם/קיא/אין)",
+          "גוף זר בפה",
+          "ריחות מהפה",
+          "נפיחות בפה/שפתיים/לשון"
+        ],
+        "equipment": ["סקשיין (ידני או חשמלי)"]
+      },
+      "next": "airway_diagnosis"
+    },
+    
+    "airway_diagnosis": {
+      "id": "airway_diagnosis",
+      "type": "diagnosis",
+      "title": "אבחון A",
+      "severity": "critical",
+      "conditions": [
+        {
+          "label": "חסימה מלאה + גוף זר",
+          "target": "choking"
+        },
+        {
+          "label": "נפיחות שפתיים/לשון + אלרגיה",
+          "target": "anaphylaxis_airway"
+        },
+        {
+          "label": "חסימה חלקית + הפרשות",
+          "target": "secretions"
+        },
+        {
+          "label": "לאחר פרכוס/הרעלה",
+          "target": "post_seizure"
+        },
+        {
+          "label": "נתיב תקין",
+          "target": "breathing"
+        }
+      ]
+    },
+    
+    "choking": {
+      "id": "choking",
+      "type": "action",
+      "title": "חנק",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "היימליך מיידי",
+          "אם מחוסר הכרה: 5 דחיסות חזה",
+          "נטן: סקשיין + אינטובציה"
+        ]
+      },
+      "next": "breathing"
+    },
+    
+    "anaphylaxis_airway": {
+      "id": "anaphylaxis_airway",
+      "type": "action",
+      "title": "אנאפילקסיס",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "אפיפן 0.3mg IM (ירך) מיידית",
+          "חמצן גבוה",
+          "נטן: נוזלים IV, נבולייזר",
+          "פינוי דחוף"
+        ]
+      },
+      "next": "breathing"
+    },
+    
+    "secretions": {
+      "id": "secretions",
+      "type": "action",
+      "title": "הפרשות בנתיב אוויר",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "סקשיין (יד/חשמלי)",
+          "הטיית ראש לצד",
+          "מנח החלמה אם מחוסר הכרה"
+        ]
+      },
+      "next": "breathing"
+    },
+    
+    "post_seizure": {
+      "id": "post_seizure",
+      "type": "action",
+      "title": "פוסט פרכוס/הרעלה",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "בדוק נתיב אוויר",
+          "מנח החלמה",
+          "סקשיין אם נדרש",
+          "חמצן",
+          "נטן"
+        ]
+      },
+      "next": "breathing"
+    },
+    
+    "breathing": {
+      "id": "breathing",
+      "type": "check",
+      "title": "B - Breathing | נשימה",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "הסתכל על תנועת בית החזה\nהנח יד על החזה להרגשת תנועה\nספר קצב נשימות ל-15 שניות × 4\nחבר סטורציה אם יש",
+        "whatToLookFor": "עסק (עומק, סדירות, קצב)\nמאמץ נשימתי (שרירי עזר, נחיריים)\nסטורציה תקינה (>94%)",
+        "questions": [
+          "התרשמות (תקינה/מצוקה)",
+          "קצב (12-20 תקין/טכיפנאה/ברדיפנאה)",
+          "עומק (שטחית/עמוקה)",
+          "סטורציה (95-100% תקין/<90% היפוקסיה)",
+          "סטורציה אחרי חמצן",
+          "קולות נשימה",
+          "צבע שפתיים (ורוד/כחול ציאנוזיס)"
+        ],
+        "equipment": ["מיכל חמצן", "מסכת כיס", "מסכת עזר", "אמבו", "סטורציה"]
+      },
+      "next": "breathing_diseases"
+    },
+    
+    "breathing_diseases": {
+      "id": "breathing_diseases",
+      "type": "info",
+      "title": "מחלות נשימתיות - עסק",
+      "description": "מדריך לזיהוי מהיר",
+      "content": {
+        "whatToLookFor": "1. אסטמה - צפצוף, משאף, הארכת נשיפה\n2. COPD - כרוני, מחולל חמצן, עישון\n3. דלקת ריאות - חום, שיעול, ליחה\n4. תסחיף ריאתי PE - פתאומי, כאב, טריגר\n5. בצקת ריאות - קרדיאלי, בעבוע, לד גבוה\n6. אנאפילקסיס - אורטיקריה, נפיחות\n7. HY - נימול, משתפר בהרגעה\n8. חנק - סיפור מקרה\n9. דיסקציה - כאב חד מקרין לגב"
+      },
+      "next": "breathing_sounds"
+    },
+    
+    "breathing_sounds": {
+      "id": "breathing_sounds",
+      "type": "info",
+      "title": "קולות נשימה",
+      "content": {
+        "whatToLookFor": "צפצופים - אסטמה/אלרגיה\nחרחורים - דלקת/בצקת ריאות\nבעבוע - בצקת\nללא קולות: HY, COPD, חנק, PE, דיסקציה"
+      },
+      "next": "breathing_diagnosis"
+    },
+    
+    "breathing_diagnosis": {
+      "id": "breathing_diagnosis",
+      "type": "diagnosis",
+      "title": "אבחון B",
+      "severity": "critical",
+      "conditions": [
+        {
+          "label": "צפצוף + משאף + נשיפה ארוכה",
+          "target": "asthma"
+        },
+        {
+          "label": "צפצוף + חרחורים + קרדיאלי",
+          "target": "pulmonary_edema"
+        },
+        {
+          "label": "חרחורים + חום + ליחה",
+          "target": "pneumonia"
+        },
+        {
+          "label": "כאב פתאומי + טריגר + ללא קולות",
+          "target": "pulmonary_embolism"
+        },
+        {
+          "label": "כרוני + עישון + מחולל O2",
+          "target": "copd"
+        },
+        {
+          "label": "צפצוף + אורטיקריה + נפיחות",
+          "target": "anaphylaxis_breathing"
+        },
+        {
+          "label": "נימול + חרדה + משתפר בהרגעה",
+          "target": "hyperventilation"
+        },
+        {
+          "label": "סיפור אכילה + חסימה חלקית",
+          "target": "partial_choking"
+        },
+        {
+          "label": "כאב חד לגב + פתאומי",
+          "target": "aortic_dissection"
+        },
+        {
+          "label": "נשימה תקינה",
+          "target": "circulation"
+        }
+      ]
+    },
+    
+    "asthma": {
+      "id": "asthma",
+      "type": "action",
+      "title": "אסטמה",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "ישיבה",
+          "O2 גבוה",
+          "משאף ב2 (אם יש)",
+          "נטן: נבולייזר סלבוטמול",
+          "אם חמור: אדרנלין"
+        ]
+      },
+      "next": "circulation"
+    },
+    
+    "pulmonary_edema": {
+      "id": "pulmonary_edema",
+      "type": "action",
+      "title": "בצקת ריאות",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "ישיבה 90°",
+          "O2 גבוה",
+          "ניטרו אם לד >100",
+          "נטן: CPAP/BiPAP",
+          "פינוי דחוף"
+        ]
+      },
+      "next": "circulation"
+    },
+    
+    "pneumonia": {
+      "id": "pneumonia",
+      "type": "action",
+      "title": "דלקת ריאות",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "O2 לפי סטורציה",
+          "נטן: נוזלים IV",
+          "פינוי לבדיקות",
+          "אנטיביוטיקה בביה\"ח"
+        ]
+      },
+      "next": "circulation"
+    },
+    
+    "pulmonary_embolism": {
+      "id": "pulmonary_embolism",
+      "type": "action",
+      "title": "תסחיף ריאתי PE",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "O2 גבוה",
+          "שכיבה",
+          "פינוי דחוף",
+          "נטן: נוזלים, הפרין",
+          "ביה\"ח: CT אנגיו"
+        ]
+      },
+      "next": "circulation"
+    },
+    
+    "copd": {
+      "id": "copd",
+      "type": "action",
+      "title": "COPD",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "O2 מבוקר 2-4L",
+          "ישיבה",
+          "נבולייזר אם יש",
+          "נטן: נבולייזר, סטרואידים"
+        ]
+      },
+      "next": "circulation"
+    },
+    
+    "anaphylaxis_breathing": {
+      "id": "anaphylaxis_breathing",
+      "type": "action",
+      "title": "אנאפילקסיס נשימתי",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "אפיפן 0.3mg IM",
+          "O2 גבוה",
+          "נבולייזר אדרנלין",
+          "פינוי דחוף"
+        ]
+      },
+      "next": "circulation"
+    },
+    
+    "hyperventilation": {
+      "id": "hyperventilation",
+      "type": "action",
+      "title": "הייפרוונטילציה",
+      "severity": "stable",
+      "content": {
+        "treatment": [
+          "הרגעה",
+          "נשימות איטיות",
+          "שקית נייר אם צריך",
+          "רר אם לא משתפר"
+        ]
+      },
+      "next": "circulation"
+    },
+    
+    "partial_choking": {
+      "id": "partial_choking",
+      "type": "action",
+      "title": "חנק חלקי",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "עודד שיעול",
+          "ישיבה קדימה",
+          "אל תעשה היימליך",
+          "O2",
+          "פינוי"
+        ]
+      },
+      "next": "circulation"
+    },
+    
+    "aortic_dissection": {
+      "id": "aortic_dissection",
+      "type": "action",
+      "title": "דיסקציה אאורטלית",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "שכיבה",
+          "O2",
+          "פינוי חירום קוד אדום",
+          "ניטור לד",
+          "אל תיתן ניטרו"
+        ]
+      },
+      "next": "circulation"
+    },
+    
+    "circulation": {
+      "id": "circulation",
+      "type": "check",
+      "title": "C - Circulation | מחזור דם",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "דופק קרוטידי (2-3 אצבעות על צידי צוואר)\nדופק רדיאלי (2-3 אצבעות שורש כף יד)\nמילוי קפילרי (לחץ על ציפורן)\nבדוק עור (מגע ביד על מצח/ידיים)",
+        "whatToLookFor": "עסק (דופק) - עוצמה, סדירות, קצב\nצטל (עור) - צבע, טמפרטורה, לחות\nמילוי קפילרי ≤ 2 שניות\nאין דימום מסכן חיים",
+        "questions": [
+          "דופק (60-100 תקין/טכיקרדיה/ברדיקרדיה)",
+          "סדירות דופק",
+          "עוצמת דופק (חלש/חזק)",
+          "לחץ דם (120/80 תקין/גבוה/נמוך)",
+          "טמפרטורה (36-37.5 תקין/חום/היפותרמיה)",
+          "עור (ורוד/חיוור/אפרפר/כחול, יבש/לח)",
+          "כאב (מיקום, סוג, עוצמה 1-10)",
+          "פריחה או בצקות"
+        ],
+        "equipment": ["דפיברילטור", "לחץ דם + סטטוסקופ"]
+      },
+      "next": "circulation_pain"
+    },
+    
+    "circulation_pain": {
+      "id": "circulation_pain",
+      "type": "info",
+      "title": "שאלות על כאב",
+      "content": {
+        "questions": [
+          "התחיל במאמץ?",
+          "הכאב מוכר?",
+          "הכאב מקרין?",
+          "היסטוריה משפחתית?",
+          "מיקום (סימן לוין)?",
+          "סולם כאב 1-10",
+          "סוג כאב (תאר)",
+          "חרדה?"
+        ]
+      },
+      "next": "circulation_aspirin"
+    },
+    
+    "circulation_aspirin": {
+      "id": "circulation_aspirin",
+      "type": "info",
+      "title": "שולל אספירין",
+      "content": {
+        "questions": [
+          "ניתוח בשבועיים",
+          "הריון",
+          "כיב קיבה",
+          "ילד",
+          "אלרגיה",
+          "מדללי דם"
+        ]
+      },
+      "next": "circulation_tzatal"
+    },
+    
+    "circulation_tzatal": {
+      "id": "circulation_tzatal",
+      "type": "info",
+      "title": "צטל - צבע טמפרטורה לחות",
+      "description": "שאל משפחה: חריג בצבע? מילוי קפילרי. עד נטן: הגבהת רגליים, נוזלים",
+      "next": "circulation_diagnosis"
+    },
+    
+    "circulation_diagnosis": {
+      "id": "circulation_diagnosis",
+      "type": "diagnosis",
+      "title": "אבחון C",
+      "severity": "critical",
+      "conditions": [
+        {
+          "label": "כאב לוחץ במאמץ + מקרין + לוין",
+          "target": "acs"
+        },
+        {
+          "label": "דופק מהיר לא סדיר + סחרחורת",
+          "target": "afib"
+        },
+        {
+          "label": "דופק איטי <50 + חולשה",
+          "target": "bradycardia"
+        },
+        {
+          "label": "לד נמוך + חיוור + מזיע",
+          "target": "shock"
+        },
+        {
+          "label": "כאב חד לגב + הפרש לד בידיים",
+          "target": "dissection_c"
+        },
+        {
+          "label": "חום + דופק מהיר + זיהום",
+          "target": "sepsis"
+        },
+        {
+          "label": "מחזור תקין",
+          "target": "disability"
+        }
+      ]
+    },
+    
+    "acs": {
+      "id": "acs",
+      "type": "action",
+      "title": "תסמונת כלילית חריפה ACS",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "ישיבה/חצי שכיבה",
+          "O2 אם סט<94%",
+          "אספירין 300mg (שולל קודם)",
+          "ניטרו 0.4mg תת לשוני (אם לד>100)",
+          "נטן: מורפיום, ECG 12, קטטר",
+          "פינוי קוד אדום לקטטר"
+        ]
+      },
+      "next": "disability"
+    },
+    
+    "afib": {
+      "id": "afib",
+      "type": "action",
+      "title": "פרפור פרוזדורים",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "ניטור ECG",
+          "אם יציב: פינוי רגיל",
+          "אם לא יציב (כאב/לד נמוך/קוצר): נטן קרדיווורסיה",
+          "נוזלים IV"
+        ]
+      },
+      "next": "disability"
+    },
+    
+    "bradycardia": {
+      "id": "bradycardia",
+      "type": "action",
+      "title": "ברדיקרדיה",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "שכיבה + הגבהת רגליים",
+          "נוזלים IV",
+          "אם חמור: נטן אטרופין",
+          "ניטור ECG",
+          "פינוי"
+        ]
+      },
+      "next": "disability"
+    },
+    
+    "shock": {
+      "id": "shock",
+      "type": "action",
+      "title": "הלם",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "שכיבה + רגליים גבוה",
+          "O2 גבוה",
+          "נטן: נוזלים IV מהיר 500-1000ml",
+          "שמור חום",
+          "חפש מקור דימום",
+          "פינוי דחוף"
+        ]
+      },
+      "next": "disability"
+    },
+    
+    "dissection_c": {
+      "id": "dissection_c",
+      "type": "action",
+      "title": "דיסקציה אאורטלית",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "שכיבה",
+          "O2",
+          "אל תיתן ניטרו/אספירין",
+          "ניטור לד שתי ידיים",
+          "פינוי קוד אדום",
+          "נטן: שליטה על לד"
+        ]
+      },
+      "next": "disability"
+    },
+    
+    "sepsis": {
+      "id": "sepsis",
+      "type": "action",
+      "title": "ספסיס",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "O2",
+          "נוזלים IV מהיר",
+          "טיפול בחום (פרצטמול)",
+          "פינוי דחוף",
+          "ביה\"ח: אנטיביוטיקה"
+        ]
+      },
+      "next": "disability"
+    },
+    
+    "disability": {
+      "id": "disability",
+      "type": "check",
+      "title": "D - Disability | מצב נוירולוגי",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "בדוק אישונים עם פנס\nFAST: פנים (חיוך/עצימה)\nידיים (הרמה, לחיצה, נפילה)\nדיבור (חזרה על משפט, מיקום)\nזמן (מתי התחיל)",
+        "whatToLookFor": "חוסר סימטריה בפנים/ידיים\nשינוי בדיבור\nאישונים: קוטר, שוויון, תגובה לאור\nמצב הכרה לפי AVPU/GCS",
+        "questions": [
+          "הכרה לפי AVPU",
+          "סוכר (70-140 תקין/היפו/היפר)",
+          "FAST (תקין/חולשה פנים/יד/דיבור)",
+          "אישונים (שווים ריאקטיביים/לא שווים/מורחבים/מכווצים)"
+        ],
+        "equipment": ["מד סוכר"]
+      },
+      "next": "disability_sugar"
+    },
+    
+    "disability_sugar": {
+      "id": "disability_sugar",
+      "type": "info",
+      "title": "בדיקת סוכר",
+      "description": "השווה לבסיס (שאל על אינסולין). אם גבוה (300): יש מחלת סוכר? נטן - גלוקוג'ל",
+      "next": "disability_poisoning"
+    },
+    
+    "disability_poisoning": {
+      "id": "disability_poisoning",
+      "type": "info",
+      "title": "הרעלות",
+      "severity": "urgent",
+      "content": {
+        "whatToLookFor": "סימנים: בליעה/שאיפה/הזרקה/ספיגה\nאישונים בצורת סיכה (אופיאטים)\nקושי נשימה, בלבול, ריור\nדופק איטי/מהיר\nטיפול: נתיב אוויר, תמיכה, פינוי"
+      },
+      "next": "disability_diagnosis"
+    },
+    
+    "disability_diagnosis": {
+      "id": "disability_diagnosis",
+      "type": "diagnosis",
+      "title": "אבחון D",
+      "severity": "critical",
+      "conditions": [
+        {
+          "label": "סוכר <70 + הזעה + רעד",
+          "target": "hypoglycemia"
+        },
+        {
+          "label": "סוכר >250 + צמא + בלבול",
+          "target": "hyperglycemia"
+        },
+        {
+          "label": "FAST+ פנים/יד/דיבור",
+          "target": "stroke"
+        },
+        {
+          "label": "אישונים סיכה + נשימה איטית",
+          "target": "opioid"
+        },
+        {
+          "label": "בלבול + חום + צוואר נוקשה",
+          "target": "meningitis"
+        },
+        {
+          "label": "פרכוס + פוסט איקטלי",
+          "target": "seizure"
+        },
+        {
+          "label": "נוירולוגיה תקינה",
+          "target": "exposure"
+        }
+      ]
+    },
+    
+    "hypoglycemia": {
+      "id": "hypoglycemia",
+      "type": "action",
+      "title": "היפוגליקמיה",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "אם בהכרה: סוכר/מיץ דרך הפה",
+          "אם מחוסר הכרה: גלוקוג'ל בין חניכיים",
+          "נטן: גלוקוז 10% IV",
+          "בדוק סוכר שוב אחרי 15 דק",
+          "תן ארוחה"
+        ]
+      },
+      "next": "exposure"
+    },
+    
+    "hyperglycemia": {
+      "id": "hyperglycemia",
+      "type": "action",
+      "title": "היפרגליקמיה",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "נוזלים IV",
+          "אם אינסולין: שאל מתי לקח",
+          "פינוי לבדיקות",
+          "ביה\"ח: אינסולין IV",
+          "בדוק קטונים אם אפשר"
+        ]
+      },
+      "next": "exposure"
+    },
+    
+    "stroke": {
+      "id": "stroke",
+      "type": "action",
+      "title": "שבץ מוחי",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "רשום זמן תחילת תסמינים",
+          "סוכר מיידי",
+          "O2 אם סט<94%",
+          "שכיבה ראש 30°",
+          "אל תיתן אספירין/אוכל/שתייה",
+          "פינוי קוד אדום למוח",
+          "חלון 4.5 שעות לטיפול"
+        ]
+      },
+      "next": "exposure"
+    },
+    
+    "opioid": {
+      "id": "opioid",
+      "type": "action",
+      "title": "הרעלת אופיאטים",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "נתיב אוויר",
+          "O2 גבוה",
+          "נטן: נרקן (Naloxone) 0.4mg IV/IM",
+          "אמבו אם נשימה <10",
+          "ניטור רציף",
+          "פינוי"
+        ]
+      },
+      "next": "exposure"
+    },
+    
+    "meningitis": {
+      "id": "meningitis",
+      "type": "action",
+      "title": "דלקת קרום מוח",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "פינוי דחוף",
+          "O2",
+          "נוזלים IV",
+          "חיטוי ציוד",
+          "ביה\"ח: אנטיביוטיקה דחופה",
+          "ניטור הכרה"
+        ]
+      },
+      "next": "exposure"
+    },
+    
+    "seizure": {
+      "id": "seizure",
+      "type": "action",
+      "title": "פרכוס",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "הגן על הראש",
+          "מנח צד אחרי פרכוס",
+          "סוכר",
+          "O2",
+          "אם ממושך >5 דק: נטן מידזולם",
+          "אל תכניס דבר לפה",
+          "פינוי"
+        ]
+      },
+      "next": "exposure"
+    },
+    
+    "exposure": {
+      "id": "exposure",
+      "type": "check",
+      "title": "E - Exposure | הפשטה",
+      "severity": "stable",
+      "content": {
+        "checkMethod": "הפשטה מבוקרת (שמור פרטיות וחום)\nהסתכל/משש לכל אורך הגוף",
+        "whatToLookFor": "פציעות נסתרות\nפריחות, אלרגיה, צמיד רפואי\nסימני טראומה נוספים",
+        "equipment": ["מספריים"]
+      },
+      "next": "sample"
+    },
+    
+    "sample": {
+      "id": "sample",
+      "type": "info",
+      "title": "SAMPLE - איסוף מידע",
+      "content": {
+        "checkMethod": "תשאול המטופל/עדים",
+        "whatToLookFor": "S-Symptoms (סימנים)\nA-Allergies (אלרגיות)\nM-Medications (תרופות)\nP-Past medical history (היסטוריה)\nL-Last meal (זמן אכילה)\nE-Events (סיבת האירוע)"
+      },
+      "next": "opqrst"
+    },
+    
+    "opqrst": {
+      "id": "opqrst",
+      "type": "info",
+      "title": "OPQRST - בירור כאב/בעיה",
+      "content": {
+        "checkMethod": "תשאול ישיר",
+        "whatToLookFor": "O-Onset (מתי התחיל)\nP-Provokes/Palliates (מה מחמיר/מקל)\nQ-Quality (סוג הכאב)\nR-Region/Radiation (מיקום/הקרנה)\nS-Severity (עוצמה)\nT-Time (משך/שינוי)"
+      },
+      "next": "additional_questions"
+    },
+    
+    "additional_questions": {
+      "id": "additional_questions",
+      "type": "info",
+      "title": "אנמנזה - שאלות נוספות (22 שאלות)",
+      "content": {
+        "questions": [
+          "חולשה כללית/חד-צדדית",
+          "מחלות רקע (סוכרת/לחץ/לב/אסתמה/אפילפסיה)",
+          "תרופות קבועות",
+          "אלרגיות",
+          "אכילה אחרונה",
+          "בחילות/הקאות",
+          "גירוד בשפתיים/לשון",
+          "היסטוריה משפחתית",
+          "כאב מקרין (יד/גב/לסת)",
+          "האם הכאב משתנה במנוחה/תזוזה/מגע",
+          "סימן לוין",
+          "פעילות/מאמץ לפני תסמינים",
+          "טיסות/נסיעות ארוכות (PE)",
+          "בצקות ברגליים",
+          "סמים/אלכוהול",
+          "פעילות ספורטיבית",
+          "עישון",
+          "קבלת תרופות לווריד",
+          "עקיצה/פגיעה",
+          "משהו שמקל על כאב",
+          "מבנה גוף (רזה/מלא/שמן)",
+          "האם קרה בעבר אירוע דומה"
+        ]
+      },
+      "next": "approach"
+    },
+    
+    "approach": {
+      "id": "approach",
+      "type": "info",
+      "title": "גישה נכונה לתהליך",
+      "content": {
+        "whatToLookFor": "ABC קודם - הצלת חיים לפני הכל\nתשאול תוך כדי טיפול\nתצפית תמידית (נשימה, צבע, שפת גוף)\nאיסוף מידע ממקורות נוספים\nהתאמת הבדיקה למטופל"
+      },
+      "next": "truth_questions"
+    },
+    
+    "truth_questions": {
+      "id": "truth_questions",
+      "type": "info",
+      "title": "שאלות אמת - למילוי אנמנזה מלאה",
+      "content": {
+        "questions": [
+          "אלרגיות - אתה אלרגי למשהו?",
+          "מחלות רקע - יש לך מחלות כרוניות?",
+          "תרופות קבועות - אתה נוטל תרופות באופן קבוע?",
+          "אמת - מתי הרגשת לאחרונה בריא לחלוטין?"
+        ]
+      },
+      "next": "end"
+    },
+    
+    "end": {
+      "id": "end",
+      "type": "end",
+      "title": "דיווח יציאה למקרה",
+      "description": "סיום הערכה והעברה לטיפול מתקדם או פינוי"
+    }
+  }
+}

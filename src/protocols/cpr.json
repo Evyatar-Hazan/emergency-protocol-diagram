@@ -1,0 +1,280 @@
+{
+  "id": "cpr",
+  "name": "החייאה (CPR/BLS)",
+  "description": "פרוטוקול החייאה בסיסית למבוגר",
+  "version": "1.0.0",
+  "startNode": "safety",
+  "metadata": {
+    "author": "מערכת פרוטוקולים רפואיים",
+    "lastUpdated": "2026-01-01",
+    "tags": ["cpr", "emergency", "life-threatening"]
+  },
+  "nodes": {
+    "safety": {
+      "id": "safety",
+      "type": "check",
+      "title": "S - Safety | בטיחות",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "הסתכל סביב (חשמל, אש, תנועה, חומרים)\nהרגש קרקע (רעידות, חום, רטיבות)\nהאזן לרעשים חריגים",
+        "whatToLookFor": "אזור בטוח להגעה\nאין סיכון נוסף",
+        "equipment": ["שטח פנוי", "אייפוד", "כפפות"]
+      },
+      "next": "initial_assessment"
+    },
+    
+    "initial_assessment": {
+      "id": "initial_assessment",
+      "type": "info",
+      "title": "אנמנזה - סבב ראשוני",
+      "description": "בטיחות ושאלות מקדימות",
+      "content": {
+        "questions": [
+          "מה רואים בזירה",
+          "איך המטופל פונה לעזרה",
+          "גיל המטופל",
+          "מתי זה התחיל",
+          "תנוחת המטופל",
+          "מה בזירה (תרופות, אלכוהול, סמים)"
+        ]
+      },
+      "next": "avpu"
+    },
+    
+    "avpu": {
+      "id": "avpu",
+      "type": "check",
+      "title": "AVPU - בדיקת הכרה",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "A-Alert: דיבור רגיל מול המטופל\nV-Voice: פניה בקול ברור וחזק\nP-Pain: מבוגר/ילד - טפיחה על השכמות+צביטת טרפז, תינוק - צביטה/לחיצה בעקב\nU-Unresponsive: אין תגובה כלל",
+        "whatToLookFor": "רמת תגובה לגירוי מילולי/כאב\nסימני הכרה/חוסר הכרה"
+      },
+      "conditions": [
+        {
+          "label": "Alert - ערני",
+          "target": "abcde_start"
+        },
+        {
+          "label": "Verbal - מגיב לקול",
+          "target": "abcde_start"
+        },
+        {
+          "label": "Pain - מגיב לכאב",
+          "target": "abcde_start"
+        },
+        {
+          "label": "Unresponsive - לא מגיב",
+          "target": "check_breathing"
+        }
+      ]
+    },
+    
+    "check_breathing": {
+      "id": "check_breathing",
+      "type": "decision",
+      "title": "נשימה תקינה?",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "האזן למטופל במשך 10 שניות ובדוק תנועות חזה בלבד"
+      },
+      "conditions": [
+        {
+          "label": "כן",
+          "target": "abcde_start"
+        },
+        {
+          "label": "לא",
+          "target": "check_pulse"
+        }
+      ]
+    },
+    
+    "check_pulse": {
+      "id": "check_pulse",
+      "type": "decision",
+      "title": "דופק מרכזי?",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "בדוק דופק קרוטיד או פריפרי"
+      },
+      "conditions": [
+        {
+          "label": "כן",
+          "target": "abcde_start"
+        },
+        {
+          "label": "לא",
+          "target": "start_cpr"
+        }
+      ]
+    },
+    
+    "start_cpr": {
+      "id": "start_cpr",
+      "type": "action",
+      "title": "החייאת BLS",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "עיסויי חזה בקצב נכון 30:2, הקפדה על עומק עיסוי",
+        "treatment": [
+          "התחל עיסויי חזה מיידית",
+          "קצב: 100-120 לדקה",
+          "עומק: 5-6 ס\"מ",
+          "יחס: 30 עיסויים : 2 נשימות"
+        ]
+      },
+      "next": "call_help"
+    },
+    
+    "call_help": {
+      "id": "call_help",
+      "type": "action",
+      "title": "הזעקת עזרה + AED",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "הזעק תגבורת מיידית",
+          "דרוש מישהו להביא AED",
+          "המשך עיסויי חזה ללא הפסקה"
+        ]
+      },
+      "next": "chest_compressions"
+    },
+    
+    "chest_compressions": {
+      "id": "chest_compressions",
+      "type": "action",
+      "title": "עיסויי חזה 30:2",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "30 עיסויי חזה",
+          "2 נשימות הצלה",
+          "המשך במחזורים"
+        ]
+      },
+      "next": "aed_available"
+    },
+    
+    "aed_available": {
+      "id": "aed_available",
+      "type": "decision",
+      "title": "AED זמין?",
+      "severity": "critical",
+      "conditions": [
+        {
+          "label": "כן",
+          "target": "check_rhythm"
+        },
+        {
+          "label": "לא",
+          "target": "continue_cpr"
+        }
+      ]
+    },
+    
+    "check_rhythm": {
+      "id": "check_rhythm",
+      "type": "decision",
+      "title": "קצב בר הלם?",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "AED מנתח את הקצב אוטומטית"
+      },
+      "conditions": [
+        {
+          "label": "כן - VF/VT",
+          "target": "deliver_shock"
+        },
+        {
+          "label": "לא",
+          "target": "continue_cpr"
+        }
+      ]
+    },
+    
+    "deliver_shock": {
+      "id": "deliver_shock",
+      "type": "action",
+      "title": "מתן הלם",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "ודא שאף אחד לא נוגע במטופל",
+          "לחץ על כפתור ההלם",
+          "המשך מיידית עם עיסויי חזה"
+        ]
+      },
+      "next": "continue_cpr"
+    },
+    
+    "continue_cpr": {
+      "id": "continue_cpr",
+      "type": "action",
+      "title": "המשך עיסויים 2 דקות",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "המשך CPR למשך 2 דקות",
+          "5 מחזורים של 30:2",
+          "החלף מבצע אם אפשרי"
+        ]
+      },
+      "next": "check_rosc"
+    },
+    
+    "check_rosc": {
+      "id": "check_rosc",
+      "type": "decision",
+      "title": "חזרת דופק (ROSC)?",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "בדוק דופק קרוטיד למשך 10 שניות"
+      },
+      "conditions": [
+        {
+          "label": "כן",
+          "target": "post_rosc"
+        },
+        {
+          "label": "לא",
+          "target": "chest_compressions"
+        }
+      ]
+    },
+    
+    "post_rosc": {
+      "id": "post_rosc",
+      "type": "action",
+      "title": "טיפול לאחר החייאה",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "נטר סימנים חיוניים",
+          "חמצן גבוה",
+          "שמור חום גוף",
+          "מנח החלמה אם מחוסר הכרה",
+          "פינוי דחוף לביה\"ח"
+        ]
+      },
+      "next": "abcde_start"
+    },
+    
+    "abcde_start": {
+      "id": "abcde_start",
+      "type": "info",
+      "title": "מעבר לפרוטוקול ABCDE",
+      "description": "המטופל מגיב או התאושש - המשך בבדיקה שיטתית",
+      "severity": "stable",
+      "next": "end"
+    },
+    
+    "end": {
+      "id": "end",
+      "type": "end",
+      "title": "המשך טיפול והעברה",
+      "description": "פינוי למרכז רפואי"
+    }
+  }
+}
