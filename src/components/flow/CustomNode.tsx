@@ -1,0 +1,161 @@
+import { memo } from 'react';
+import { Handle, Position } from 'reactflow';
+import type { Node } from '../../types/protocol';
+
+interface CustomNodeProps {
+  data: {
+    node: Node;
+    label: string;
+    severity: string;
+    onClick?: () => void;
+  };
+}
+
+/**
+ * קומפוננטת CustomNode - צומת מותאם אישית לתרשים הזרימה
+ */
+export const CustomNode = memo(({ data }: CustomNodeProps) => {
+  const { node } = data;
+  
+  // אייקונים לפי סוג
+  const icons: Record<Node['type'], string> = {
+    start: '🏁',
+    decision: '❓',
+    check: '🔍',
+    question: '💬',
+    action: '⚡',
+    diagnosis: '🩺',
+    info: 'ℹ️',
+    end: '✅',
+  };
+  
+  const typeLabels: Record<Node['type'], string> = {
+    start: 'התחלה',
+    decision: 'החלטה',
+    check: 'בדיקה',
+    question: 'שאלה',
+    action: 'פעולה',
+    diagnosis: 'אבחנה',
+    info: 'מידע',
+    end: 'סיום',
+  };
+
+  return (
+    <div className="relative" dir="rtl">
+      <Handle type="target" position={Position.Top} />
+      
+      <div className="p-4 min-w-[350px] max-w-[450px]">
+        {/* Header */}
+        <div className="flex items-start gap-2 mb-3">
+          <span className="text-3xl">{icons[node.type]}</span>
+          <div className="flex-1">
+            <div className="text-xs font-semibold opacity-70 mb-1">
+              {typeLabels[node.type]}
+            </div>
+            <div className="font-bold text-base leading-tight">
+              {node.title}
+            </div>
+          </div>
+        </div>
+
+        {/* Description */}
+        {node.description && (
+          <p className="text-sm text-gray-800 leading-relaxed mb-3 bg-white bg-opacity-50 p-2 rounded">
+            {node.description}
+          </p>
+        )}
+
+        {/* Content - Full Details */}
+        {node.content && (
+          <div className="space-y-2 text-xs bg-white bg-opacity-50 p-3 rounded">
+            {/* Check Method */}
+            {node.content.checkMethod && (
+              <div>
+                <div className="font-bold text-xs mb-1 flex items-center gap-1">
+                  🔍 <span>שיטת בדיקה:</span>
+                </div>
+                <div className="text-xs leading-relaxed whitespace-pre-line text-gray-800">
+                  {node.content.checkMethod}
+                </div>
+              </div>
+            )}
+
+            {/* What to Look For */}
+            {node.content.whatToLookFor && (
+              <div>
+                <div className="font-bold text-xs mb-1 flex items-center gap-1">
+                  👁️ <span>על מה לשים לב:</span>
+                </div>
+                {Array.isArray(node.content.whatToLookFor) ? (
+                  <ul className="list-disc list-inside text-xs space-y-0.5 text-gray-800">
+                    {node.content.whatToLookFor.map((item, idx) => (
+                      <li key={idx}>{item}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="text-xs leading-relaxed whitespace-pre-line text-gray-800">
+                    {node.content.whatToLookFor}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Equipment */}
+            {node.content.equipment && node.content.equipment.length > 0 && (
+              <div>
+                <div className="font-bold text-xs mb-1 flex items-center gap-1">
+                  🎒 <span>ציוד נדרש:</span>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {node.content.equipment.map((item, idx) => (
+                    <span
+                      key={idx}
+                      className="inline-block bg-gray-700 text-white text-[10px] px-2 py-0.5 rounded-full"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Questions */}
+            {node.content.questions && node.content.questions.length > 0 && (
+              <div>
+                <div className="font-bold text-xs mb-1 flex items-center gap-1">
+                  💬 <span>שאלות לשאול:</span>
+                </div>
+                <ul className="list-disc list-inside text-xs space-y-0.5 text-gray-800">
+                  {node.content.questions.map((q, idx) => (
+                    <li key={idx}>{q}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Treatment */}
+            {node.content.treatment && (
+              <div>
+                <div className="font-bold text-xs mb-1 flex items-center gap-1">
+                  ⚡ <span>טיפול:</span>
+                </div>
+                <div className="text-xs leading-relaxed whitespace-pre-line text-gray-800 bg-yellow-50 p-2 rounded">
+                  {node.content.treatment}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Node ID */}
+        <div className="text-[10px] font-mono text-gray-400 mt-2 opacity-50">
+          {node.id}
+        </div>
+      </div>
+
+      <Handle type="source" position={Position.Bottom} />
+    </div>
+  );
+});
+
+CustomNode.displayName = 'CustomNode';

@@ -2,10 +2,11 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useFlowStore } from './store/flowStore';
 import { initializeFlowData, loadFeatureFlags } from './utils/bootstrap';
+import { FullFlowDiagram } from './components/flow/FullFlowDiagram';
 
 function App() {
   const { t } = useTranslation();
-  const { flowData, loadData, setActiveProtocol } = useFlowStore();
+  const { flowData, activeProtocol, loadData, setActiveProtocol } = useFlowStore();
   const [isLoading, setIsLoading] = useState(true);
   const [featureFlags, setFeatureFlags] = useState<Record<string, unknown> | null>(null);
 
@@ -20,7 +21,8 @@ function App() {
         const flags = await loadFeatureFlags();
         setFeatureFlags(flags);
 
-        console.log('App initialized successfully');
+        // התחל אוטומטית עם הפרוטוקול המאוחד
+        console.log('[App] Auto-starting unified flow');
       } catch (error) {
         console.error('Failed to initialize app:', error);
       } finally {
@@ -30,6 +32,14 @@ function App() {
 
     initialize();
   }, [loadData]);
+
+  // אתחול אוטומטי של הפרוטוקול המאוחד
+  useEffect(() => {
+    if (!isLoading && !activeProtocol && flowData.protocols.unified_flow) {
+      console.log('[App] Setting unified_flow as active protocol');
+      setActiveProtocol('unified_flow');
+    }
+  }, [isLoading, activeProtocol, flowData, setActiveProtocol]);
 
   if (isLoading) {
     return (
@@ -44,6 +54,14 @@ function App() {
 
   const protocolKeys = Object.keys(flowData.protocols);
 
+  console.log('[App] activeProtocol:', activeProtocol);
+
+  // תצוגת תרשים זרימה מלא - כל הפרוטוקולים ביחד
+  if (!isLoading && flowData.protocols) {
+    return <FullFlowDiagram protocols={flowData.protocols} />;
+  }
+
+  // מסך בחירת פרוטוקול
   return (
     <div className="min-h-screen bg-gray-50" dir="rtl">
       <div className="container mx-auto px-4 py-8">

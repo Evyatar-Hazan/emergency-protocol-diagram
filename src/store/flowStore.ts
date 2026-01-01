@@ -18,7 +18,7 @@ interface FlowState {
   navigationHistory: string[];
   
   // Actions
-  setActiveProtocol: (protocolId: string) => void;
+  setActiveProtocol: (protocolId: string | null) => void;
   navigateToNode: (nodeId: string) => void;
   goBack: () => void;
   reset: () => void;
@@ -35,14 +35,28 @@ export const useFlowStore = create<FlowState>((set, get) => ({
   navigationHistory: [],
 
   // הגדרת פרוטוקול פעיל
-  setActiveProtocol: (protocolId: string) => {
+  setActiveProtocol: (protocolId: string | null) => {
+    console.log('[Store] setActiveProtocol called with:', protocolId);
+    if (protocolId === null) {
+      set({
+        activeProtocol: null,
+        activeProtocolId: null,
+        currentNode: null,
+        currentNodeId: null,
+        navigationHistory: [],
+      });
+      return;
+    }
+
     const protocol = get().flowData.protocols[protocolId];
+    console.log('[Store] Protocol found:', protocol);
     if (!protocol) {
       console.error(`Protocol ${protocolId} not found`);
       return;
     }
 
     const startNode = protocol.nodes[protocol.startNode];
+    console.log('[Store] Start node:', startNode);
     set({
       activeProtocol: protocol,
       activeProtocolId: protocolId,
@@ -54,7 +68,40 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 
   // ניווט לצומת ספציפי
   navigateToNode: (nodeId: string) => {
-    const { activeProtocol, navigationHistory } = get();
+    const { activeProtocol, navigationHistory, flowData } = get();
+    
+    // בדיקה אם זה קישור בין-פרוטוקולי (פורמט: "protocol:node")
+    if (nodeId.includes(':')) {
+      const [targetProtocolId, targetNodeId] = nodeId.split(':');
+      console.log('[Store] Cross-protocol navigation to:', targetProtocolId, targetNodeId);
+      
+      const targetProtocol = flowData.protocols[targetProtocolId];
+      if (!targetProtocol) {
+        console.error(`Target protocol ${targetProtocolId} not found`);
+        return;
+      }
+      
+      const targetNode = targetProtocol.nodes[targetNodeId];
+      if (!targetNode) {
+        console.error(`Target node ${targetNodeId} not found in protocol ${targetProtocolId}`);
+        return;
+      }
+      
+      // עדכן לפרוטוקול החדש והצומת החדש
+      set({
+        activeProtocol: targetProtocol,
+        activeProtocolId: targetProtocolId,
+        currentNode: targetNode,
+        currentNodeId: targetNodeId,
+        navigationHistory: [...navigationHistory, `${targetProtocolId}:${targetNodeId}`],
+      });
+      
+      // גלול למעלה
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    
+    // ניווט רגיל בתוך אותו פרוטוקול
     if (!activeProtocol) {
       console.error('No active protocol');
       return;
@@ -71,6 +118,9 @@ export const useFlowStore = create<FlowState>((set, get) => ({
       currentNodeId: nodeId,
       navigationHistory: [...navigationHistory, nodeId],
     });
+    
+    // גלול למעלה
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   },
 
   // חזרה לצומת קודם
