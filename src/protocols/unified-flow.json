@@ -1,0 +1,104 @@
+{
+  "id": "unified_flow",
+  "name": "פרוטוקול אחוד - זרימה מלאה",
+  "description": "פרוטוקול אחד רציף המתחיל מבטיחות ומסתעף דינמית לפי ממצאים בשטח",
+  "version": "1.0.0",
+  "startNode": "safety",
+  "metadata": {
+    "author": "מערכת פרוטוקולים רפואיים",
+    "lastUpdated": "2026-01-01",
+    "tags": ["unified", "dynamic", "field-assessment"],
+    "notes": "פרוטוקול זה מאחד את כל הפרוטוקולים לזרימה אחת. מתחיל מבטיחות, עובר להערכה ראשונית, ומסתעף דינמית ל-CPR או ABCDE לפי ממצאים"
+  },
+  "nodes": {
+    "safety": {
+      "id": "safety",
+      "type": "check",
+      "title": "S - Safety | בטיחות",
+      "description": "בדיקת בטיחות סביבתית לפני גישה למטופל",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "הסתכל סביב (חשמל, אש, תנועה, חומרים)\nהרגש קרקע (רעידות, חום, רטיבות)\nהאזן לרעשים חריגים",
+        "whatToLookFor": "אזור בטוח להגעה\nאין סיכון נוסף\nניתן לגשת למטופל"
+      },
+      "next": "initial_assessment"
+    },
+    "initial_assessment": {
+      "id": "initial_assessment",
+      "type": "check",
+      "title": "הערכה ראשונית",
+      "description": "הערכת מצב המטופל - הכרה, נשימה, דופק",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "1. בדוק הכרה - דבר אליו בקול רם\n2. בדוק נשימה - הסתכל, הרגש, הקשב\n3. בדוק דופק צווארי - 10 שניות",
+        "whatToLookFor": "מטופל מגיב/לא מגיב\nנושם/לא נושם\nיש דופק/אין דופק"
+      },
+      "next": "check_pulse"
+    },
+    "check_pulse": {
+      "id": "check_pulse",
+      "type": "decision",
+      "title": "יש דופק?",
+      "description": "בדיקת נוכחות דופק צווארי",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "מישוש דופק צווארי למשך 10 שניות",
+        "whatToLookFor": "דופק מוחשי\nעוצמת הדופק\nקצב הדופק"
+      },
+      "conditions": [
+        {
+          "label": "אין דופק - התחל החייאה",
+          "target": "cpr:start_cpr"
+        },
+        {
+          "label": "יש דופק - המשך הערכה",
+          "target": "mechanism_assessment"
+        }
+      ]
+    },
+    "mechanism_assessment": {
+      "id": "mechanism_assessment",
+      "type": "question",
+      "title": "מנגנון הפציעה/אירוע",
+      "description": "קביעת מסלול הערכה - טראומה או רפואי",
+      "severity": "urgent",
+      "content": {
+        "questions": [
+          "האם יש מנגנון טראומטי? (נפילה, תאונה, פגיעה, דקירה, ירי)",
+          "האם יש סימני חבלה חיצוניים?",
+          "האם המטופל דיווח על אירוע רפואי? (כאב חזה, קוצר נשימה, חולשה)"
+        ]
+      },
+      "conditions": [
+        {
+          "label": "טראומה - ABCDE Trauma",
+          "target": "abcde_trauma:airway_trauma"
+        },
+        {
+          "label": "רפואי - ABCDE Medical",
+          "target": "abcde_medical:airway_check"
+        }
+      ]
+    }
+  },
+  "crossProtocolLinks": {
+    "description": "קישורים בין-פרוטוקוליים - צמתים שמפנים לפרוטוקולים אחרים",
+    "links": {
+      "cpr:start_cpr": {
+        "protocolId": "cpr",
+        "nodeId": "start_cpr",
+        "description": "מעבר לפרוטוקול החייאה"
+      },
+      "abcde_medical:airway_check": {
+        "protocolId": "abcde_medical",
+        "nodeId": "airway_check",
+        "description": "מעבר לפרוטוקול ABCDE רפואי"
+      },
+      "abcde_trauma:airway_trauma": {
+        "protocolId": "abcde_trauma",
+        "nodeId": "airway_trauma",
+        "description": "מעבר לפרוטוקול ABCDE טראומה (יווצר בעתיד)"
+      }
+    }
+  }
+}

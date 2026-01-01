@@ -1,0 +1,25 @@
+{
+  "app": {
+    "title": "מערכת תרשימי זרימה קליניים",
+    "subtitle": "פרוטוקולים רפואיים לחובש"
+  },
+  "protocols": {
+    "cpr": "החייאה",
+    "abcde_medical": "ABCDE - חולה",
+    "abcde_trauma": "ABCDE - טראומה"
+  },
+  "common": {
+    "yes": "כן",
+    "no": "לא",
+    "unknown": "לא ידוע",
+    "loading": "טוען...",
+    "error": "שגיאה"
+  },
+  "abcde": {
+    "a": "A - Airway | נתיב אוויר",
+    "b": "B - Breathing | נשימה",
+    "c": "C - Circulation | מחזור דם",
+    "d": "D - Disability | מצב נוירולוגי",
+    "e": "E - Exposure | הפשטה"
+  }
+}

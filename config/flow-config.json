@@ -1,0 +1,61 @@
+{
+  "flowMode": "unified",
+  "description": "קונפיגורציה לזרימת הפרוטוקול המאוחד",
+  
+  "unifiedFlow": {
+    "enabled": true,
+    "startProtocol": "unified_flow",
+    "startNode": "safety",
+    "description": "זרימה אחת מלאה שמתחילה מבטיחות ומסתעפת דינמית לפי ממצאים",
+    
+    "flowStructure": {
+      "phase1_safety": {
+        "name": "בטיחות (Safety)",
+        "nodes": ["safety"],
+        "alwaysStart": true,
+        "description": "תמיד מתחילים מבדיקת בטיחות"
+      },
+      "phase2_initial": {
+        "name": "הערכה ראשונית",
+        "nodes": ["initial_assessment", "check_pulse"],
+        "description": "בדיקת הכרה, נשימה, דופק"
+      },
+      "phase3_branching": {
+        "name": "הסתעפות דינמית",
+        "description": "כאן נקבע המסלול לפי ממצאים",
+        "branches": {
+          "no_pulse": {
+            "condition": "אין דופק",
+            "target": "cpr",
+            "description": "מעבר לפרוטוקול החייאה מלא"
+          },
+          "has_pulse_trauma": {
+            "condition": "יש דופק + מנגנון טראומטי",
+            "target": "abcde_trauma",
+            "description": "מעבר ל-ABCDE טראומה"
+          },
+          "has_pulse_medical": {
+            "condition": "יש דופק + אירוע רפואי",
+            "target": "abcde_medical",
+            "description": "מעבר ל-ABCDE רפואי"
+          }
+        }
+      }
+    }
+  },
+  
+  "displayMode": {
+    "type": "continuous-scroll",
+    "description": "תצוגה רצופה עם גלילה, לא מסכים נפרדים",
+    "showBreadcrumbs": true,
+    "showProgress": true,
+    "animateTransitions": false
+  },
+  
+  "navigation": {
+    "allowBackNavigation": true,
+    "showHistory": true,
+    "autoScroll": true,
+    "scrollBehavior": "smooth"
+  }
+}
