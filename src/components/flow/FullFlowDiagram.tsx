@@ -31,7 +31,7 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
   const [collapsedNodes, setCollapsedNodes] = useState<Set<string>>(new Set());
   
   // פונקציה לקבלת כל הצאצאים של צומת
-  const getNodeDescendants = useCallback((nodeId: string, allNodes: FlowNode[], allEdges: Edge[]): Set<string> => {
+  const getNodeDescendants = useCallback((nodeId: string, _allNodes: FlowNode[], allEdges: Edge[]): Set<string> => {
     const descendants = new Set<string>();
     const queue = [nodeId];
     
