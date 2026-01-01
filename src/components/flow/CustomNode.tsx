@@ -139,9 +139,17 @@ export const CustomNode = memo(({ data }: CustomNodeProps) => {
                 <div className="font-bold text-xs mb-1 flex items-center gap-1">
                   ⚡ <span>טיפול:</span>
                 </div>
-                <div className="text-xs leading-relaxed whitespace-pre-line text-gray-800 bg-yellow-50 p-2 rounded">
-                  {node.content.treatment}
-                </div>
+                {Array.isArray(node.content.treatment) ? (
+                  <ul className="list-disc list-inside text-xs space-y-0.5 text-gray-800 bg-yellow-50 p-2 rounded">
+                    {node.content.treatment.map((item, idx) => (
+                      <li key={idx}>{item}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="text-xs leading-relaxed whitespace-pre-line text-gray-800 bg-yellow-50 p-2 rounded">
+                    {node.content.treatment}
+                  </div>
+                )}
               </div>
             )}
           </div>
