@@ -1,0 +1,25 @@
+{
+  "app": {
+    "title": "Clinical Flow Chart System",
+    "subtitle": "Medical Protocols for Paramedics"
+  },
+  "protocols": {
+    "cpr": "CPR",
+    "abcde_medical": "ABCDE - Medical",
+    "abcde_trauma": "ABCDE - Trauma"
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "unknown": "Unknown",
+    "loading": "Loading...",
+    "error": "Error"
+  },
+  "abcde": {
+    "a": "A - Airway",
+    "b": "B - Breathing",
+    "c": "C - Circulation",
+    "d": "D - Disability",
+    "e": "E - Exposure"
+  }
+}

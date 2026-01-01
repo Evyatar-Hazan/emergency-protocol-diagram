@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "features": {
+    "enableAdvancedProtocols": false,
+    "enableOfflineMode": true,
+    "enableDebugMode": false,
+    "enableTelemetry": false
+  },
+  "ui": {
+    "showNodeIds": false,
+    "animateTransitions": true,
+    "compactMode": false
+  }
+}
