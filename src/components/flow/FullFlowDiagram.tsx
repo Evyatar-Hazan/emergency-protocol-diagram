@@ -30,6 +30,52 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
   // State לניהול צמתים מוסתרים
   const [collapsedNodes, setCollapsedNodes] = useState<Set<string>>(new Set());
   
+  // הגדרת קבוצות צמתים לפי קטגוריות
+  const nodeCategories = useMemo(() => {
+    const categories: Record<string, { label: string; nodeIds: string[] }> = {};
+    
+    Object.entries(protocols).forEach(([protocolId, protocol]) => {
+      Object.entries(protocol.nodes).forEach(([nodeId, _node]) => {
+        const fullNodeId = `${protocolId}:${nodeId}`;
+        
+        // זיהוי קטגוריה לפי prefix של ה-nodeId
+        if (nodeId.startsWith('safety')) {
+          if (!categories['safety']) categories['safety'] = { label: 'S - Safety', nodeIds: [] };
+          categories['safety'].nodeIds.push(fullNodeId);
+        } else if (nodeId.startsWith('scene_')) {
+          if (!categories['scene']) categories['scene'] = { label: 'Scene Assessment', nodeIds: [] };
+          categories['scene'].nodeIds.push(fullNodeId);
+        } else if (nodeId.startsWith('x_') || nodeId.includes('bleeding') || nodeId.includes('tourniquet')) {
+          if (!categories['exsanguination']) categories['exsanguination'] = { label: 'X - Exsanguination', nodeIds: [] };
+          categories['exsanguination'].nodeIds.push(fullNodeId);
+        } else if (nodeId.startsWith('avpu') || nodeId.includes('voice_check') || nodeId.includes('pain_check') || nodeId.includes('unresponsive')) {
+          if (!categories['avpu']) categories['avpu'] = { label: 'AVPU', nodeIds: [] };
+          categories['avpu'].nodeIds.push(fullNodeId);
+        } else if (nodeId.startsWith('cpr') || nodeId.includes('defib') || nodeId.includes('rosc') || nodeId.includes('compressions') || nodeId.includes('ventilations')) {
+          if (!categories['cpr']) categories['cpr'] = { label: 'CPR Protocol', nodeIds: [] };
+          categories['cpr'].nodeIds.push(fullNodeId);
+        } else if (nodeId.startsWith('airway') || nodeId.includes('choking') || nodeId.includes('suction') || nodeId.includes('tongue') || nodeId.includes('anaphylaxis_airway') || nodeId.includes('trauma_airway')) {
+          if (!categories['airway']) categories['airway'] = { label: 'A - Airway', nodeIds: [] };
+          categories['airway'].nodeIds.push(fullNodeId);
+        } else if (nodeId.startsWith('breathing') || nodeId.startsWith('respiratory')) {
+          if (!categories['breathing']) categories['breathing'] = { label: 'B - Breathing', nodeIds: [] };
+          categories['breathing'].nodeIds.push(fullNodeId);
+        } else if (nodeId.startsWith('circulation') || nodeId.startsWith('shock')) {
+          if (!categories['circulation']) categories['circulation'] = { label: 'C - Circulation', nodeIds: [] };
+          categories['circulation'].nodeIds.push(fullNodeId);
+        } else if (nodeId.startsWith('disability') || nodeId.startsWith('neuro')) {
+          if (!categories['disability']) categories['disability'] = { label: 'D - Disability', nodeIds: [] };
+          categories['disability'].nodeIds.push(fullNodeId);
+        } else if (nodeId.startsWith('exposure') || nodeId.startsWith('environment')) {
+          if (!categories['exposure']) categories['exposure'] = { label: 'E - Exposure', nodeIds: [] };
+          categories['exposure'].nodeIds.push(fullNodeId);
+        }
+      });
+    });
+    
+    return categories;
+  }, [protocols]);
+  
   // פונקציה לקבלת כל הצאצאים של צומת
   const getNodeDescendants = useCallback((nodeId: string, _allNodes: FlowNode[], allEdges: Edge[]): Set<string> => {
     const descendants = new Set<string>();
@@ -65,6 +111,27 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
     });
   }, []);
   
+  // פונקציה לטיפול בלחיצה על כפתור קטגוריה - מקפל/פורס את כל הצמתים בקבוצה
+  const handleToggleCategory = useCallback((categoryKey: string) => {
+    const category = nodeCategories[categoryKey];
+    if (!category) return;
+    
+    setCollapsedNodes(prev => {
+      const newSet = new Set(prev);
+      const allCollapsed = category.nodeIds.every(id => newSet.has(id));
+      
+      if (allCollapsed) {
+        // אם כולם מקופלים - פרוס אותם
+        category.nodeIds.forEach(id => newSet.delete(id));
+      } else {
+        // אחרת - קפל את כולם
+        category.nodeIds.forEach(id => newSet.add(id));
+      }
+      
+      return newSet;
+    });
+  }, [nodeCategories]);
+  
   // המרת הצמתים מכל הפרוטוקולים לפורמט של React Flow
   const { nodes: flowNodes, edges: flowEdges } = useMemo(() => {
     const nodes: FlowNode[] = [];
@@ -90,11 +157,23 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
     // בניית הצמתים מכל הפרוטוקולים
     let globalIndex = 0;
     
+    // פונקציה למציאת קטגוריה של צומת
+    const getNodeCategory = (fullNodeId: string): string | undefined => {
+      for (const [categoryKey, category] of Object.entries(nodeCategories)) {
+        if (category.nodeIds.includes(fullNodeId)) {
+          return categoryKey;
+        }
+      }
+      return undefined;
+    };
+    
     // עבור על כל הפרוטוקולים
     Object.entries(protocols).forEach(([protocolId, protocol]) => {
       Object.entries(protocol.nodes).forEach(([nodeId, node]) => {
         const severity = node.severity || 'normal';
         const fullNodeId = `${protocolId}:${nodeId}`;
+        const categoryKey = getNodeCategory(fullNodeId);
+        const categoryLabel = categoryKey ? nodeCategories[categoryKey]?.label : undefined;
         
         // חישוב מיקום אוטומטי עם מרווח גדול יותר
         const yPosition = globalIndex * 400;
@@ -109,6 +188,7 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
             label: node.title,
             severity,
             protocolId,
+            categoryLabel,
             onClick: () => onNodeClick?.(fullNodeId),
             onToggleCollapse: () => handleToggleCollapse(fullNodeId),
             isCollapsed: collapsedNodes.has(fullNodeId),
@@ -252,6 +332,7 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
         <Background />
         <Controls />
         
+        {/* פאנל מידע עליון */}
         <Panel position="top-right" className="bg-white p-4 rounded-lg shadow-lg" dir="rtl">
           <h3 className="font-bold text-lg mb-2">תרשים זרימה מאוחד</h3>
           <p className="text-sm text-gray-600 mb-2">כל הפרוטוקולים במסך אחד</p>
@@ -281,6 +362,42 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
                 <span>יציב</span>
               </div>
             </div>
+          </div>
+        </Panel>
+        
+        {/* פאנל כפתורי קטגוריות בתחתית */}
+        <Panel position="bottom-center" className="bg-white/95 backdrop-blur-sm p-4 rounded-lg shadow-lg max-w-5xl" dir="rtl">
+          <h3 className="font-bold text-sm mb-3 text-center">קיפול לפי קטגוריות 📁</h3>
+          <div className="flex flex-wrap gap-2 justify-center">
+            {Object.entries(nodeCategories).map(([categoryKey, category]) => {
+              const allCollapsed = category.nodeIds.every(id => collapsedNodes.has(id));
+              const someCollapsed = category.nodeIds.some(id => collapsedNodes.has(id));
+              
+              return (
+                <button
+                  key={categoryKey}
+                  onClick={() => handleToggleCategory(categoryKey)}
+                  className={`
+                    px-4 py-2 rounded-lg font-semibold text-sm transition-all
+                    ${allCollapsed 
+                      ? 'bg-gray-700 text-white hover:bg-gray-600' 
+                      : someCollapsed
+                      ? 'bg-yellow-500 text-white hover:bg-yellow-600'
+                      : 'bg-blue-500 text-white hover:bg-blue-600'
+                    }
+                    shadow-md hover:shadow-lg
+                  `}
+                  title={`${category.nodeIds.length} צמתים`}
+                >
+                  <span className="mr-2">{allCollapsed ? '▶' : '▼'}</span>
+                  {category.label}
+                  <span className="mr-1 text-xs opacity-80">({category.nodeIds.length})</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="text-center mt-3 text-xs text-gray-600">
+            לחץ על קטגוריה כדי לקפל/לפרוס את כל הצמתים שלה
           </div>
         </Panel>
       </ReactFlow>
