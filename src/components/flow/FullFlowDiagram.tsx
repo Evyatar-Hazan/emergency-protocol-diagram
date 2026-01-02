@@ -30,52 +30,6 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
   // State לניהול צמתים מוסתרים
   const [collapsedNodes, setCollapsedNodes] = useState<Set<string>>(new Set());
   
-  // הגדרת קבוצות צמתים לפי קטגוריות
-  const nodeCategories = useMemo(() => {
-    const categories: Record<string, { label: string; nodeIds: string[] }> = {};
-    
-    Object.entries(protocols).forEach(([protocolId, protocol]) => {
-      Object.entries(protocol.nodes).forEach(([nodeId, _node]) => {
-        const fullNodeId = `${protocolId}:${nodeId}`;
-        
-        // זיהוי קטגוריה לפי prefix של ה-nodeId
-        if (nodeId.startsWith('safety')) {
-          if (!categories['safety']) categories['safety'] = { label: 'S - Safety', nodeIds: [] };
-          categories['safety'].nodeIds.push(fullNodeId);
-        } else if (nodeId.startsWith('scene_')) {
-          if (!categories['scene']) categories['scene'] = { label: 'Scene Assessment', nodeIds: [] };
-          categories['scene'].nodeIds.push(fullNodeId);
-        } else if (nodeId.startsWith('x_') || nodeId.includes('bleeding') || nodeId.includes('tourniquet')) {
-          if (!categories['exsanguination']) categories['exsanguination'] = { label: 'X - Exsanguination', nodeIds: [] };
-          categories['exsanguination'].nodeIds.push(fullNodeId);
-        } else if (nodeId.startsWith('avpu') || nodeId.includes('voice_check') || nodeId.includes('pain_check') || nodeId.includes('unresponsive')) {
-          if (!categories['avpu']) categories['avpu'] = { label: 'AVPU', nodeIds: [] };
-          categories['avpu'].nodeIds.push(fullNodeId);
-        } else if (nodeId.startsWith('cpr') || nodeId.includes('defib') || nodeId.includes('rosc') || nodeId.includes('compressions') || nodeId.includes('ventilations')) {
-          if (!categories['cpr']) categories['cpr'] = { label: 'CPR Protocol', nodeIds: [] };
-          categories['cpr'].nodeIds.push(fullNodeId);
-        } else if (nodeId.startsWith('airway') || nodeId.includes('choking') || nodeId.includes('suction') || nodeId.includes('tongue') || nodeId.includes('anaphylaxis_airway') || nodeId.includes('trauma_airway')) {
-          if (!categories['airway']) categories['airway'] = { label: 'A - Airway', nodeIds: [] };
-          categories['airway'].nodeIds.push(fullNodeId);
-        } else if (nodeId.startsWith('breathing') || nodeId.startsWith('respiratory')) {
-          if (!categories['breathing']) categories['breathing'] = { label: 'B - Breathing', nodeIds: [] };
-          categories['breathing'].nodeIds.push(fullNodeId);
-        } else if (nodeId.startsWith('circulation') || nodeId.startsWith('shock')) {
-          if (!categories['circulation']) categories['circulation'] = { label: 'C - Circulation', nodeIds: [] };
-          categories['circulation'].nodeIds.push(fullNodeId);
-        } else if (nodeId.startsWith('disability') || nodeId.startsWith('neuro')) {
-          if (!categories['disability']) categories['disability'] = { label: 'D - Disability', nodeIds: [] };
-          categories['disability'].nodeIds.push(fullNodeId);
-        } else if (nodeId.startsWith('exposure') || nodeId.startsWith('environment')) {
-          if (!categories['exposure']) categories['exposure'] = { label: 'E - Exposure', nodeIds: [] };
-          categories['exposure'].nodeIds.push(fullNodeId);
-        }
-      });
-    });
-    
-    return categories;
-  }, [protocols]);
-  
   // פונקציה לקבלת כל הצאצאים של צומת
   const getNodeDescendants = useCallback((nodeId: string, _allNodes: FlowNode[], allEdges: Edge[]): Set<string> => {
     const descendants = new Set<string>();
@@ -113,24 +67,18 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
   
   // פונקציה לטיפול בלחיצה על כפתור קטגוריה - מקפל/פורס את כל הצמתים בקבוצה
   const handleToggleCategory = useCallback((categoryKey: string) => {
-    const category = nodeCategories[categoryKey];
-    if (!category) return;
+    const headerNodeId = `header:${categoryKey}`;
     
     setCollapsedNodes(prev => {
       const newSet = new Set(prev);
-      const allCollapsed = category.nodeIds.every(id => newSet.has(id));
-      
-      if (allCollapsed) {
-        // אם כולם מקופלים - פרוס אותם
-        category.nodeIds.forEach(id => newSet.delete(id));
+      if (newSet.has(headerNodeId)) {
+        newSet.delete(headerNodeId);
       } else {
-        // אחרת - קפל את כולם
-        category.nodeIds.forEach(id => newSet.add(id));
+        newSet.add(headerNodeId);
       }
-      
       return newSet;
     });
-  }, [nodeCategories]);
+  }, []);
   
   // המרת הצמתים מכל הפרוטוקולים לפורמט של React Flow
   const { nodes: flowNodes, edges: flowEdges } = useMemo(() => {
@@ -154,41 +102,119 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
       normal: '#2563eb',
     };
 
-    // בניית הצמתים מכל הפרוטוקולים
-    let globalIndex = 0;
+    // בניית מפת צמתים לפי קטגוריות
+    const categorizedNodes: Record<string, { categoryLabel: string; nodes: Array<{ id: string; node: Node; protocolId: string }> }> = {};
     
-    // פונקציה למציאת קטגוריה של צומת
-    const getNodeCategory = (fullNodeId: string): string | undefined => {
-      for (const [categoryKey, category] of Object.entries(nodeCategories)) {
-        if (category.nodeIds.includes(fullNodeId)) {
-          return categoryKey;
-        }
-      }
-      return undefined;
-    };
-    
-    // עבור על כל הפרוטוקולים
     Object.entries(protocols).forEach(([protocolId, protocol]) => {
       Object.entries(protocol.nodes).forEach(([nodeId, node]) => {
-        const severity = node.severity || 'normal';
         const fullNodeId = `${protocolId}:${nodeId}`;
-        const categoryKey = getNodeCategory(fullNodeId);
-        const categoryLabel = categoryKey ? nodeCategories[categoryKey]?.label : undefined;
         
-        // חישוב מיקום אוטומטי עם מרווח גדול יותר
-        const yPosition = globalIndex * 400;
-        const xPosition = 100 + (globalIndex % 2) * 500;
+        // זיהוי קטגוריה
+        let categoryKey = 'other';
+        let categoryLabel = 'אחר';
+        
+        if (nodeId.startsWith('report_') || nodeId === 'safety') {
+          categoryKey = 'initial';
+          categoryLabel = '🚨 התחלה ובטיחות';
+        } else if (nodeId.startsWith('scene_')) {
+          categoryKey = 'scene';
+          categoryLabel = '🔍 הערכת זירה';
+        } else if (nodeId.startsWith('x_') || nodeId.includes('bleeding') || nodeId.includes('tourniquet')) {
+          categoryKey = 'exsanguination';
+          categoryLabel = '🩸 X - דימום מסיב';
+        } else if (nodeId.startsWith('avpu') || nodeId.includes('voice_check') || nodeId.includes('pain_check') || nodeId.includes('unresponsive')) {
+          categoryKey = 'avpu';
+          categoryLabel = '🧠 AVPU - רמת הכרה';
+        } else if (nodeId.startsWith('cpr') || nodeId.includes('defib') || nodeId.includes('rosc') || nodeId.includes('compressions') || nodeId.includes('ventilations')) {
+          categoryKey = 'cpr';
+          categoryLabel = '💓 CPR - החייאה';
+        } else if (nodeId.startsWith('airway') || nodeId.includes('choking') || nodeId.includes('suction') || nodeId.includes('tongue') || nodeId.includes('anaphylaxis_airway') || nodeId.includes('trauma_airway')) {
+          categoryKey = 'airway';
+          categoryLabel = '🫁 A - Airway';
+        } else if (nodeId.startsWith('breathing') || nodeId.startsWith('respiratory')) {
+          categoryKey = 'breathing';
+          categoryLabel = '💨 B - Breathing';
+        } else if (nodeId.startsWith('circulation') || nodeId.startsWith('shock')) {
+          categoryKey = 'circulation';
+          categoryLabel = '❤️ C - Circulation';
+        } else if (nodeId.startsWith('disability') || nodeId.startsWith('neuro')) {
+          categoryKey = 'disability';
+          categoryLabel = '🧠 D - Disability';
+        } else if (nodeId.startsWith('exposure') || nodeId.startsWith('environment')) {
+          categoryKey = 'exposure';
+          categoryLabel = '🌡️ E - Exposure';
+        } else if (nodeId.includes('abcde')) {
+          categoryKey = 'abcde_hub';
+          categoryLabel = '🎯 ABCDE Assessment';
+        }
+        
+        if (!categorizedNodes[categoryKey]) {
+          categorizedNodes[categoryKey] = { categoryLabel, nodes: [] };
+        }
+        categorizedNodes[categoryKey].nodes.push({ id: fullNodeId, node, protocolId });
+      });
+    });
+
+    // סדר הקטגוריות
+    const categoryOrder = ['initial', 'scene', 'exsanguination', 'avpu', 'cpr', 'abcde_hub', 'airway', 'breathing', 'circulation', 'disability', 'exposure', 'other'];
+    
+    let yPosition = 100;
+    const xBase = 100;
+    
+    // בניית צמתי כותרת וצמתים רגילים
+    categoryOrder.forEach(categoryKey => {
+      const category = categorizedNodes[categoryKey];
+      if (!category || category.nodes.length === 0) return;
+      
+      const headerNodeId = `header:${categoryKey}`;
+      
+      // צומת כותרת
+      nodes.push({
+        id: headerNodeId,
+        type: 'custom',
+        position: { x: xBase, y: yPosition },
+        data: {
+          node: {
+            id: headerNodeId,
+            type: 'info',
+            title: category.categoryLabel,
+            description: `${category.nodes.length} צמתים`,
+            content: {},
+          },
+          label: category.categoryLabel,
+          severity: 'normal',
+          protocolId: 'system',
+          isHeaderNode: true,
+          categoryKey,
+          onToggleCollapse: () => handleToggleCategory(categoryKey),
+          isCollapsed: collapsedNodes.has(headerNodeId),
+        },
+        style: {
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          border: '4px solid #553c9a',
+          borderRadius: '12px',
+          padding: '0px',
+          width: 450,
+          minHeight: 100,
+        },
+      });
+      
+      yPosition += 150;
+      
+      // צמתים רגילים בקטגוריה
+      category.nodes.forEach(({ id: fullNodeId, node, protocolId }) => {
+        const severity = node.severity || 'normal';
         
         nodes.push({
           id: fullNodeId,
           type: 'custom',
-          position: { x: xPosition, y: yPosition },
+          position: { x: xBase + 50, y: yPosition },
           data: {
             node,
             label: node.title,
             severity,
             protocolId,
-            categoryLabel,
+            parentHeaderId: headerNodeId,
             onClick: () => onNodeClick?.(fullNodeId),
             onToggleCollapse: () => handleToggleCollapse(fullNodeId),
             isCollapsed: collapsedNodes.has(fullNodeId),
@@ -203,8 +229,10 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
           },
         });
         
-        globalIndex++;
+        yPosition += 450;
       });
+      
+      yPosition += 100; // רווח בין קטגוריות
     });
 
     // בניית החיבורים (edges) מכל הפרוטוקולים
@@ -282,18 +310,28 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
   
   // סינון צמתים וקצוות בהתאם למצב ה-collapse
   const visibleNodes = useMemo(() => {
-    const hiddenDescendants = new Set<string>();
+    const hiddenNodes = new Set<string>();
     
-    // עבור על כל הצמתים המכווצים
-    collapsedNodes.forEach(collapsedNodeId => {
-      const descendants = getNodeDescendants(collapsedNodeId, flowNodes, flowEdges);
-      descendants.forEach(desc => hiddenDescendants.add(desc));
+    // הסתרת צמתים שהכותרת שלהם מקופלת
+    collapsedNodes.forEach(collapsedId => {
+      if (collapsedId.startsWith('header:')) {
+        // זו כותרת - הסתר את כל הצמתים שהparentHeaderId שלהם תואם
+        flowNodes.forEach(node => {
+          if (node.data.parentHeaderId === collapsedId) {
+            hiddenNodes.add(node.id);
+          }
+        });
+      } else {
+        // צומת רגיל - הסתר את הצאצאים שלו
+        const descendants = getNodeDescendants(collapsedId, flowNodes, flowEdges);
+        descendants.forEach(desc => hiddenNodes.add(desc));
+      }
     });
     
     // החזר רק צמתים שלא מוסתרים
     return flowNodes.map(node => ({
       ...node,
-      hidden: hiddenDescendants.has(node.id),
+      hidden: hiddenNodes.has(node.id),
     }));
   }, [flowNodes, flowEdges, collapsedNodes, getNodeDescendants]);
   
@@ -362,42 +400,6 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
                 <span>יציב</span>
               </div>
             </div>
-          </div>
-        </Panel>
-        
-        {/* פאנל כפתורי קטגוריות בתחתית */}
-        <Panel position="bottom-center" className="bg-white/95 backdrop-blur-sm p-4 rounded-lg shadow-lg max-w-5xl" dir="rtl">
-          <h3 className="font-bold text-sm mb-3 text-center">קיפול לפי קטגוריות 📁</h3>
-          <div className="flex flex-wrap gap-2 justify-center">
-            {Object.entries(nodeCategories).map(([categoryKey, category]) => {
-              const allCollapsed = category.nodeIds.every(id => collapsedNodes.has(id));
-              const someCollapsed = category.nodeIds.some(id => collapsedNodes.has(id));
-              
-              return (
-                <button
-                  key={categoryKey}
-                  onClick={() => handleToggleCategory(categoryKey)}
-                  className={`
-                    px-4 py-2 rounded-lg font-semibold text-sm transition-all
-                    ${allCollapsed 
-                      ? 'bg-gray-700 text-white hover:bg-gray-600' 
-                      : someCollapsed
-                      ? 'bg-yellow-500 text-white hover:bg-yellow-600'
-                      : 'bg-blue-500 text-white hover:bg-blue-600'
-                    }
-                    shadow-md hover:shadow-lg
-                  `}
-                  title={`${category.nodeIds.length} צמתים`}
-                >
-                  <span className="mr-2">{allCollapsed ? '▶' : '▼'}</span>
-                  {category.label}
-                  <span className="mr-1 text-xs opacity-80">({category.nodeIds.length})</span>
-                </button>
-              );
-            })}
-          </div>
-          <div className="text-center mt-3 text-xs text-gray-600">
-            לחץ על קטגוריה כדי לקפל/לפרוס את כל הצמתים שלה
           </div>
         </Panel>
       </ReactFlow>

@@ -8,6 +8,8 @@ interface CustomNodeProps {
     label: string;
     severity: string;
     categoryLabel?: string;
+    isHeaderNode?: boolean;
+    parentHeaderId?: string;
     onClick?: () => void;
     onToggleCollapse?: () => void;
     isCollapsed?: boolean;
@@ -18,7 +20,48 @@ interface CustomNodeProps {
  * קומפוננטת CustomNode - צומת מותאם אישית לתרשים הזרימה
  */
 export const CustomNode = memo(({ data }: CustomNodeProps) => {
-  const { node, categoryLabel, onToggleCollapse, isCollapsed } = data;
+  const { node, isHeaderNode, onToggleCollapse, isCollapsed } = data;
+  
+  // אם זה צומת כותרת - הצג עיצוב מיוחד
+  if (isHeaderNode) {
+    return (
+      <div className="relative" dir="rtl">
+        <Handle type="target" position={Position.Top} style={{ opacity: 0 }} />
+        
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleCollapse?.();
+          }}
+          className="w-full cursor-pointer hover:scale-105 transition-transform"
+        >
+          <div className="p-6 text-white">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-4xl">{isCollapsed ? '▶️' : '🔽'}</span>
+                <div>
+                  <div className="font-bold text-2xl leading-tight">
+                    {node.title}
+                  </div>
+                  <div className="text-sm opacity-90 mt-1">
+                    {node.description}
+                  </div>
+                </div>
+              </div>
+              <div className="text-5xl opacity-50">
+                {isCollapsed ? '📁' : '📂'}
+              </div>
+            </div>
+          </div>
+        </button>
+        
+        <Handle type="source" position={Position.Bottom} style={{ opacity: 0 }} />
+      </div>
+    );
+  }
+  
+  // צומת רגיל
+  const { categoryLabel, onToggleCollapse, isCollapsed } = data;
   
   // אייקונים לפי סוג
   const icons: Record<Node['type'], string> = {
@@ -46,13 +89,6 @@ export const CustomNode = memo(({ data }: CustomNodeProps) => {
   return (
     <div className="relative" dir="rtl">
       <Handle type="target" position={Position.Top} />
-      
-      {/* תווית קטגוריה */}
-      {categoryLabel && (
-        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-20">
-          📁 {categoryLabel}
-        </div>
-      )}
       
       {/* כפתור כיווץ/פתיחה */}
       {(node.next || node.conditions) && onToggleCollapse && (
