@@ -160,6 +160,7 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
     
     let yPosition = 100;
     const xBase = 100;
+    let previousHeaderId: string | null = null;
     
     // בניית צמתי כותרת וצמתים רגילים
     categoryOrder.forEach(categoryKey => {
@@ -167,6 +168,31 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
       if (!category || category.nodes.length === 0) return;
       
       const headerNodeId = `header:${categoryKey}`;
+      
+      // חיבור מהכותרת הקודמת לכותרת הנוכחית
+      if (previousHeaderId) {
+        edges.push({
+          id: `${previousHeaderId}-${headerNodeId}`,
+          source: previousHeaderId,
+          target: headerNodeId,
+          type: 'smoothstep',
+          animated: true,
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+          },
+          style: { stroke: '#764ba2', strokeWidth: 4, strokeDasharray: '5,5' },
+          label: '⬇️ המשך',
+          labelStyle: {
+            fill: '#764ba2',
+            fontWeight: 700,
+            fontSize: 14,
+          },
+          labelBgStyle: {
+            fill: '#ffffff',
+            fillOpacity: 0.9,
+          },
+        });
+      }
       
       // צומת כותרת
       nodes.push({
@@ -201,6 +227,22 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
       
       yPosition += 150;
       
+      // חיבור מהכותרת לצומת הראשון בקטגוריה
+      if (category.nodes.length > 0) {
+        const firstNodeId = category.nodes[0].id;
+        edges.push({
+          id: `${headerNodeId}-${firstNodeId}`,
+          source: headerNodeId,
+          target: firstNodeId,
+          type: 'smoothstep',
+          animated: true,
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+          },
+          style: { stroke: '#8b5cf6', strokeWidth: 3 },
+        });
+      }
+      
       // צמתים רגילים בקטגוריה
       category.nodes.forEach(({ id: fullNodeId, node, protocolId }) => {
         const severity = node.severity || 'normal';
@@ -232,6 +274,7 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
         yPosition += 450;
       });
       
+      previousHeaderId = headerNodeId; // שמור את הכותרת הנוכחית לקטגוריה הבאה
       yPosition += 100; // רווח בין קטגוריות
     });
 
@@ -315,9 +358,9 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
     // הסתרת צמתים שהכותרת שלהם מקופלת
     collapsedNodes.forEach(collapsedId => {
       if (collapsedId.startsWith('header:')) {
-        // זו כותרת - הסתר את כל הצמתים שהparentHeaderId שלהם תואם
+        // זו כותרת - הסתר את כל הצמתים שהparentHeaderId שלהם תואם (אבל לא את הכותרת עצמה!)
         flowNodes.forEach(node => {
-          if (node.data.parentHeaderId === collapsedId) {
+          if (node.data.parentHeaderId === collapsedId && node.id !== collapsedId) {
             hiddenNodes.add(node.id);
           }
         });
@@ -339,11 +382,25 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
   const visibleEdges = useMemo(() => {
     const hiddenNodeIds = new Set(visibleNodes.filter(n => n.hidden).map(n => n.id));
     
-    return flowEdges.map(edge => ({
-      ...edge,
-      hidden: hiddenNodeIds.has(edge.source) || hiddenNodeIds.has(edge.target),
-    }));
-  }, [flowEdges, visibleNodes]);
+    return flowEdges.map(edge => {
+      // אם זה edge בין כותרות (header-to-header), אל תסתיר אותו אף פעם
+      if (edge.source.startsWith('header:') && edge.target.startsWith('header:')) {
+        return { ...edge, hidden: false };
+      }
+      
+      // אם זה edge מכותרת לצומת רגיל, הסתר רק אם הכותרת מקופלת
+      if (edge.source.startsWith('header:')) {
+        const isHeaderCollapsed = collapsedNodes.has(edge.source);
+        return { ...edge, hidden: isHeaderCollapsed };
+      }
+      
+      // לשאר ה-edges, הסתר אם אחד מהצמתים מוסתר
+      return {
+        ...edge,
+        hidden: hiddenNodeIds.has(edge.source) || hiddenNodeIds.has(edge.target),
+      };
+    });
+  }, [flowEdges, visibleNodes, collapsedNodes]);
   
   // עדכון הצמתים כשיש שינוי ב-collapse
   useEffect(() => {
