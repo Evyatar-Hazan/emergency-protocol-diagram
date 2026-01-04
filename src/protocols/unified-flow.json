@@ -1483,6 +1483,10 @@
         {
           "label": "הלם או דימום - זיהוי סוג",
           "target": "shock_type"
+        },
+        {
+          "label": "בעיה קרדיווסקולרית - לב/כלי דם",
+          "target": "cardiovascular_problem"
         }
       ]
     },
@@ -1839,6 +1843,62 @@
         ]
       },
       "next": "circulation_complete"
+    },
+    
+    "cardiovascular_problem": {
+      "id": "cardiovascular_problem",
+      "type": "decision",
+      "title": "בעיה קרדיווסקולרית - זיהוי",
+      "description": "זיהוי סוג הבעיה הקרדיווסקולרית",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "תסמינים מרכזיים:\n\n1. כאב חזה + ECG:\n- התקף לב (STEMI)\n- קצב לא תקין\n\n2. קצב לב לא תקין:\n- מהיר (VT, SVT, AFib)\n- איטי (Bradycardia)\n\n3. כאב קורע בגב/חזה:\n- קרע באבי העורקים\n\n4. לחץ דם גבוה מאוד:\n- משבר יתר לחץ דם\n\n5. קוצר נשימה חד:\n- קריש בריאה (PE)\n\n6. שבץ:\n- חולשה חד-צדדית\n- דיבור לא ברור",
+        "whatToLookFor": [
+          "כאב חזה?",
+          "קצב לא תקין?",
+          "קוצר נשימה?",
+          "חולשה חד-צדדית?",
+          "לחץ דם גבוה מאוד?"
+        ]
+      },
+      "conditions": [
+        {
+          "label": "התקף לב (STEMI) - כאב חזה + ECG",
+          "target": "mi_stemi"
+        },
+        {
+          "label": "VT - קצב מהיר מהחדר",
+          "target": "arrhythmia_vt"
+        },
+        {
+          "label": "SVT - קצב מהיר מעל החדרים",
+          "target": "arrhythmia_svt"
+        },
+        {
+          "label": "AFib - פרפור פרוזדורים",
+          "target": "arrhythmia_afib"
+        },
+        {
+          "label": "Bradycardia - דופק איטי < 60",
+          "target": "arrhythmia_bradycardia"
+        },
+        {
+          "label": "שבץ מוחי - FAST+",
+          "target": "stroke"
+        },
+        {
+          "label": "קריש בריאה (PE)",
+          "target": "pulmonary_embolism"
+        },
+        {
+          "label": "קרע באבי העורקים",
+          "target": "aortic_dissection"
+        },
+        {
+          "label": "משבר לחץ דם גבוה",
+          "target": "hypertensive_emergency"
+        }
+      ]
     },
     
     "mi_stemi": {
@@ -2510,10 +2570,6 @@
         {
           "label": "תקין - GCS 15, אישונים תקינים",
           "target": "disability_complete"
-        },
-        {
-          "label": "שבץ חשוד - FAST+",
-          "target": "stroke"
         },
         {
           "label": "טראומת ראש",
