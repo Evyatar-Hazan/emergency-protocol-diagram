@@ -66,28 +66,28 @@ function App() {
       <div className="min-h-screen bg-gray-100" dir="rtl">
         {/* טאבים */}
         <div className="bg-white shadow-md sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="flex items-center justify-center gap-2 py-3">
+          <div className="max-w-7xl mx-auto px-2 sm:px-4">
+            <div className="flex items-center justify-center gap-1 sm:gap-2 py-2">
               <button
                 onClick={() => setViewMode('step-by-step')}
-                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all ${
+                className={`flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${
                   viewMode === 'step-by-step'
-                    ? 'bg-blue-600 text-white shadow-lg'
+                    ? 'bg-blue-600 text-white shadow-md'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                <span>📱</span>
-                <span>מצב צעד-אחר-צעד</span>
+                <span className="text-sm sm:text-base">📱</span>
+                <span>צעד-אחר-צעד</span>
               </button>
               <button
                 onClick={() => setViewMode('diagram')}
-                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all ${
+                className={`flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${
                   viewMode === 'diagram'
-                    ? 'bg-blue-600 text-white shadow-lg'
+                    ? 'bg-blue-600 text-white shadow-md'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
-                <span>🗺️</span>
+                <span className="text-sm sm:text-base">🗺️</span>
                 <span>תרשים מלא</span>
               </button>
             </div>
