@@ -10,7 +10,7 @@ import ReactFlow, {
   Panel,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import type { Protocol } from '../../types/protocol';
+import type { Protocol, Node as ProtocolNode } from '../../types/protocol';
 import { CustomNode } from './CustomNode';
 
 interface FullFlowDiagramProps {
@@ -103,7 +103,7 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
     };
 
     // בניית מפת צמתים לפי קטגוריות
-    const categorizedNodes: Record<string, { categoryLabel: string; nodes: Array<{ id: string; node: Node; protocolId: string }> }> = {};
+    const categorizedNodes: Record<string, { categoryLabel: string; nodes: Array<{ id: string; node: ProtocolNode; protocolId: string }> }> = {};
     
     Object.entries(protocols).forEach(([protocolId, protocol]) => {
       Object.entries(protocol.nodes).forEach(([nodeId, node]) => {
@@ -151,7 +151,7 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
         if (!categorizedNodes[categoryKey]) {
           categorizedNodes[categoryKey] = { categoryLabel, nodes: [] };
         }
-        categorizedNodes[categoryKey].nodes.push({ id: fullNodeId, node, protocolId });
+        categorizedNodes[categoryKey].nodes.push({ id: fullNodeId, node: node as ProtocolNode, protocolId });
       });
     });
 
@@ -245,7 +245,7 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
       
       // צמתים רגילים בקטגוריה
       category.nodes.forEach(({ id: fullNodeId, node, protocolId }) => {
-        const severity = node.severity || 'normal';
+        const severity = (node.severity || 'normal') as keyof typeof severityColors;
         
         nodes.push({
           id: fullNodeId,
