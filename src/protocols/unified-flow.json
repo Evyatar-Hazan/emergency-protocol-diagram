@@ -1010,7 +1010,7 @@
       "content": {
         "treatment": "נשימה תקינה ← ממשיכים ל-C (Circulation)"
       },
-      "next": "abcde_assessment"
+      "next": "circulation_assessment"
     },
     
     "breathing_problem_type": {
