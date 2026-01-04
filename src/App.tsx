@@ -3,12 +3,16 @@ import { useEffect, useState } from 'react';
 import { useFlowStore } from './store/flowStore';
 import { initializeFlowData, loadFeatureFlags } from './utils/bootstrap';
 import { FullFlowDiagram } from './components/flow/FullFlowDiagram';
+import { StepByStepView } from './components/StepByStep/StepByStepView';
+
+type ViewMode = 'step-by-step' | 'diagram';
 
 function App() {
   const { t } = useTranslation();
   const { flowData, activeProtocol, loadData, setActiveProtocol } = useFlowStore();
   const [isLoading, setIsLoading] = useState(true);
   const [featureFlags, setFeatureFlags] = useState<Record<string, unknown> | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>('step-by-step');
 
   useEffect(() => {
     async function initialize() {
@@ -56,9 +60,48 @@ function App() {
 
   console.log('[App] activeProtocol:', activeProtocol);
 
-  // תצוגת תרשים זרימה מלא - כל הפרוטוקולים ביחד
+  // תצוגה עם טאבים
   if (!isLoading && flowData.protocols) {
-    return <FullFlowDiagram protocols={flowData.protocols} />;
+    return (
+      <div className="min-h-screen bg-gray-100" dir="rtl">
+        {/* טאבים */}
+        <div className="bg-white shadow-md sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="flex items-center justify-center gap-2 py-3">
+              <button
+                onClick={() => setViewMode('step-by-step')}
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all ${
+                  viewMode === 'step-by-step'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                <span>📱</span>
+                <span>מצב צעד-אחר-צעד</span>
+              </button>
+              <button
+                onClick={() => setViewMode('diagram')}
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all ${
+                  viewMode === 'diagram'
+                    ? 'bg-blue-600 text-white shadow-lg'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                <span>🗺️</span>
+                <span>תרשים מלא</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* תוכן */}
+        {viewMode === 'step-by-step' ? (
+          <StepByStepView protocols={flowData.protocols} />
+        ) : (
+          <FullFlowDiagram protocols={flowData.protocols} />
+        )}
+      </div>
+    );
   }
 
   // מסך בחירת פרוטוקול

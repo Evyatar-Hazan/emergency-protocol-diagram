@@ -39,6 +39,7 @@ export interface Node {
   // חיבורים
   next?: string | string[];    // צומת הבא (או מספר אפשרויות)
   conditions?: EdgeCondition[]; // תנאים למעברים
+  options?: Array<{ label: string; target: string }>; // אפשרויות לצומת החלטה
 }
 
 export interface EdgeCondition {
