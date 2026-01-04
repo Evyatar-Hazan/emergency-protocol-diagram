@@ -4,8 +4,9 @@ import { useFlowStore } from './store/flowStore';
 import { initializeFlowData, loadFeatureFlags } from './utils/bootstrap';
 import { FullFlowDiagram } from './components/flow/FullFlowDiagram';
 import { StepByStepView } from './components/StepByStep/StepByStepView';
+import { VitalSignsView } from './components/VitalSigns/VitalSignsView';
 
-type ViewMode = 'step-by-step' | 'diagram';
+type ViewMode = 'step-by-step' | 'diagram' | 'vital-signs';
 
 function App() {
   const { t } = useTranslation();
@@ -90,6 +91,17 @@ function App() {
                 <span className="text-sm sm:text-base">🗺️</span>
                 <span>תרשים מלא</span>
               </button>
+              <button
+                onClick={() => setViewMode('vital-signs')}
+                className={`flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${
+                  viewMode === 'vital-signs'
+                    ? 'bg-green-600 text-white shadow-md'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                <span className="text-sm sm:text-base">📊</span>
+                <span>מדדים</span>
+              </button>
             </div>
           </div>
         </div>
@@ -97,8 +109,10 @@ function App() {
         {/* תוכן */}
         {viewMode === 'step-by-step' ? (
           <StepByStepView protocols={flowData.protocols} />
-        ) : (
+        ) : viewMode === 'diagram' ? (
           <FullFlowDiagram protocols={flowData.protocols} />
+        ) : (
+          <VitalSignsView />
         )}
       </div>
     );
