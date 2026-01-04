@@ -114,7 +114,7 @@
     "trauma_protocol": {
       "id": "trauma_protocol",
       "type": "check",
-      "title": "בדיקת דימומים פורצים",
+      "title": "שלב X - בדיקת דימומים פורצים",
       "description": "בטראומה - בדיקה מהירה לדימומים מסכני חיים לפני הערכת הכרה",
       "severity": "critical",
       "content": {
