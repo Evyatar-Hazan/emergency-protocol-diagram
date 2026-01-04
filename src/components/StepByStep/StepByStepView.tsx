@@ -115,27 +115,27 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   return (
     <div className={`min-h-screen ${config.bg} p-4 md:p-8`} dir="rtl">
       {/* כותרת עליונה */}
-      <div className="max-w-4xl mx-auto mb-6">
-        <div className="bg-white rounded-lg shadow-md p-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <div className="max-w-4xl mx-auto mb-4">
+        <div className="bg-white rounded-lg shadow-md p-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <button
               onClick={goBack}
               disabled={history.length === 0}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center gap-1 px-3 py-2 text-sm bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <span>←</span>
-              <span>חזור</span>
+              <span className="hidden sm:inline">חזור</span>
             </button>
             <button
               onClick={restart}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-1 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <span>🔄</span>
-              <span>התחל מחדש</span>
+              <span className="hidden sm:inline">התחל מחדש</span>
             </button>
           </div>
           
-          <div className="text-sm text-gray-600">
+          <div className="text-xs sm:text-sm text-gray-600">
             צעד {history.length + 1}
           </div>
         </div>
@@ -143,17 +143,17 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
 
       {/* תוכן הצומת */}
       <div className="max-w-4xl mx-auto">
-        <div className={`bg-white rounded-2xl shadow-2xl border-4 ${config.border} overflow-hidden`}>
+        <div className={`bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl border-3 sm:border-4 ${config.border} overflow-hidden`}>
           {/* כותרת */}
-          <div className={`${config.bg} border-b-4 ${config.border} p-6`}>
-            <div className="flex items-start gap-4">
-              <div className="text-5xl">{config.icon}</div>
+          <div className={`${config.bg} border-b-3 sm:border-b-4 ${config.border} p-4 sm:p-6`}>
+            <div className="flex items-start gap-3">
+              <div className="text-3xl sm:text-5xl">{config.icon}</div>
               <div className="flex-1">
-                <h1 className={`text-3xl md:text-4xl font-bold ${config.text} mb-2`}>
+                <h1 className={`text-2xl sm:text-3xl md:text-4xl font-bold ${config.text} mb-1 sm:mb-2`}>
                   {currentNode.title}
                 </h1>
                 {currentNode.description && (
-                  <p className={`text-lg ${config.text} opacity-80`}>
+                  <p className={`text-base sm:text-lg ${config.text} opacity-80`}>
                     {currentNode.description}
                   </p>
                 )}
@@ -162,15 +162,15 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
           </div>
 
           {/* תוכן */}
-          <div className="p-6 md:p-8 space-y-6">
+          <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6">
             {/* checkMethod */}
             {currentNode.content?.checkMethod && (
-              <div className="bg-blue-50 rounded-lg p-5 border-l-4 border-blue-500">
-                <h3 className="font-bold text-xl mb-3 flex items-center gap-2">
+              <div className="bg-blue-50 rounded-lg p-4 sm:p-5 border-l-4 border-blue-500">
+                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
                   <span>🔍</span>
                   <span>איך לבדוק</span>
                 </h3>
-                <p className="whitespace-pre-line text-gray-800 leading-relaxed">
+                <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
                   {currentNode.content.checkMethod}
                 </p>
               </div>
@@ -178,22 +178,22 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
 
             {/* whatToLookFor */}
             {currentNode.content?.whatToLookFor && (
-              <div className="bg-purple-50 rounded-lg p-5 border-l-4 border-purple-500">
-                <h3 className="font-bold text-xl mb-3 flex items-center gap-2">
+              <div className="bg-purple-50 rounded-lg p-4 sm:p-5 border-l-4 border-purple-500">
+                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
                   <span>👀</span>
                   <span>על מה לשים לב</span>
                 </h3>
                 {Array.isArray(currentNode.content.whatToLookFor) ? (
                   <ul className="space-y-2">
                     {currentNode.content.whatToLookFor.map((item: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-3">
+                      <li key={idx} className="flex items-start gap-2 sm:gap-3">
                         <span className="text-purple-500 font-bold">•</span>
-                        <span className="text-gray-800 leading-relaxed">{item}</span>
+                        <span className="text-sm sm:text-base text-gray-800 leading-relaxed">{item}</span>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="whitespace-pre-line text-gray-800 leading-relaxed">
+                  <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
                     {currentNode.content.whatToLookFor}
                   </p>
                 )}
@@ -202,22 +202,22 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
 
             {/* treatment */}
             {currentNode.content?.treatment && (
-              <div className="bg-green-50 rounded-lg p-5 border-l-4 border-green-500">
-                <h3 className="font-bold text-xl mb-3 flex items-center gap-2">
+              <div className="bg-green-50 rounded-lg p-4 sm:p-5 border-l-4 border-green-500">
+                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
                   <span>💊</span>
                   <span>טיפול</span>
                 </h3>
                 {Array.isArray(currentNode.content.treatment) ? (
                   <ul className="space-y-2">
                     {currentNode.content.treatment.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-3">
+                      <li key={idx} className="flex items-start gap-2 sm:gap-3">
                         <span className="text-green-500 font-bold">•</span>
-                        <span className="text-gray-800 leading-relaxed whitespace-pre-line">{item}</span>
+                        <span className="text-sm sm:text-base text-gray-800 leading-relaxed whitespace-pre-line">{item}</span>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="whitespace-pre-line text-gray-800 leading-relaxed">
+                  <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
                     {currentNode.content.treatment}
                   </p>
                 )}
@@ -226,8 +226,8 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
 
             {/* equipment */}
             {currentNode.content?.equipment && currentNode.content.equipment.length > 0 && (
-              <div className="bg-orange-50 rounded-lg p-5 border-l-4 border-orange-500">
-                <h3 className="font-bold text-xl mb-3 flex items-center gap-2">
+              <div className="bg-orange-50 rounded-lg p-4 sm:p-5 border-l-4 border-orange-500">
+                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
                   <span>🧰</span>
                   <span>ציוד נדרש</span>
                 </h3>
@@ -235,7 +235,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   {currentNode.content.equipment.map((item, idx) => (
                     <span
                       key={idx}
-                      className="px-4 py-2 bg-white rounded-full border-2 border-orange-300 text-gray-800 font-medium"
+                      className="px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base bg-white rounded-full border-2 border-orange-300 text-gray-800 font-medium"
                     >
                       {item}
                     </span>
@@ -246,16 +246,16 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
 
             {/* questions */}
             {currentNode.content?.questions && currentNode.content.questions.length > 0 && (
-              <div className="bg-yellow-50 rounded-lg p-5 border-l-4 border-yellow-500">
-                <h3 className="font-bold text-xl mb-3 flex items-center gap-2">
+              <div className="bg-yellow-50 rounded-lg p-4 sm:p-5 border-l-4 border-yellow-500">
+                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
                   <span>❓</span>
                   <span>שאלות לשאול</span>
                 </h3>
                 <ul className="space-y-2">
                   {currentNode.content.questions.map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
+                    <li key={idx} className="flex items-start gap-2 sm:gap-3">
                       <span className="text-yellow-600 font-bold">•</span>
-                      <span className="text-gray-800 leading-relaxed">{item}</span>
+                      <span className="text-sm sm:text-base text-gray-800 leading-relaxed">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -264,18 +264,18 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
           </div>
 
           {/* כפתורי המשך */}
-          <div className={`${config.bg} border-t-4 ${config.border} p-6`}>
+          <div className={`${config.bg} border-t-4 ${config.border} p-4 sm:p-6`}>
             {nextOptions.length > 0 ? (
-              <div className="space-y-3">
-                <h3 className="font-bold text-xl mb-4 text-center">מה הלאה?</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="space-y-2 sm:space-y-3">
+                <h3 className="font-bold text-lg sm:text-xl mb-3 sm:mb-4 text-center">מה הלאה?</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                   {nextOptions.map((option, idx) => (
                     <button
                       key={idx}
                       onClick={() => navigateToNode(option.target)}
-                      className="w-full bg-white hover:bg-gray-50 text-gray-900 font-bold py-4 px-6 rounded-xl border-3 border-gray-300 hover:border-blue-500 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                      className="w-full bg-white hover:bg-gray-50 text-gray-900 font-bold py-3 px-4 sm:py-4 sm:px-6 rounded-lg sm:rounded-xl border-2 sm:border-3 border-gray-300 hover:border-blue-500 transition-all shadow-md sm:shadow-lg hover:shadow-xl transform hover:scale-105"
                     >
-                      <span className="text-lg">{option.label}</span>
+                      <span className="text-base sm:text-lg">{option.label}</span>
                     </button>
                   ))}
                 </div>
