@@ -20,7 +20,7 @@ interface CustomNodeProps {
  * קומפוננטת CustomNode - צומת מותאם אישית לתרשים הזרימה
  */
 export const CustomNode = memo(({ data }: CustomNodeProps) => {
-  const { node, isHeaderNode, onToggleCollapse, isCollapsed } = data;
+  const { node, isHeaderNode, categoryLabel, onToggleCollapse, isCollapsed } = data;
   
   // אם זה צומת כותרת - הצג עיצוב מיוחד
   if (isHeaderNode) {
@@ -60,8 +60,7 @@ export const CustomNode = memo(({ data }: CustomNodeProps) => {
     );
   }
   
-  // צומת רגיל
-  const { categoryLabel, onToggleCollapse, isCollapsed } = data;
+  // צומת רגיל - המשתנים כבר מפורקים למעלה
   
   // אייקונים לפי סוג
   const icons: Record<Node['type'], string> = {
