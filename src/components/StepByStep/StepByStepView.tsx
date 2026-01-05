@@ -133,6 +133,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <span>🔄</span>
               <span className="hidden sm:inline">התחל מחדש</span>
             </button>
+            <div className="bg-gray-800 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs sm:text-sm font-mono">
+              ID: {currentNode.id}
+            </div>
           </div>
           
           <div className="text-xs sm:text-sm text-gray-600">
@@ -143,12 +146,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
 
       {/* תוכן הצומת */}
       <div className="max-w-4xl mx-auto">
-        <div className={`bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl border-3 sm:border-4 ${config.border} overflow-hidden relative`}>
-          {/* תג ID בפינה */}
-          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-gray-800 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs sm:text-sm font-mono shadow-lg z-10">
-            ID: {currentNode.id}
-          </div>
-
+        <div className={`bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl border-3 sm:border-4 ${config.border} overflow-hidden`}>
           {/* כותרת */}
           <div className={`${config.bg} border-b-3 sm:border-b-4 ${config.border} p-4 sm:p-6`}>
             <div className="flex items-start gap-3">
