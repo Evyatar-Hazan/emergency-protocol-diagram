@@ -266,6 +266,24 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                 </ul>
               </div>
             )}
+
+            {/* vitals/metrics */}
+            {currentNode.content?.vitals && currentNode.content.vitals.length > 0 && (
+              <div className="bg-cyan-50 rounded-lg p-4 sm:p-5 border-l-4 border-cyan-500">
+                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
+                  <span>📊</span>
+                  <span>מדדים</span>
+                </h3>
+                <ul className="space-y-2">
+                  {currentNode.content.vitals.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2 sm:gap-3">
+                      <span className="text-cyan-600 font-bold">•</span>
+                      <span className="text-sm sm:text-base text-gray-800 leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* כפתורי המשך */}

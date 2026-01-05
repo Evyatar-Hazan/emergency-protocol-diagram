@@ -33,6 +33,7 @@ export interface Node {
     whatToLookFor?: string | string[]; // מה לחפש (string או רשימה)
     equipment?: string[];          // ציוד נדרש
     questions?: string[];          // שאלות לשאול
+    vitals?: string[];             // מדדים (סימנים חיוניים)
     treatment?: string | string[]; // טיפול (טקסט חופשי או רשימה)
   };
   
