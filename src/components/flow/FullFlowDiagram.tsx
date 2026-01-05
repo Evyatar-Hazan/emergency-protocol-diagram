@@ -159,7 +159,10 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
     const categoryOrder = ['initial', 'scene', 'exsanguination', 'avpu', 'cpr', 'abcde_hub', 'airway', 'breathing', 'circulation', 'disability', 'exposure', 'other'];
     
     let yPosition = 100;
-    const xBase = 100;
+    const xBase = 200; // הגדלת רווח אופקי בסיסי
+    const nodeVerticalSpacing = 550; // הגדלת רווח אנכי בין צמתים (מ-450 ל-550)
+    const categorySpacing = 200; // הגדלת רווח בין קטגוריות (מ-100 ל-200)
+    const headerSpacing = 180; // רווח בין כותרת לצמתים (מ-150 ל-180)
     let previousHeaderId: string | null = null;
     
     // בניית צמתי כותרת וצמתים רגילים
@@ -225,7 +228,7 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
         },
       });
       
-      yPosition += 150;
+      yPosition += headerSpacing;
       
       // חיבור מהכותרת לצומת הראשון בקטגוריה
       if (category.nodes.length > 0) {
@@ -243,14 +246,19 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
         });
       }
       
-      // צמתים רגילים בקטגוריה
-      category.nodes.forEach(({ id: fullNodeId, node, protocolId }) => {
+      // צמתים רגילים בקטגוריה עם שיטת זיגזג לפיזור אופקי
+      category.nodes.forEach(({ id: fullNodeId, node, protocolId }, index) => {
         const severity = (node.severity || 'normal') as keyof typeof severityColors;
+        
+        // חישוב מיקום X עם שינוי זיגזג לפיזור טוב יותר
+        // צמתים זוגיים ימין, אי-זוגיים שמאל
+        const zigzagOffset = index % 2 === 0 ? 100 : -100;
+        const xPosition = xBase + zigzagOffset;
         
         nodes.push({
           id: fullNodeId,
           type: 'custom',
-          position: { x: xBase + 50, y: yPosition },
+          position: { x: xPosition, y: yPosition },
           data: {
             node,
             label: node.title,
@@ -271,11 +279,11 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
           },
         });
         
-        yPosition += 450;
+        yPosition += nodeVerticalSpacing;
       });
       
       previousHeaderId = headerNodeId; // שמור את הכותרת הנוכחית לקטגוריה הבאה
-      yPosition += 100; // רווח בין קטגוריות
+      yPosition += categorySpacing; // רווח בין קטגוריות
     });
 
     // בניית החיבורים (edges) מכל הפרוטוקולים
