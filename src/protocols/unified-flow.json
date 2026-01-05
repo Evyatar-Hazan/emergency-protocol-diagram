@@ -635,7 +635,28 @@
           "האם הדפיברילטור מחובר?"
         ]
       },
-      "next": "airway_check_cpr"
+      "next": "check_rescuer_count"
+    },
+    
+    "check_rescuer_count": {
+      "id": "check_rescuer_count",
+      "type": "decision",
+      "title": "כמה חובשים?",
+      "description": "האם יש שני חובשים או יותר?",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "⚠️ חובש בודד - אסור להפסיק עיסויים!\n\nחובש בודד:\n• המשך עיסויים ללא הפסקה\n• דלג על בדיקת נתיב אוויר\n• עבור ישירות להנשמות\n• 30 עיסויים ← 2 הנשמות ← חזרה\n\nשני חובשים:\n• חובש 1: ממשיך עיסויים\n• חובש 2: בודק נתיב אוויר במהירות\n• יש זמן לבדוק פה בין מחזורים"
+      },
+      "conditions": [
+        {
+          "label": "חובש בודד - דלג על בדיקת נתיב אוויר",
+          "target": "ventilations"
+        },
+        {
+          "label": "שני חובשים - בדוק נתיב אוויר",
+          "target": "airway_check_cpr"
+        }
+      ]
     },
     
     "airway_check_cpr": {
