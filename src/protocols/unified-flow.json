@@ -980,13 +980,12 @@
     "abcde_trauma": {
       "id": "abcde_trauma",
       "type": "info",
-      "title": "מעבר להערכת ABCDE - טראומה",
-      "description": "אירוע טראומטי - התחלת הערכה שיטתית",
-      "severity": "critical",
+      "title": "פרוטוקול טראומה - בפיתוח",
+      "description": "מסלול טראומטי מפורט יתווסף בהמשך",
+      "severity": "warning",
       "content": {
-        "treatment": "מתחילים בדיקה שיטתית טראומטית: A → B → C → D → E\n\nשים לב: פרוטוקול טראומה מפורט יתווסף בעתיד"
-      },
-      "next": "airway_assessment"
+        "treatment": "פרוטוקול ABCDE מיוחד לטראומה עדיין לא זמין.\n\nבינתיים, המשך עם הערכת ABCDE רגילה והקפד על:\n• יציבות עמוד שדרה צווארי\n• בדיקת דימום פנימי\n• מנגנון הפגיעה\n• הערכת חבלה רב-מערכתית"
+      }
     },
     
     "airway_assessment": {
