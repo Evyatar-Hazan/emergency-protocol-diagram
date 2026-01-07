@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Protocol, Node } from '../../types/protocol';
 
 interface StepByStepViewProps {
@@ -8,6 +8,61 @@ interface StepByStepViewProps {
 export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   const [currentNodeId, setCurrentNodeId] = useState<string>('unified_flow:report_departure');
   const [history, setHistory] = useState<string[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [bookmarkedNodes, setBookmarkedNodes] = useState<Set<string>>(new Set());
+
+  // טען סימניות מ-localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('protocol-bookmarks');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setBookmarkedNodes(new Set(parsed));
+      } catch (e) {
+        console.error('Failed to load bookmarks', e);
+      }
+    }
+  }, []);
+
+  // שמור סימניות ל-localStorage
+  const saveBookmarks = (bookmarks: Set<string>) => {
+    localStorage.setItem('protocol-bookmarks', JSON.stringify(Array.from(bookmarks)));
+  };
+
+  // הוסף/הסר סימניה
+  const toggleBookmark = (nodeId: string) => {
+    setBookmarkedNodes(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(nodeId)) {
+        newSet.delete(nodeId);
+      } else {
+        newSet.add(nodeId);
+      }
+      saveBookmarks(newSet);
+      return newSet;
+    });
+  };
+
+  // קבלת רשימת צמתים מסומנים בלבד
+  const getBookmarkedNodesList = () => {
+    const bookmarked: Array<{ id: string; label: string; nodeKey: string }> = [];
+    
+    bookmarkedNodes.forEach(nodeId => {
+      const parsed = parseNodeId(nodeId);
+      if (parsed) {
+        const node = protocols[parsed.protocolId]?.nodes[parsed.nodeKey];
+        if (node) {
+          bookmarked.push({
+            id: nodeId,
+            label: node.title,
+            nodeKey: parsed.nodeKey
+          });
+        }
+      }
+    });
+
+    return bookmarked;
+  };
   
   // פיצול של nodeId לפרוטוקול + node
   const parseNodeId = (nodeId: string): { protocolId: string; nodeKey: string } | null => {
@@ -112,12 +167,139 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
 
   const nextOptions = getNextOptions();
 
+  // קפיצה ישירה לצומת + שמירה בהיסטוריה
+  const jumpToNode = (nodeId: string) => {
+    if (nodeId !== currentNodeId) {
+      setHistory([...history, currentNodeId]);
+      setCurrentNodeId(nodeId);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setIsSidebarOpen(false); // סגור את הסרגל אחרי קפיצה
+    }
+  };
+
   return (
     <div className={`min-h-screen ${config.bg} p-4 md:p-8`} dir="rtl">
+      {/* overlay כהה כשהסרגל פתוח */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 transition-opacity"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* סרגל צד מתקפל */}
+      <div
+        className={`fixed top-0 right-0 h-full bg-white shadow-2xl transition-transform duration-300 ease-in-out z-50 w-full sm:w-96 ${
+          isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="h-full flex flex-col">
+          {/* כותרת סרגל */}
+          <div className="bg-gradient-to-l from-purple-600 to-blue-600 text-white p-4 sm:p-5 flex items-center justify-between shadow-lg">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl sm:text-3xl">🔖</span>
+              <div>
+                <h2 className="text-lg sm:text-xl font-bold">הסימניות שלי</h2>
+                <p className="text-xs sm:text-sm text-white/80">
+                  {bookmarkedNodes.size} {bookmarkedNodes.size === 1 ? 'סימניה' : 'סימניות'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="text-white hover:bg-white/20 rounded-lg p-2 sm:p-2.5 transition-colors text-xl"
+              aria-label="סגור"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* תוכן סרגל - גלילה */}
+          <div className="flex-1 overflow-y-auto">
+            {getBookmarkedNodesList().length === 0 ? (
+              // מסך ריק - הסבר איך להוסיף
+              <div className="flex flex-col items-center justify-center h-full p-6 sm:p-8 text-center">
+                <div className="text-6xl sm:text-7xl mb-4 sm:mb-6">☆</div>
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 sm:mb-3">
+                  אין סימניות עדיין
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 leading-relaxed max-w-xs">
+                  כדי להוסיף סימניה, לחץ על כפתור הכוכב (☆) בחלק העליון של כל צומת
+                </p>
+                <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 sm:p-5 max-w-sm">
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-2xl">💡</span>
+                    <span className="font-bold text-blue-900 text-sm sm:text-base">טיפ</span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-blue-800 text-right">
+                    סמן צמתים שאתה חוזר אליהם לעתים קרובות לגישה מהירה ונוחה
+                  </p>
+                </div>
+              </div>
+            ) : (
+              // רשימת סימניות
+              <div className="p-3 sm:p-4 space-y-2">
+                {getBookmarkedNodesList().map((node) => {
+                  const isCurrent = node.id === currentNodeId;
+                  
+                  return (
+                    <div
+                      key={node.id}
+                      className={`group relative rounded-lg transition-all ${
+                        isCurrent
+                          ? 'bg-blue-100 border-2 border-blue-500 shadow-md'
+                          : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4">
+                        <button
+                          onClick={() => toggleBookmark(node.id)}
+                          className="text-xl sm:text-2xl transition-transform hover:scale-110 text-yellow-500 flex-shrink-0"
+                          title="הסר סימניה"
+                        >
+                          ⭐
+                        </button>
+                        <button
+                          onClick={() => jumpToNode(node.id)}
+                          className="flex-1 text-right"
+                        >
+                          <div className="font-medium text-sm sm:text-base text-gray-900 hover:text-blue-600 transition-colors">
+                            {node.label}
+                          </div>
+                          <div className="text-xs text-gray-500 font-mono mt-0.5">
+                            {node.nodeKey}
+                          </div>
+                        </button>
+                        {isCurrent && (
+                          <div className="flex-shrink-0 text-blue-600 text-sm sm:text-base font-bold">
+                            ←
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* הסבר תחתון */}
+          <div className="bg-gradient-to-t from-gray-100 to-gray-50 p-3 sm:p-4 border-t border-gray-200">
+            <div className="flex items-start gap-2 text-xs sm:text-sm text-gray-600">
+              <span className="text-base sm:text-lg flex-shrink-0">ℹ️</span>
+              <div className="space-y-1">
+                <p>⭐ לחץ להסרת סימניה</p>
+                <p>☆ לחץ בצומת להוספת סימניה</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* כותרת עליונה */}
       <div className="max-w-4xl mx-auto mb-4">
-        <div className="bg-white rounded-lg shadow-md p-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="bg-white rounded-lg shadow-md p-3 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={goBack}
               disabled={history.length === 0}
@@ -133,12 +315,37 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <span>🔄</span>
               <span className="hidden sm:inline">התחל מחדש</span>
             </button>
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="flex items-center gap-1 px-3 py-2 text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:shadow-lg transition-all"
+              title="פתח סימניות"
+            >
+              <span className="text-base">🔖</span>
+              <span className="hidden sm:inline">סימניות</span>
+              {bookmarkedNodes.size > 0 && (
+                <span className="bg-white text-purple-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                  {bookmarkedNodes.size}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => toggleBookmark(currentNodeId)}
+              className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg transition-all ${
+                bookmarkedNodes.has(currentNodeId)
+                  ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+              title={bookmarkedNodes.has(currentNodeId) ? 'הסר סימניה' : 'הוסף סימניה'}
+            >
+              <span className="text-lg">{bookmarkedNodes.has(currentNodeId) ? '⭐' : '☆'}</span>
+              <span className="hidden sm:inline text-xs">סמן</span>
+            </button>
             <div className="bg-gray-800 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs sm:text-sm font-mono">
               ID: {currentNode.id}
             </div>
           </div>
           
-          <div className="text-xs sm:text-sm text-gray-600">
+          <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
             צעד {history.length + 1}
           </div>
         </div>
