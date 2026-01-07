@@ -1159,7 +1159,7 @@
       "conditions": [
         {
           "label": "הגוף הזר יצא בשיעול",
-          "target": "airway_complete"
+          "target": "airway_status"
         },
         {
           "label": "החסימה הפכה למלאה",
@@ -1217,7 +1217,7 @@
       "conditions": [
         {
           "label": "הגוף הזר יצא",
-          "target": "airway_complete"
+          "target": "airway_status"
         },
         {
           "label": "איבוד הכרה",
@@ -1258,7 +1258,7 @@
       "conditions": [
         {
           "label": "הגוף הזר יצא",
-          "target": "airway_complete"
+          "target": "airway_status"
         },
         {
           "label": "איבוד הכרה",
@@ -1288,7 +1288,7 @@
       "conditions": [
         {
           "label": "הגוף הזר יצא",
-          "target": "airway_complete"
+          "target": "airway_status"
         },
         {
           "label": "איבוד הכרה",
