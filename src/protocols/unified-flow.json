@@ -1363,7 +1363,7 @@
           "האם הנשימה השתפרה?"
         ]
       },
-      "next": "airway_complete"
+      "next": "airway_status"
     },
     
     "tongue_obstruction": {
