@@ -1396,7 +1396,7 @@
           "צווארון (אם טראומה)"
         ]
       },
-      "next": "airway_complete"
+      "next": "airway_status"
     },
     
     "anaphylaxis_airway": {
