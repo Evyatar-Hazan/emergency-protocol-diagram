@@ -929,12 +929,45 @@
 
     "abcde_assessment": {
       "id": "abcde_assessment",
-      "type": "info",
-      "title": "מעבר להערכת ABCDE מלאה",
-      "description": "המטופל מגיב או יציב - התחלת הערכה שיטתית",
+      "type": "decision",
+      "title": "סוג הערכת ABCDE",
+      "description": "בחירת פרוטוקול הערכה לפי סוג האירוע",
       "severity": "urgent",
       "content": {
-        "treatment": "מתחילים בדיקה שיטתית: A → B → C → D → E"
+        "checkMethod": "קבע את סוג האירוע לפי מנגנון הפגיעה והתסמינים"
+      },
+      "conditions": [
+        {
+          "label": "מחלה / בעיה רפואית",
+          "target": "abcde_medical"
+        },
+        {
+          "label": "טראומה / פגיעה פיזית",
+          "target": "abcde_trauma"
+        }
+      ]
+    },
+
+    "abcde_medical": {
+      "id": "abcde_medical",
+      "type": "info",
+      "title": "מעבר להערכת ABCDE - מחלות",
+      "description": "אירוע רפואי - התחלת הערכה שיטתית",
+      "severity": "urgent",
+      "content": {
+        "treatment": "מתחילים בדיקה שיטתית רפואית: A → B → C → D → E"
+      },
+      "next": "airway_assessment"
+    },
+
+    "abcde_trauma": {
+      "id": "abcde_trauma",
+      "type": "info",
+      "title": "מעבר להערכת ABCDE - טראומה",
+      "description": "אירוע טראומטי - התחלת הערכה שיטתית",
+      "severity": "critical",
+      "content": {
+        "treatment": "מתחילים בדיקה שיטתית טראומטית: A → B → C → D → E\n\nשים לב: פרוטוקול טראומה מפורט יתווסף בעתיד"
       },
       "next": "airway_assessment"
     },
