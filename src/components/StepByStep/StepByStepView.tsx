@@ -386,6 +386,30 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               </div>
             )}
 
+            {/* about */}
+            {currentNode.content?.about && (
+              <div className="bg-indigo-50 rounded-lg p-4 sm:p-5 border-l-4 border-indigo-500">
+                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
+                  <span>ℹ️</span>
+                  <span>הסבר</span>
+                </h3>
+                {Array.isArray(currentNode.content.about) ? (
+                  <ul className="space-y-2">
+                    {currentNode.content.about.map((item: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-2 sm:gap-3">
+                        <span className="text-indigo-500 font-bold">•</span>
+                        <span className="text-sm sm:text-base text-gray-800 leading-relaxed whitespace-pre-line">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
+                    {currentNode.content.about}
+                  </p>
+                )}
+              </div>
+            )}
+
             {/* whatToLookFor */}
             {currentNode.content?.whatToLookFor && (
               <div className="bg-purple-50 rounded-lg p-4 sm:p-5 border-l-4 border-purple-500">
