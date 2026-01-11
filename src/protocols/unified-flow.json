@@ -1813,8 +1813,12 @@
           "target": "choking_protocol"
         },
         {
-          "label": "המשך טיפול באסטמה",
+          "label": "יש אסטמה - המשך טיפול",
           "target": "breathing_complete"
+        },
+        {
+          "label": "אין אסטמה - חזור להערכה",
+          "target": "breathing_status"
         }
       ]
     },
