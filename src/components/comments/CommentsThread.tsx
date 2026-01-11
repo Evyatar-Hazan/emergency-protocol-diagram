@@ -93,7 +93,6 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
               <CommentItem
                 key={comment.id}
                 {...comment}
-                onCommentAdded={handleCommentAdded}
                 onCommentDeleted={handleCommentAdded}
                 onCommentUpdated={handleCommentAdded}
               />
