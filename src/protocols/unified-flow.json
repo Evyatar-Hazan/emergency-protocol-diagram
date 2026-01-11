@@ -1751,7 +1751,7 @@
     
     "asthma_attack": {
       "id": "asthma_attack",
-      "type": "action",
+      "type": "decision",
       "title": "Asthma - התקף אסטמה (מדריך BLS)",
       "description": "התקף אסטמה חריף - סיוע BLS למטופל בשטח",
       "severity": "critical",
@@ -1807,7 +1807,16 @@
           "אתה כחול/חיוור?"
         ]
       },
-      "next": "breathing_complete"
+      "conditions": [
+        {
+          "label": "יש חשד לחנק - גוף זר",
+          "target": "choking_protocol"
+        },
+        {
+          "label": "המשך טיפול באסטמה",
+          "target": "breathing_complete"
+        }
+      ]
     },
     
     "copd_exacerbation": {
