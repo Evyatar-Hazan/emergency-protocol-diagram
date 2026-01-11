@@ -1862,7 +1862,7 @@
     
     "copd_exacerbation": {
       "id": "copd_exacerbation",
-      "type": "action",
+      "type": "decision",
       "title": "COPD - החמרת מחלת ריאות חסימתית כרונית",
       "description": "החמרה של מחלת ריאות חסימתית כרונית (Emphysema או Chronic Bronchitis) - מדריך BLS",
       "severity": "urgent",
@@ -1943,7 +1943,12 @@
           "ההתקף הזה חמור מהרגיל?"
         ]
       },
-      "next": "breathing_complete"
+      "conditions": [
+        {
+          "label": "אין COPD - חזור להערכה",
+          "target": "breathing_status"
+        }
+      ]
     },
     
     "pulmonary_edema": {
