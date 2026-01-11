@@ -32,6 +32,8 @@ export interface Node {
     checkMethod?: string;          // איך לבדוק
     about?: string | string[];     // הסבר על התנאי
     whatToLookFor?: string | string[]; // מה לחפש (string או רשימה)
+    assessment?: string | string[]; // הערכה/בדיקה (string או רשימה)
+    explanation?: string | string[]; // הסבר מתקדם (string או רשימה)
     equipment?: string[];          // ציוד נדרש
     questions?: string[];          // שאלות לשאול
     vitals?: string[];             // מדדים (סימנים חיוניים)

@@ -10,6 +10,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   const [history, setHistory] = useState<string[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [bookmarkedNodes, setBookmarkedNodes] = useState<Set<string>>(new Set());
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
 
   // טען סימניות מ-localStorage
   useEffect(() => {
@@ -39,6 +40,19 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
         newSet.add(nodeId);
       }
       saveBookmarks(newSet);
+      return newSet;
+    });
+  };
+
+  // התחלף סטטוס של סעיף (מקופל / פתוח)
+  const toggleSection = (sectionName: string) => {
+    setCollapsedSections(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(sectionName)) {
+        newSet.delete(sectionName);
+      } else {
+        newSet.add(sectionName);
+      }
       return newSet;
     });
   };
@@ -375,142 +389,316 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
           <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6">
             {/* checkMethod */}
             {currentNode.content?.checkMethod && (
-              <div className="bg-blue-50 rounded-lg p-4 sm:p-5 border-l-4 border-blue-500">
-                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
-                  <span>🔍</span>
-                  <span>איך לבדוק</span>
-                </h3>
-                <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
-                  {currentNode.content.checkMethod}
-                </p>
+              <div className="bg-blue-50 rounded-lg border-l-4 border-blue-500 overflow-hidden">
+                <button
+                  onClick={() => toggleSection('checkMethod')}
+                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-blue-100 transition-colors"
+                >
+                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                    <span>🔍</span>
+                    <span>איך לבדוק</span>
+                  </h3>
+                  <span className="text-xl transition-transform" style={{
+                    transform: collapsedSections.has('checkMethod') ? 'rotate(-90deg)' : 'rotate(0deg)'
+                  }}>
+                    ▼
+                  </span>
+                </button>
+                {!collapsedSections.has('checkMethod') && (
+                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-blue-200">
+                    <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
+                      {currentNode.content.checkMethod}
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 
             {/* about */}
             {currentNode.content?.about && (
-              <div className="bg-indigo-50 rounded-lg p-4 sm:p-5 border-l-4 border-indigo-500">
-                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
-                  <span>ℹ️</span>
-                  <span>הסבר</span>
-                </h3>
-                {Array.isArray(currentNode.content.about) ? (
-                  <ul className="space-y-2">
-                    {currentNode.content.about.map((item: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-2 sm:gap-3">
-                        <span className="text-indigo-500 font-bold">•</span>
-                        <span className="text-sm sm:text-base text-gray-800 leading-relaxed whitespace-pre-line">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
-                    {currentNode.content.about}
-                  </p>
+              <div className="bg-indigo-50 rounded-lg border-l-4 border-indigo-500 overflow-hidden">
+                <button
+                  onClick={() => toggleSection('about')}
+                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-indigo-100 transition-colors"
+                >
+                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                    <span>ℹ️</span>
+                    <span>הסבר</span>
+                  </h3>
+                  <span className="text-xl transition-transform" style={{
+                    transform: collapsedSections.has('about') ? 'rotate(-90deg)' : 'rotate(0deg)'
+                  }}>
+                    ▼
+                  </span>
+                </button>
+                {!collapsedSections.has('about') && (
+                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-indigo-200">
+                    {Array.isArray(currentNode.content.about) ? (
+                      <ul className="space-y-2">
+                        {currentNode.content.about.map((item: string, idx: number) => (
+                          <li key={idx} className="flex items-start gap-2 sm:gap-3">
+                            <span className="text-indigo-500 font-bold">•</span>
+                            <span className="text-sm sm:text-base text-gray-800 leading-relaxed whitespace-pre-line">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
+                        {currentNode.content.about}
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
             )}
 
             {/* whatToLookFor */}
             {currentNode.content?.whatToLookFor && (
-              <div className="bg-purple-50 rounded-lg p-4 sm:p-5 border-l-4 border-purple-500">
-                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
-                  <span>👀</span>
-                  <span>על מה לשים לב</span>
-                </h3>
-                {Array.isArray(currentNode.content.whatToLookFor) ? (
-                  <ul className="space-y-2">
-                    {currentNode.content.whatToLookFor.map((item: string, idx: number) => (
-                      <li key={idx} className="flex items-start gap-2 sm:gap-3">
-                        <span className="text-purple-500 font-bold">•</span>
-                        <span className="text-sm sm:text-base text-gray-800 leading-relaxed">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
-                    {currentNode.content.whatToLookFor}
-                  </p>
+              <div className="bg-purple-50 rounded-lg border-l-4 border-purple-500 overflow-hidden">
+                <button
+                  onClick={() => toggleSection('whatToLookFor')}
+                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-purple-100 transition-colors"
+                >
+                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                    <span>👀</span>
+                    <span>על מה לשים לב</span>
+                  </h3>
+                  <span className="text-xl transition-transform" style={{
+                    transform: collapsedSections.has('whatToLookFor') ? 'rotate(-90deg)' : 'rotate(0deg)'
+                  }}>
+                    ▼
+                  </span>
+                </button>
+                {!collapsedSections.has('whatToLookFor') && (
+                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-purple-200">
+                    {Array.isArray(currentNode.content.whatToLookFor) ? (
+                      <ul className="space-y-2">
+                        {currentNode.content.whatToLookFor.map((item: string, idx: number) => (
+                          <li key={idx} className="flex items-start gap-2 sm:gap-3">
+                            <span className="text-purple-500 font-bold">•</span>
+                            <span className="text-sm sm:text-base text-gray-800 leading-relaxed">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
+                        {currentNode.content.whatToLookFor}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* assessment */}
+            {currentNode.content?.assessment && (
+              <div className="bg-rose-50 rounded-lg border-l-4 border-rose-500 overflow-hidden">
+                <button
+                  onClick={() => toggleSection('assessment')}
+                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-rose-100 transition-colors"
+                >
+                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                    <span>✅</span>
+                    <span>הערכה</span>
+                  </h3>
+                  <span className="text-xl transition-transform" style={{
+                    transform: collapsedSections.has('assessment') ? 'rotate(-90deg)' : 'rotate(0deg)'
+                  }}>
+                    ▼
+                  </span>
+                </button>
+                {!collapsedSections.has('assessment') && (
+                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-rose-200">
+                    {Array.isArray(currentNode.content.assessment) ? (
+                      <ul className="space-y-2">
+                        {currentNode.content.assessment.map((item: string, idx: number) => (
+                          <li key={idx} className="flex items-start gap-2 sm:gap-3">
+                            <span className="text-rose-500 font-bold">•</span>
+                            <span className="text-sm sm:text-base text-gray-800 leading-relaxed whitespace-pre-line">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
+                        {currentNode.content.assessment}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* explanation */}
+            {currentNode.content?.explanation && (
+              <div className="bg-amber-50 rounded-lg border-l-4 border-amber-500 overflow-hidden">
+                <button
+                  onClick={() => toggleSection('explanation')}
+                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-amber-100 transition-colors"
+                >
+                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                    <span>💡</span>
+                    <span>הסבר מתקדם</span>
+                  </h3>
+                  <span className="text-xl transition-transform" style={{
+                    transform: collapsedSections.has('explanation') ? 'rotate(-90deg)' : 'rotate(0deg)'
+                  }}>
+                    ▼
+                  </span>
+                </button>
+                {!collapsedSections.has('explanation') && (
+                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-amber-200">
+                    {Array.isArray(currentNode.content.explanation) ? (
+                      <ul className="space-y-2">
+                        {currentNode.content.explanation.map((item: string, idx: number) => (
+                          <li key={idx} className="flex items-start gap-2 sm:gap-3">
+                            <span className="text-amber-600 font-bold">•</span>
+                            <span className="text-sm sm:text-base text-gray-800 leading-relaxed whitespace-pre-line">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
+                        {currentNode.content.explanation}
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
             )}
 
             {/* treatment */}
             {currentNode.content?.treatment && (
-              <div className="bg-green-50 rounded-lg p-4 sm:p-5 border-l-4 border-green-500">
-                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
-                  <span>💊</span>
-                  <span>טיפול</span>
-                </h3>
-                {Array.isArray(currentNode.content.treatment) ? (
-                  <ul className="space-y-2">
-                    {currentNode.content.treatment.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2 sm:gap-3">
-                        <span className="text-green-500 font-bold">•</span>
-                        <span className="text-sm sm:text-base text-gray-800 leading-relaxed whitespace-pre-line">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
-                    {currentNode.content.treatment}
-                  </p>
+              <div className="bg-green-50 rounded-lg border-l-4 border-green-500 overflow-hidden">
+                <button
+                  onClick={() => toggleSection('treatment')}
+                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-green-100 transition-colors"
+                >
+                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                    <span>💊</span>
+                    <span>טיפול</span>
+                  </h3>
+                  <span className="text-xl transition-transform" style={{
+                    transform: collapsedSections.has('treatment') ? 'rotate(-90deg)' : 'rotate(0deg)'
+                  }}>
+                    ▼
+                  </span>
+                </button>
+                {!collapsedSections.has('treatment') && (
+                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-green-200">
+                    {Array.isArray(currentNode.content.treatment) ? (
+                      <ul className="space-y-2">
+                        {currentNode.content.treatment.map((item, idx) => (
+                          <li key={idx} className="flex items-start gap-2 sm:gap-3">
+                            <span className="text-green-500 font-bold">•</span>
+                            <span className="text-sm sm:text-base text-gray-800 leading-relaxed whitespace-pre-line">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
+                        {currentNode.content.treatment}
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
             )}
 
             {/* equipment */}
             {currentNode.content?.equipment && currentNode.content.equipment.length > 0 && (
-              <div className="bg-orange-50 rounded-lg p-4 sm:p-5 border-l-4 border-orange-500">
-                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
-                  <span>🧰</span>
-                  <span>ציוד נדרש</span>
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {currentNode.content.equipment.map((item, idx) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base bg-white rounded-full border-2 border-orange-300 text-gray-800 font-medium"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
+              <div className="bg-orange-50 rounded-lg border-l-4 border-orange-500 overflow-hidden">
+                <button
+                  onClick={() => toggleSection('equipment')}
+                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-orange-100 transition-colors"
+                >
+                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                    <span>🧰</span>
+                    <span>ציוד נדרש</span>
+                  </h3>
+                  <span className="text-xl transition-transform" style={{
+                    transform: collapsedSections.has('equipment') ? 'rotate(-90deg)' : 'rotate(0deg)'
+                  }}>
+                    ▼
+                  </span>
+                </button>
+                {!collapsedSections.has('equipment') && (
+                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-orange-200">
+                    <div className="flex flex-wrap gap-2">
+                      {currentNode.content.equipment.map((item, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base bg-white rounded-full border-2 border-orange-300 text-gray-800 font-medium"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
             {/* questions */}
             {currentNode.content?.questions && currentNode.content.questions.length > 0 && (
-              <div className="bg-yellow-50 rounded-lg p-4 sm:p-5 border-l-4 border-yellow-500">
-                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
-                  <span>❓</span>
-                  <span>שאלות לשאול</span>
-                </h3>
-                <ul className="space-y-2">
-                  {currentNode.content.questions.map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-2 sm:gap-3">
-                      <span className="text-yellow-600 font-bold">•</span>
-                      <span className="text-sm sm:text-base text-gray-800 leading-relaxed">{item}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="bg-yellow-50 rounded-lg border-l-4 border-yellow-500 overflow-hidden">
+                <button
+                  onClick={() => toggleSection('questions')}
+                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-yellow-100 transition-colors"
+                >
+                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                    <span>❓</span>
+                    <span>שאלות לשאול</span>
+                  </h3>
+                  <span className="text-xl transition-transform" style={{
+                    transform: collapsedSections.has('questions') ? 'rotate(-90deg)' : 'rotate(0deg)'
+                  }}>
+                    ▼
+                  </span>
+                </button>
+                {!collapsedSections.has('questions') && (
+                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-yellow-200">
+                    <ul className="space-y-2">
+                      {currentNode.content.questions.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-2 sm:gap-3">
+                          <span className="text-yellow-600 font-bold">•</span>
+                          <span className="text-sm sm:text-base text-gray-800 leading-relaxed">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
 
             {/* vitals/metrics */}
             {currentNode.content?.vitals && currentNode.content.vitals.length > 0 && (
-              <div className="bg-cyan-50 rounded-lg p-4 sm:p-5 border-l-4 border-cyan-500">
-                <h3 className="font-bold text-lg sm:text-xl mb-2 sm:mb-3 flex items-center gap-2">
-                  <span>📊</span>
-                  <span>מדדים</span>
-                </h3>
-                <ul className="space-y-2">
-                  {currentNode.content.vitals.map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-2 sm:gap-3">
-                      <span className="text-cyan-600 font-bold">•</span>
-                      <span className="text-sm sm:text-base text-gray-800 leading-relaxed">{item}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="bg-cyan-50 rounded-lg border-l-4 border-cyan-500 overflow-hidden">
+                <button
+                  onClick={() => toggleSection('vitals')}
+                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-cyan-100 transition-colors"
+                >
+                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                    <span>📊</span>
+                    <span>מדדים</span>
+                  </h3>
+                  <span className="text-xl transition-transform" style={{
+                    transform: collapsedSections.has('vitals') ? 'rotate(-90deg)' : 'rotate(0deg)'
+                  }}>
+                    ▼
+                  </span>
+                </button>
+                {!collapsedSections.has('vitals') && (
+                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-cyan-200">
+                    <ul className="space-y-2">
+                      {currentNode.content.vitals.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-2 sm:gap-3">
+                          <span className="text-cyan-600 font-bold">•</span>
+                          <span className="text-sm sm:text-base text-gray-800 leading-relaxed">{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
           </div>
