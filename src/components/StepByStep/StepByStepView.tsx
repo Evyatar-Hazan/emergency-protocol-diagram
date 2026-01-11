@@ -405,7 +405,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   </span>
                 </button>
                 {!collapsedSections.has('checkMethod') && (
-                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-blue-200">
+                  <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5 border-t border-blue-200">
                     <p className="whitespace-pre-line text-sm sm:text-base text-gray-800 leading-relaxed">
                       {currentNode.content.checkMethod}
                     </p>
@@ -432,7 +432,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   </span>
                 </button>
                 {!collapsedSections.has('about') && (
-                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-indigo-200">
+                  <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5 border-t border-indigo-200">
                     {Array.isArray(currentNode.content.about) ? (
                       <ul className="space-y-2">
                         {currentNode.content.about.map((item: string, idx: number) => (
@@ -470,7 +470,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   </span>
                 </button>
                 {!collapsedSections.has('whatToLookFor') && (
-                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-purple-200">
+                  <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5 border-t border-purple-200">
                     {Array.isArray(currentNode.content.whatToLookFor) ? (
                       <ul className="space-y-2">
                         {currentNode.content.whatToLookFor.map((item: string, idx: number) => (
@@ -508,7 +508,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   </span>
                 </button>
                 {!collapsedSections.has('assessment') && (
-                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-rose-200">
+                  <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5 border-t border-rose-200">
                     {Array.isArray(currentNode.content.assessment) ? (
                       <ul className="space-y-2">
                         {currentNode.content.assessment.map((item: string, idx: number) => (
@@ -546,7 +546,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   </span>
                 </button>
                 {!collapsedSections.has('explanation') && (
-                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-amber-200">
+                  <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5 border-t border-amber-200">
                     {Array.isArray(currentNode.content.explanation) ? (
                       <ul className="space-y-2">
                         {currentNode.content.explanation.map((item: string, idx: number) => (
@@ -584,7 +584,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   </span>
                 </button>
                 {!collapsedSections.has('treatment') && (
-                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-green-200">
+                  <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5 border-t border-green-200">
                     {Array.isArray(currentNode.content.treatment) ? (
                       <ul className="space-y-2">
                         {currentNode.content.treatment.map((item, idx) => (
@@ -622,7 +622,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   </span>
                 </button>
                 {!collapsedSections.has('equipment') && (
-                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-orange-200">
+                  <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5 border-t border-orange-200">
                     <div className="flex flex-wrap gap-2">
                       {currentNode.content.equipment.map((item, idx) => (
                         <span
@@ -656,7 +656,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   </span>
                 </button>
                 {!collapsedSections.has('questions') && (
-                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-yellow-200">
+                  <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5 border-t border-yellow-200">
                     <ul className="space-y-2">
                       {currentNode.content.questions.map((item, idx) => (
                         <li key={idx} className="flex items-start gap-2 sm:gap-3">
@@ -688,7 +688,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   </span>
                 </button>
                 {!collapsedSections.has('vitals') && (
-                  <div className="px-4 sm:px-5 pb-4 sm:pb-5 border-t border-cyan-200">
+                  <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5 border-t border-cyan-200">
                     <ul className="space-y-2">
                       {currentNode.content.vitals.map((item, idx) => (
                         <li key={idx} className="flex items-start gap-2 sm:gap-3">
