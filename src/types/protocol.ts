@@ -30,6 +30,7 @@ export interface Node {
   // תוכן מפורט
   content?: {
     checkMethod?: string;          // איך לבדוק
+    about?: string | string[];     // הסבר על התנאי
     whatToLookFor?: string | string[]; // מה לחפש (string או רשימה)
     equipment?: string[];          // ציוד נדרש
     questions?: string[];          // שאלות לשאול
