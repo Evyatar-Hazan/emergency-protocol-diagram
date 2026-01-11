@@ -1,16 +1,23 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useFlowStore } from './store/flowStore';
+import { useAuthStore } from './store/authStore';
 import { initializeFlowData, loadFeatureFlags } from './utils/bootstrap';
 import { FullFlowDiagram } from './components/flow/FullFlowDiagram';
 import { StepByStepView } from './components/StepByStep/StepByStepView';
 import { VitalSignsView } from './components/VitalSigns/VitalSignsView';
+import { LoginPage } from './components/auth/LoginPage';
+import { UserMenu } from './components/auth/UserMenu';
 
 type ViewMode = 'step-by-step' | 'diagram' | 'vital-signs';
 
-function App() {
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+
+function AppContent() {
   const { t } = useTranslation();
   const { flowData, activeProtocol, loadData, setActiveProtocol } = useFlowStore();
+  const { user, isAuthenticated, checkAuth } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
   const [featureFlags, setFeatureFlags] = useState<Record<string, unknown> | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('step-by-step');
@@ -18,6 +25,9 @@ function App() {
   useEffect(() => {
     async function initialize() {
       try {
+        // Check authentication status
+        checkAuth();
+
         // טען את הדאטא
         const data = await initializeFlowData();
         loadData(data);
@@ -36,7 +46,7 @@ function App() {
     }
 
     initialize();
-  }, [loadData]);
+  }, [loadData, checkAuth]);
 
   // אתחול אוטומטי של הפרוטוקול המאוחד
   useEffect(() => {
@@ -57,6 +67,11 @@ function App() {
     );
   }
 
+  // Show login page if not authenticated
+  if (!isAuthenticated || !user) {
+    return <LoginPage onLoginSuccess={() => {}} />;
+  }
+
   const protocolKeys = Object.keys(flowData.protocols);
 
   console.log('[App] activeProtocol:', activeProtocol);
@@ -65,10 +80,10 @@ function App() {
   if (!isLoading && flowData.protocols) {
     return (
       <div className="min-h-screen bg-gray-100" dir="rtl">
-        {/* טאבים */}
+        {/* טאבים ותפריט משתמש */}
         <div className="bg-white shadow-md sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-2 sm:px-4">
-            <div className="flex items-center justify-center gap-1 sm:gap-2 py-2">
+          <div className="max-w-7xl mx-auto px-2 sm:px-4 flex items-center justify-between">
+            <div className="flex items-center justify-center gap-1 sm:gap-2 py-2 flex-1">
               <button
                 onClick={() => setViewMode('step-by-step')}
                 className={`flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${
@@ -102,6 +117,9 @@ function App() {
                 <span className="text-sm sm:text-base">📊</span>
                 <span>מדדים</span>
               </button>
+            </div>
+            <div className="py-2">
+              <UserMenu />
             </div>
           </div>
         </div>
@@ -229,4 +247,10 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <GoogleOAuthProvider clientId={googleClientId}>
+      <AppContent />
+    </GoogleOAuthProvider>
+  );
+}
