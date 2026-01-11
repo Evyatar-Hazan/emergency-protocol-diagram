@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
+import { GoogleLoginButton } from './GoogleLoginButton';
 
 export const UserMenu: React.FC = () => {
   const { user, logout } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
 
   if (!user) {
-    return null;
+    return (
+      <div className="flex items-center gap-2">
+        <GoogleLoginButton />
+      </div>
+    );
   }
 
   return (

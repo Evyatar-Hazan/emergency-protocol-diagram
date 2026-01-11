@@ -7,7 +7,6 @@ import { initializeFlowData, loadFeatureFlags } from './utils/bootstrap';
 import { FullFlowDiagram } from './components/flow/FullFlowDiagram';
 import { StepByStepView } from './components/StepByStep/StepByStepView';
 import { VitalSignsView } from './components/VitalSigns/VitalSignsView';
-import { LoginPage } from './components/auth/LoginPage';
 import { UserMenu } from './components/auth/UserMenu';
 
 type ViewMode = 'step-by-step' | 'diagram' | 'vital-signs';
@@ -17,7 +16,7 @@ const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 function AppContent() {
   const { t } = useTranslation();
   const { flowData, activeProtocol, loadData, setActiveProtocol } = useFlowStore();
-  const { user, isAuthenticated, checkAuth } = useAuthStore();
+  const { checkAuth } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
   const [featureFlags, setFeatureFlags] = useState<Record<string, unknown> | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('step-by-step');
@@ -65,11 +64,6 @@ function AppContent() {
         </div>
       </div>
     );
-  }
-
-  // Show login page if not authenticated
-  if (!isAuthenticated || !user) {
-    return <LoginPage onLoginSuccess={() => {}} />;
   }
 
   const protocolKeys = Object.keys(flowData.protocols);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { commentService } from '../../services/api';
+import { GoogleLoginButton } from '../auth/GoogleLoginButton';
 
 interface CommentFormProps {
   nodeId: string;
@@ -22,8 +23,11 @@ export const CommentForm: React.FC<CommentFormProps> = ({
 
   if (!isAuthenticated || !user) {
     return (
-      <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
-        Sign in to add comments
+      <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <p className="text-sm text-blue-700 mb-3">
+          👤 Sign in to add comments and participate in discussions
+        </p>
+        <GoogleLoginButton />
       </div>
     );
   }
