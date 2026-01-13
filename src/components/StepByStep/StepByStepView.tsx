@@ -148,6 +148,14 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
 
   // קבלת אפשרויות הבאות
   const getNextOptions = (): Array<{ label: string; target: string }> => {
+    // אם יש actions (כפתורים לניווט)
+    if (currentNode.content?.actions && currentNode.content.actions.length > 0) {
+      return currentNode.content.actions.map(action => ({
+        label: action.label,
+        target: action.target.includes(':') ? action.target : `${parsed!.protocolId}:${action.target}`
+      }));
+    }
+    
     // אם יש conditions (decision node עם תנאים)
     if (currentNode.conditions && currentNode.conditions.length > 0) {
       return currentNode.conditions.map(cond => ({
