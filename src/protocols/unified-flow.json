@@ -2460,16 +2460,36 @@
       },
       "conditions": [
         {
-          "label": "מחזור תקין - המשך ל-D",
+          "label": "✅ מחזור תקין - המשך ל-D",
           "target": "circulation_complete"
         },
         {
-          "label": "הלם או דימום - זיהוי סוג",
-          "target": "shock_type"
+          "label": "💔 תעוקת חזה - יציבה (אנג'ינה)",
+          "target": "chest_pain_stable"
         },
         {
-          "label": "בעיה קרדיווסקולרית - לב/כלי דם",
-          "target": "cardiovascular_problem"
+          "label": "🚨 תעוקת חזה - לא יציבה (ACS)",
+          "target": "acute_coronary_syndrome"
+        },
+        {
+          "label": "💀 אוטם שקט - ללא סימפטומים קלאסיים",
+          "target": "silent_infarction"
+        },
+        {
+          "label": "❤️ אי ספיקת לב ימין (RV failure)",
+          "target": "right_heart_failure"
+        },
+        {
+          "label": "❤️ אי ספיקת לב שמאל (LV failure)",
+          "target": "left_heart_failure"
+        },
+        {
+          "label": "💧 בצקת ריאות",
+          "target": "pulmonary_edema"
+        },
+        {
+          "label": "🌊 הלם",
+          "target": "shock_type"
         }
       ]
     },
@@ -2482,6 +2502,147 @@
       "severity": "stable",
       "content": {
         "treatment": "מחזור דם תקין ויציב ← ממשיכים ל-D (Disability)"
+      },
+      "next": "disability_assessment"
+    },
+    
+    "chest_pain_stable": {
+      "id": "chest_pain_stable",
+      "type": "action",
+      "title": "💔 תעוקת חזה יציבה - אנג'ינה",
+      "severity": "urgent",
+      "content": {
+        "diagnosis": "תעוקת חזה יציבה - סיכון נמוך",
+        "treatment": [
+          "חמצן אם SpO2 < 94%",
+          "ניטרט (אם זה אנג'ינה)",
+          "אספירין 300mg",
+          "ניטור הדופק",
+          "EKG",
+          "קבלת קוד קורונארי (CCU) לצפייה"
+        ]
+      },
+      "next": "disability_assessment"
+    },
+    
+    "acute_coronary_syndrome": {
+      "id": "acute_coronary_syndrome",
+      "type": "action",
+      "title": "🚨 תעוקת חזה לא יציבה - ACS",
+      "severity": "critical",
+      "content": {
+        "diagnosis": "Acute Coronary Syndrome - סיכון גבוה",
+        "treatment": [
+          "חמצן גבוה אם SpO2 < 94%",
+          "IV access × 2",
+          "ניטרט IV",
+          "אספירין 300mg + clopidogrel 600mg",
+          "ניטור מתמיד של הדופק ו-BP",
+          "EKG מיידי",
+          "טרופונין",
+          "קבלת דחוף ל-CCU/קתטר"
+        ]
+      },
+      "next": "disability_assessment"
+    },
+    
+    "silent_infarction": {
+      "id": "silent_infarction",
+      "type": "action",
+      "title": "💀 אוטם שקט - ללא סימפטומים קלאסיים",
+      "severity": "critical",
+      "content": {
+        "diagnosis": "Silent Myocardial Infarction - סיכון גבוה מאד",
+        "treatment": [
+          "חמצן גבוה",
+          "IV access × 2",
+          "ניטרט",
+          "אספירין + clopidogrel",
+          "ניטור מתמיד",
+          "EKG + טרופונין חוזר",
+          "קבלת דחוף ל-CCU",
+          "חוקרים טריגרים אחרים (סכרת, גיל, היסטוריה)"
+        ]
+      },
+      "next": "disability_assessment"
+    },
+    
+    "right_heart_failure": {
+      "id": "right_heart_failure",
+      "type": "action",
+      "title": "❤️ אי ספיקת לב ימין (RV failure)",
+      "severity": "urgent",
+      "content": {
+        "diagnosis": "Right Ventricular Failure - עבור לד רוב הפעמים",
+        "symptoms": [
+          "JVD (ורידי צוואר נפוחים)",
+          "בוצה בכבד",
+          "בוצה בתחתונים",
+          "כאב בחלק הימני של החזה"
+        ],
+        "treatment": [
+          "חמצן אם צריך",
+          "מנוחה",
+          "מוניטור הדופק",
+          "EKG עם מחטפים ימניים",
+          "עמודה עוריד (JVP) מד",
+          "הנזלת IV זהירה",
+          "ייעוץ קרדיולוג"
+        ]
+      },
+      "next": "disability_assessment"
+    },
+    
+    "left_heart_failure": {
+      "id": "left_heart_failure",
+      "type": "action",
+      "title": "❤️ אי ספיקת לב שמאל (LV failure)",
+      "severity": "urgent",
+      "content": {
+        "diagnosis": "Left Ventricular Failure - בדוק ריאות",
+        "symptoms": [
+          "קוצר נשימה",
+          "קרקורים בריאות",
+          "Orthopnea (קוצר נשימה בשכיבה)",
+          "עייפות"
+        ],
+        "treatment": [
+          "חמצן גבוה",
+          "מצב משקכל (upright)",
+          "מוניטור Sat O2 מתמיד",
+          "IV access",
+          "דיורטיקה אם צריך (furosemide)",
+          "ניטרט",
+          "ניטור הדופק והנשימה",
+          "EKG + BNP"
+        ]
+      },
+      "next": "disability_assessment"
+    },
+    
+    "pulmonary_edema": {
+      "id": "pulmonary_edema",
+      "type": "action",
+      "title": "💧 בצקת ריאות - חוירות",
+      "severity": "critical",
+      "content": {
+        "diagnosis": "Pulmonary Edema - קרדיאק ריאות",
+        "symptoms": [
+          "קוצר נשימה",
+          "קרקורים דו-צדדיים",
+          "כלים מורעים (pink frothy sputum)",
+          "חוסר היכולת לשכב שטוח"
+        ],
+        "treatment": [
+          "חמצן גבוה עד 100%",
+          "מצב משקכל (upright) - רוב הפעמים ניצב",
+          "IV access × 2",
+          "דיורטיקה IV גבוהה (furosemide 40-80mg)",
+          "ניטרט (לקטן את הלחץ הקדימי)",
+          "מוניטור מתמיד",
+          "ניטור נשימה + SpO2",
+          "קבלת דחוף ל-ICU"
+        ]
       },
       "next": "disability_assessment"
     },
