@@ -20,6 +20,7 @@ function AppContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [featureFlags, setFeatureFlags] = useState<Record<string, unknown> | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('step-by-step');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     async function initialize() {
@@ -74,45 +75,84 @@ function AppContent() {
   if (!isLoading && flowData.protocols) {
     return (
       <div className="min-h-screen bg-gray-100" dir="rtl">
-        {/* טאבים ותפריט משתמש */}
-        <div className="bg-white shadow-md sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-2 sm:px-4 flex items-center justify-between">
-            <div className="flex items-center justify-center gap-1 sm:gap-2 py-2 flex-1">
-              <button
-                onClick={() => setViewMode('step-by-step')}
-                className={`flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${
-                  viewMode === 'step-by-step'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                <span className="text-sm sm:text-base">📱</span>
-                <span>צעד-אחר-צעד</span>
-              </button>
-              <button
-                onClick={() => setViewMode('diagram')}
-                className={`flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${
-                  viewMode === 'diagram'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                <span className="text-sm sm:text-base">🗺️</span>
-                <span>תרשים מלא</span>
-              </button>
-              <button
-                onClick={() => setViewMode('vital-signs')}
-                className={`flex items-center gap-1 px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-semibold transition-all ${
-                  viewMode === 'vital-signs'
-                    ? 'bg-green-600 text-white shadow-md'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                <span className="text-sm sm:text-base">📊</span>
-                <span>מדדים</span>
-              </button>
+        {/* Header עם תפריט נפתח */}
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            {/* לוגו וכותרת */}
+            <div className="flex items-center gap-3 flex-1">
+              <h1 className="text-white font-bold text-lg sm:text-xl">🚑 UH Protocol</h1>
             </div>
-            <div className="py-2">
+
+            {/* כפתור תפריט (hamburger) - מוצג רק במובייל */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden flex flex-col gap-1.5 mr-3 p-2 hover:bg-blue-500 rounded-lg transition"
+              aria-label="תפריט"
+            >
+              <span className={`w-6 h-0.5 bg-white transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+              <span className={`w-6 h-0.5 bg-white transition-all ${isMenuOpen ? 'opacity-0' : ''}`}></span>
+              <span className={`w-6 h-0.5 bg-white transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+            </button>
+
+            {/* תפריט - נמצא בצד יימין (מוצג תמיד בdktop, נפתח בموβايل) */}
+            <div className={`${
+              isMenuOpen
+                ? 'absolute top-full left-0 right-0 bg-white border-t-4 border-blue-600 shadow-xl'
+                : 'hidden lg:block'
+            }`}>
+              <div className={`max-w-7xl mx-auto ${isMenuOpen ? 'px-4 py-4' : 'flex gap-2'}`}>
+                <button
+                  onClick={() => {
+                    setViewMode('step-by-step');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full lg:w-auto flex items-center justify-center lg:justify-start gap-2 px-4 py-2.5 lg:py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                    viewMode === 'step-by-step'
+                      ? 'bg-blue-600 text-white shadow-md'
+                      : 'bg-gray-100 lg:bg-gray-200 text-gray-700 hover:bg-gray-200 lg:hover:bg-gray-300'
+                  }`}
+                >
+                  <span className="text-lg">📱</span>
+                  <span>צעד-אחר-צעד</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setViewMode('diagram');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full lg:w-auto flex items-center justify-center lg:justify-start gap-2 px-4 py-2.5 lg:py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                    viewMode === 'diagram'
+                      ? 'bg-blue-600 text-white shadow-md'
+                      : 'bg-gray-100 lg:bg-gray-200 text-gray-700 hover:bg-gray-200 lg:hover:bg-gray-300'
+                  }`}
+                >
+                  <span className="text-lg">🗺️</span>
+                  <span>תרשים מלא</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setViewMode('vital-signs');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full lg:w-auto flex items-center justify-center lg:justify-start gap-2 px-4 py-2.5 lg:py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                    viewMode === 'vital-signs'
+                      ? 'bg-green-600 text-white shadow-md'
+                      : 'bg-gray-100 lg:bg-gray-200 text-gray-700 hover:bg-gray-200 lg:hover:bg-gray-300'
+                  }`}
+                >
+                  <span className="text-lg">📊</span>
+                  <span>מדדים</span>
+                </button>
+
+                {/* תפריט משתמש בתוך התפריט הנפתח */}
+                <div className={`${isMenuOpen ? 'mt-4 pt-4 border-t border-gray-200' : 'hidden lg:block'}`}>
+                  <UserMenu />
+                </div>
+              </div>
+            </div>
+
+            {/* תפריט משתמש בdktop */}
+            <div className="hidden lg:block">
               <UserMenu />
             </div>
           </div>
