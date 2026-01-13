@@ -80,7 +80,7 @@ function AppContent() {
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             {/* לוגו וכותרת */}
             <div className="flex items-center gap-3 flex-1">
-              <h1 className="text-white font-bold text-lg sm:text-xl">🚑 UH Protocol</h1>
+              <h1 className="text-white font-bold text-lg sm:text-xl">🏥 פרוטוקול חירום - מערכת ABCDE</h1>
             </div>
 
             {/* כפתור תפריט (hamburger) - מוצג בכל המכשירים */}
