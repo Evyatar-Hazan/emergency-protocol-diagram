@@ -554,8 +554,47 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   </span>
                 </button>
                 {!collapsedSections.has('explanation') && (
-                  <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5 border-t border-amber-200">
-                    {Array.isArray(currentNode.content.explanation) ? (
+                  <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5 border-t border-amber-200 space-y-4">
+                    {typeof currentNode.content.explanation === 'object' && !Array.isArray(currentNode.content.explanation) ? (
+                      <>
+                        {currentNode.content.explanation.title && (
+                          <h4 className="font-bold text-lg text-amber-900">{currentNode.content.explanation.title}</h4>
+                        )}
+                        
+                        {currentNode.content.explanation.clinical && (
+                          <div className="space-y-2">
+                            <h5 className="font-semibold text-amber-800 flex items-center gap-2">
+                              <span>🏥</span> <span>מצב קליני</span>
+                            </h5>
+                            <p className="text-sm sm:text-base text-gray-800 leading-relaxed whitespace-pre-line">
+                              {currentNode.content.explanation.clinical}
+                            </p>
+                          </div>
+                        )}
+                        
+                        {currentNode.content.explanation.theoretical && (
+                          <div className="space-y-2">
+                            <h5 className="font-semibold text-amber-800 flex items-center gap-2">
+                              <span>🧠</span> <span>הסבר תיאורטי</span>
+                            </h5>
+                            <p className="text-sm sm:text-base text-gray-800 leading-relaxed whitespace-pre-line">
+                              {currentNode.content.explanation.theoretical}
+                            </p>
+                          </div>
+                        )}
+                        
+                        {currentNode.content.explanation.urgency && (
+                          <div className="space-y-2">
+                            <h5 className="font-semibold text-red-700 flex items-center gap-2">
+                              <span>🚨</span> <span>דחיפות</span>
+                            </h5>
+                            <p className="text-sm sm:text-base text-red-800 leading-relaxed whitespace-pre-line bg-red-100 p-3 rounded">
+                              {currentNode.content.explanation.urgency}
+                            </p>
+                          </div>
+                        )}
+                      </>
+                    ) : Array.isArray(currentNode.content.explanation) ? (
                       <ul className="space-y-2">
                         {currentNode.content.explanation.map((item: string, idx: number) => (
                           <li key={idx} className="flex items-start gap-2 sm:gap-3">
