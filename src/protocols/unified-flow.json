@@ -2398,6 +2398,16 @@
           "חלש/סחרחורת?",
           "תרופות דילול דם?",
           "דופק קל למצוא או קשה?"
+        ],
+        "actions": [
+          {
+            "label": "✅ הכל תקין - עובר ל-D",
+            "target": "disability_assessment"
+          },
+          {
+            "label": "⚠️ לא תקין - זיהוי בעיה",
+            "target": "circulation_status"
+          }
         ]
       },
       "next": "circulation_status"
