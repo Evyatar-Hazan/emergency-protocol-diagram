@@ -20,6 +20,18 @@ export type SeverityLevel =
   | 'stable'          // כחול - יציב
   | 'normal';         // ירוק - תקין
 
+export interface ExplanationObject {
+  title?: string;
+  clinical?: string;
+  theoretical?: string;
+  urgency?: string;
+}
+
+export interface ActionOption {
+  label: string;
+  target: string;
+}
+
 export interface Node {
   id: string;
   type: NodeType;
@@ -33,11 +45,12 @@ export interface Node {
     about?: string | string[];     // הסבר על התנאי
     whatToLookFor?: string | string[]; // מה לחפש (string או רשימה)
     assessment?: string | string[]; // הערכה/בדיקה (string או רשימה)
-    explanation?: string | string[]; // הסבר מתקדם (string או רשימה)
+    explanation?: string | string[] | ExplanationObject; // הסבר מתקדם (string, רשימה או אובייקט)
     equipment?: string[];          // ציוד נדרש
     questions?: string[];          // שאלות לשאול
     vitals?: string[];             // מדדים (סימנים חיוניים)
     treatment?: string | string[]; // טיפול (טקסט חופשי או רשימה)
+    actions?: ActionOption[];      // כפתורי פעולה/ניווט מותאמים
   };
   
   // חיבורים
