@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { commentService } from '../../services/api';
 import { CommentForm } from './CommentForm';
 import { CommentItem } from './CommentItem';
@@ -34,7 +34,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadComments = async () => {
+  const loadComments = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -46,14 +46,18 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
-
-  useEffect(() => {
-    loadComments();
   }, [nodeId]);
 
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void loadComments();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [loadComments]);
+
   const handleCommentAdded = () => {
-    loadComments();
+    void loadComments();
   };
 
   return (

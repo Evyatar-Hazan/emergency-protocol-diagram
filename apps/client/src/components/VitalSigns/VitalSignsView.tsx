@@ -2,6 +2,7 @@ import { useState } from 'react';
 import vitalSignsData from '../../data/vital-signs.json';
 
 type AgeGroup = 'adult' | 'child';
+type VitalSignParameter = Record<string, string>;
 
 export function VitalSignsView() {
   const [ageGroup, setAgeGroup] = useState<AgeGroup>('adult');
@@ -68,7 +69,7 @@ export function VitalSignsView() {
 
                 {/* Parameters */}
                 <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
-                  {Object.entries(categoryData).map(([key, param]: [string, any]) => (
+                  {Object.entries(categoryData as Record<string, VitalSignParameter>).map(([key, param]) => (
                     <div
                       key={key}
                       className="border-2 border-gray-200 rounded-lg p-3 sm:p-4 hover:border-blue-400 hover:shadow-md transition-all"

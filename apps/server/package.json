@@ -1,0 +1,62 @@
+{
+  "name": "@emergency-protocol-diagram/server",
+  "version": "1.0.0",
+  "description": "Emergency Protocol Diagram Server with Comments and Google OAuth",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "postinstall": "prisma generate --schema prisma/schema.prisma",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "tsc --noEmit",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write src/**/*.ts",
+    "format:check": "prettier --check src/**/*.ts",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "prisma generate --schema prisma/schema.prisma",
+    "prisma:studio": "prisma studio",
+    "prisma:push": "prisma db push",
+    "prisma:seed": "ts-node prisma/seed.ts"
+  },
+  "keywords": [
+    "emergency",
+    "protocol",
+    "comments"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "5.18.0",
+    "bcryptjs": "2.4.3",
+    "cors": "2.8.5",
+    "dotenv": "16.4.5",
+    "express": "^4.22.2",
+    "express-validator": "7.0.0",
+    "google-auth-library": "^10.7.0",
+    "helmet": "7.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "vite": "8.0.16"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "2.4.6",
+    "@types/cors": "2.8.17",
+    "@types/express": "4.17.21",
+    "@types/jest": "29.5.11",
+    "@types/jsonwebtoken": "9.0.7",
+    "@types/node": "20.10.6",
+    "@types/supertest": "2.0.12",
+    "@typescript-eslint/eslint-plugin": "^8.61.0",
+    "@typescript-eslint/parser": "^8.61.0",
+    "eslint": "8.56.0",
+    "jest": "29.7.0",
+    "prettier": "3.1.1",
+    "prisma": "5.18.0",
+    "supertest": "6.3.3",
+    "ts-jest": "29.1.1",
+    "ts-node": "10.9.2",
+    "typescript": "5.3.3"
+  }
+}

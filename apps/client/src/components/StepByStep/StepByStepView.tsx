@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { Protocol, Node } from '../../types/protocol';
 
 interface StepByStepViewProps {
@@ -9,21 +9,19 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   const [currentNodeId, setCurrentNodeId] = useState<string>('unified_flow:report_departure');
   const [history, setHistory] = useState<string[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-  const [bookmarkedNodes, setBookmarkedNodes] = useState<Set<string>>(new Set());
-  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
-
-  // טען סימניות מ-localStorage
-  useEffect(() => {
+  const [bookmarkedNodes, setBookmarkedNodes] = useState<Set<string>>(() => {
     const saved = localStorage.getItem('protocol-bookmarks');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setBookmarkedNodes(new Set(parsed));
+        return new Set(parsed);
       } catch (e) {
         console.error('Failed to load bookmarks', e);
       }
     }
-  }, []);
+    return new Set();
+  });
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
 
   // שמור סימניות ל-localStorage
   const saveBookmarks = (bookmarks: Set<string>) => {

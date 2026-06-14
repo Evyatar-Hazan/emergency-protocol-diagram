@@ -354,7 +354,7 @@ export function FullFlowDiagram({ protocols, onNodeClick }: FullFlowDiagramProps
     });
 
     return { nodes, edges };
-  }, [protocols, onNodeClick, handleToggleCollapse, collapsedNodes]);
+  }, [protocols, onNodeClick, handleToggleCollapse, handleToggleCategory, collapsedNodes]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
