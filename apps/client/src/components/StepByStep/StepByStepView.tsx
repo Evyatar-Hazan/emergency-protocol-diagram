@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Protocol, Node } from '../../types/protocol';
+import { CommentsThread } from '../comments/CommentsThread';
 
 interface StepByStepViewProps {
   protocols: Record<string, Protocol>;
@@ -746,6 +747,11 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                 )}
               </div>
             )}
+
+            <CommentsThread
+              nodeId={currentNodeId}
+              title="דיון והערות על הצומת"
+            />
           </div>
 
           {/* כפתורי המשך */}
