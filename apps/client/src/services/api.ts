@@ -10,6 +10,34 @@ const apiClient: AxiosInstance = axios.create({
   },
 });
 
+function unwrapApiData<T>(payload: T | { data: T }): T {
+  if (payload && typeof payload === 'object' && 'data' in payload) {
+    return payload.data;
+  }
+
+  return payload as T;
+}
+
+interface ApiUser {
+  id: string;
+  email: string;
+  name?: string;
+  picture?: string;
+  isAdmin: boolean;
+}
+
+interface ApiComment {
+  id: string;
+  nodeId: string;
+  content: string;
+  author: ApiUser;
+  authorId: string;
+  parentCommentId: string | null;
+  createdAt: string;
+  updatedAt?: string;
+  replies?: ApiComment[];
+}
+
 // Add auth token to every request
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('authToken');
@@ -23,7 +51,10 @@ apiClient.interceptors.request.use((config) => {
 export const authService = {
   loginWithGoogle: async (idToken: string) => {
     const response = await apiClient.post('/auth/google-login', { idToken });
-    const { token, user } = response.data.data;
+    const { token, user } = unwrapApiData<{
+      token: string;
+      user: ApiUser;
+    }>(response.data);
 
     // Store token and user in localStorage
     localStorage.setItem('authToken', token);
@@ -34,7 +65,7 @@ export const authService = {
 
   getCurrentUser: async () => {
     const response = await apiClient.get('/auth/me');
-    return response.data.data;
+    return unwrapApiData<{ user: ApiUser }>(response.data);
   },
 
   logout: () => {
@@ -54,7 +85,8 @@ export const authService = {
 export const commentService = {
   getComments: async (nodeId: string) => {
     const response = await apiClient.get(`/comments/${nodeId}`);
-    return response.data.data;
+    const data = unwrapApiData<{ comments?: ApiComment[] } | ApiComment[]>(response.data);
+    return Array.isArray(data) ? data : (data.comments ?? []);
   },
 
   createComment: async (nodeId: string, content: string, parentCommentId?: string) => {
@@ -63,12 +95,14 @@ export const commentService = {
       content,
       parentCommentId,
     });
-    return response.data.data;
+    const data = unwrapApiData<{ comment: ApiComment } | ApiComment>(response.data);
+    return typeof data === 'object' && data && 'comment' in data ? data.comment : data;
   },
 
   updateComment: async (commentId: string, content: string) => {
     const response = await apiClient.put(`/comments/${commentId}`, { content });
-    return response.data.data;
+    const data = unwrapApiData<{ comment: ApiComment } | ApiComment>(response.data);
+    return typeof data === 'object' && data && 'comment' in data ? data.comment : data;
   },
 
   deleteComment: async (commentId: string) => {
