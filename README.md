@@ -41,3 +41,13 @@ npm audit
 ```
 
 GitHub Actions runs install, build, lint, and server tests on every push and pull request.
+
+## Production Build
+
+Cloudflare Pages can build this repository from the repo root using:
+
+```bash
+npm run build
+```
+
+The root build compiles both workspaces and then mirrors the client output to `/dist`, so legacy Pages projects that publish `dist` from the repository root continue to work after the monorepo migration.
