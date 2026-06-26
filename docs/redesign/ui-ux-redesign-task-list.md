@@ -200,6 +200,8 @@ Phase 3 implementation note:
 
 ## Phase 4: Step-by-Step Core Redesign
 
+Status: Completed on 2026-06-26
+
 ### Task 4.1
 
 Redesign the step-by-step top context bar.
@@ -275,6 +277,14 @@ Examples:
 
 - raw node ID prominence
 - excessive button competition
+
+Phase 4 implementation note:
+
+- the step-by-step screen now uses a narrative hierarchy instead of a flat accordion stack
+- the top context bar was rebuilt around protocol context, step count, severity, navigation, and bookmarking
+- the node hero now frames each step as a focused clinical learning unit with summary cards and a side focus panel
+- content is grouped into immediate action, clinical interpretation, deep learning, and professional discussion
+- the next-step footer now presents a stronger single-decision continuation pattern
 
 ## Phase 5: Quick Reference Redesign
 

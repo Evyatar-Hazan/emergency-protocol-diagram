@@ -278,6 +278,13 @@ Preferred approaches:
 This area must make progression obvious.
 The user should always know what comes next.
 
+Implementation checkpoint on 2026-06-26 for the step-by-step redesign:
+
+- the step experience now opens with a stronger clinical hero and context bar
+- immediate action, interpretation, and deep learning were separated into distinct visual layers
+- comments were moved into a lower-priority discussion panel beneath the core learning content
+- the continuation area now frames progression as a single explicit next decision
+
 ## Node Content Hierarchy
 
 Every node should be organized into three levels:
