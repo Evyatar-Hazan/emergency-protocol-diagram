@@ -34,6 +34,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   onCommentUpdated,
   level = 0,
 }) => {
+  const indentClasses = ['ml-0', 'ml-4', 'ml-8', 'ml-12'] as const;
   const { user } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(content);
@@ -88,7 +89,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     return `${Math.floor(seconds / 86400)}d ago`;
   };
 
-  const marginClass = level > 0 ? `ml-${Math.min(level * 4, 12)}` : '';
+  const marginClass = indentClasses[Math.min(level, indentClasses.length - 1)];
 
   return (
     <div className={`${marginClass} border-l-2 border-gray-200 pl-4 py-3`}>
