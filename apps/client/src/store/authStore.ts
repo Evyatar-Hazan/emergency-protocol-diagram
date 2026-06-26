@@ -22,6 +22,33 @@ interface AuthStore {
   checkAuth: () => void;
 }
 
+function readStoredUser(): User | null {
+  const userStr = localStorage.getItem('user');
+
+  if (!userStr) {
+    return null;
+  }
+
+  try {
+    const parsedUser = JSON.parse(userStr);
+
+    if (
+      parsedUser &&
+      typeof parsedUser === 'object' &&
+      typeof parsedUser.id === 'string' &&
+      typeof parsedUser.email === 'string' &&
+      typeof parsedUser.isAdmin === 'boolean'
+    ) {
+      return parsedUser as User;
+    }
+  } catch (error) {
+    console.warn('Failed to parse stored user:', error);
+  }
+
+  localStorage.removeItem('user');
+  return null;
+}
+
 export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   token: null,
@@ -62,8 +89,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   checkAuth: () => {
     // Check if we have a token and user in localStorage
     const token = localStorage.getItem('authToken');
-    const userStr = localStorage.getItem('user');
-    const user = userStr ? JSON.parse(userStr) : null;
+    const user = readStoredUser();
 
     if (token && user) {
       set({
@@ -71,6 +97,11 @@ export const useAuthStore = create<AuthStore>((set) => ({
         user,
         isAuthenticated: true,
       });
+      return;
+    }
+
+    if (token && !user) {
+      localStorage.removeItem('authToken');
     }
   },
 }));
