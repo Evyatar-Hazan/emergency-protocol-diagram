@@ -48,6 +48,11 @@ Primary message:
 3. Community
 4. Profile
 
+Implementation checkpoint on 2026-06-26 for product architecture:
+
+- primary navigation behavior was narrowed to Learning Path and Quick Reference
+- the full system diagram is now positioned as a secondary advanced tool rather than a main destination
+
 ### Learning Path
 
 This is the primary experience and should include:

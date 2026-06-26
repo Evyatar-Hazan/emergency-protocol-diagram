@@ -9,7 +9,8 @@ import { VitalSignsView } from './components/VitalSigns/VitalSignsView';
 import { UserMenu } from './components/auth/UserMenu';
 import './App.css';
 
-type ViewMode = 'step-by-step' | 'diagram' | 'vital-signs';
+type ViewMode = 'step-by-step' | 'vital-signs';
+type SecondaryTool = 'none' | 'diagram';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
@@ -19,6 +20,8 @@ function AppContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>('step-by-step');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showDiagramTools, setShowDiagramTools] = useState(false);
+  const [secondaryTool, setSecondaryTool] = useState<SecondaryTool>('none');
 
   useEffect(() => {
     async function initialize() {
@@ -86,6 +89,29 @@ function AppContent() {
             </div>
           </div>
 
+          <div className="hidden items-center gap-2 lg:flex">
+            <button
+              onClick={() => setViewMode('step-by-step')}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                viewMode === 'step-by-step'
+                  ? 'bg-white text-clinical-ink shadow-soft'
+                  : 'bg-white/10 text-white hover:bg-white/16'
+              }`}
+            >
+              מסלול למידה
+            </button>
+            <button
+              onClick={() => setViewMode('vital-signs')}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                viewMode === 'vital-signs'
+                  ? 'bg-white text-clinical-ink shadow-soft'
+                  : 'bg-white/10 text-white hover:bg-white/16'
+              }`}
+            >
+              מדדים מהירים
+            </button>
+          </div>
+
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="mr-1 flex flex-col gap-1.5 rounded-2xl border border-white/14 bg-white/10 p-3 transition hover:bg-white/16"
@@ -102,9 +128,18 @@ function AppContent() {
               : 'hidden'
           }`}>
             <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6">
+              <div className="mb-2 flex flex-col gap-1 rounded-3xl border border-slate-200/80 bg-white/80 p-3 text-right">
+                <span className="text-[11px] font-bold tracking-[0.18em] text-clinical-muted">
+                  PRIMARY PRODUCT PATHS
+                </span>
+                <p className="text-sm leading-6 text-slate-600">
+                  הניווט הראשי מחולק למסלול למידה מודרך ולשליפה מהירה של מדדים. תרשים המערכת המלא נשאר ככלי משני בלבד.
+                </p>
+              </div>
               <button
                 onClick={() => {
                   setViewMode('step-by-step');
+                  setSecondaryTool('none');
                   setIsMenuOpen(false);
                 }}
                 className={`w-full rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
@@ -120,23 +155,41 @@ function AppContent() {
               </button>
               <button
                 onClick={() => {
-                  setViewMode('diagram');
                   setIsMenuOpen(false);
+                  setShowDiagramTools(!showDiagramTools);
                 }}
-                className={`w-full rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
-                  viewMode === 'diagram'
-                    ? 'bg-clinical-blue text-white shadow-soft'
-                    : 'bg-white/75 text-clinical-ink hover:bg-white'
-                }`}
+                className="w-full rounded-2xl border border-slate-200/90 bg-white/75 px-4 py-3 text-sm font-semibold text-clinical-ink transition-all hover:bg-white"
               >
                 <span className="flex items-center justify-center gap-3">
                   <span className="text-lg">◌</span>
-                  <span>מבט מערכת מתקדם</span>
+                  <span>כלי מערכת מתקדמים</span>
                 </span>
               </button>
+              {showDiagramTools && (
+                <div className="rounded-3xl border border-slate-200/80 bg-white/85 p-3 text-right">
+                  <div className="mb-2 text-xs font-bold tracking-[0.14em] text-clinical-muted">
+                    SECONDARY TOOL
+                  </div>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-sm leading-6 text-slate-600">
+                      תרשים המערכת נשאר זמין למדריכים, סקירה מתקדמת והבנת ההקשר הרחב, אבל אינו חלק מהמסלול הראשי.
+                    </p>
+                    <button
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setSecondaryTool('diagram');
+                      }}
+                      className="rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
+                    >
+                      פתח מבט מערכת
+                    </button>
+                  </div>
+                </div>
+              )}
               <button
                 onClick={() => {
                   setViewMode('vital-signs');
+                  setSecondaryTool('none');
                   setIsMenuOpen(false);
                 }}
                 className={`w-full rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
@@ -159,10 +212,31 @@ function AppContent() {
         </div>
       </div>
 
-      {viewMode === 'step-by-step' ? (
+      {secondaryTool === 'diagram' ? (
+        <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6">
+          <div className="surface-card mb-4 rounded-3xl p-4 sm:p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <div className="clinical-kicker mb-2">כלי משני</div>
+                <h2 className="font-display text-2xl font-extrabold text-clinical-ink">
+                  מבט מערכת מתקדם
+                </h2>
+                <p className="mt-2 max-w-3xl text-sm leading-6 text-clinical-muted">
+                  התרשים המלא זמין לסקירה מערכתית, הדרכה והבנת הקשרים רחבים, אבל אינו חלק מזרימת הלמידה הראשית.
+                </p>
+              </div>
+              <button
+                onClick={() => setSecondaryTool('none')}
+                className="rounded-2xl bg-clinical-blue px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-clinical-deep"
+              >
+                חזרה למסלול הראשי
+              </button>
+            </div>
+          </div>
+          <FullFlowDiagram protocols={flowData.protocols} />
+        </div>
+      ) : viewMode === 'step-by-step' ? (
         <StepByStepView protocols={flowData.protocols} />
-      ) : viewMode === 'diagram' ? (
-        <FullFlowDiagram protocols={flowData.protocols} />
       ) : (
         <VitalSignsView />
       )}

@@ -158,6 +158,8 @@ Phase 2 implementation note:
 
 ## Phase 3: Navigation and Product Architecture
 
+Status: Completed on 2026-06-26
+
 ### Task 3.1
 
 Redesign the main navigation.
@@ -189,6 +191,12 @@ Possible entry methods:
 - choose protocol family
 - recommended starting modules
 - bookmarks
+
+Phase 3 implementation note:
+
+- navigation now treats Learning Path and Quick Reference as the two primary product paths
+- Full Diagram was demoted from primary mode selection into a secondary advanced-system tool
+- menu framing now explains the product hierarchy directly inside the UI
 
 ## Phase 4: Step-by-Step Core Redesign
 
