@@ -178,6 +178,12 @@ Use minimal but meaningful motion:
 6. Community should support the journey without interrupting it.
 7. The interface should feel clinically authoritative, not technically improvised.
 
+Implementation checkpoint on 2026-06-26 for responsive infrastructure:
+
+- step-by-step layout now uses a shared responsive shell
+- mobile control clustering was reduced
+- content containers and action areas were normalized to stable widths
+
 ## Step-by-Step Experience Redesign
 
 ### Goal

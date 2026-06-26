@@ -114,6 +114,8 @@ Phase 1 implementation note:
 
 ## Phase 2: Responsive and Layout Infrastructure
 
+Status: Completed on 2026-06-26
+
 ### Task 2.1
 
 Fix mobile overflow and horizontal layout breakage.
@@ -146,6 +148,13 @@ Requirements:
 ### Task 2.4
 
 Audit every major container for spacing and width consistency.
+
+Phase 2 implementation note:
+
+- mobile horizontal clipping was removed from the step-by-step experience
+- top control area was rebuilt to wrap and stack correctly on smaller screens
+- content widths were normalized around a shared max-width shell
+- node header, content spacing, and next-step action areas now respond more consistently across breakpoints
 
 ## Phase 3: Navigation and Product Architecture
 

@@ -117,8 +117,8 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
 
   if (!currentNode || !currentProtocol) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4" dir="rtl">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
+      <div className="app-shell flex min-h-screen items-center justify-center px-4 py-10" dir="rtl">
+        <div className="surface-card-strong w-full max-w-md rounded-3xl p-8 text-center">
           <div className="text-red-500 text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold mb-2">שגיאה</h2>
           <p className="text-gray-600 mb-4">לא נמצא צומת: {currentNodeId}</p>
@@ -199,7 +199,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   };
 
   return (
-    <div className={`min-h-screen ${config.bg} p-4 md:p-8`} dir="rtl">
+    <div className="app-shell px-3 py-4 sm:px-5 sm:py-6 lg:px-8" dir="rtl">
       {/* overlay כהה כשהסרגל פתוח */}
       {isSidebarOpen && (
         <div
@@ -318,27 +318,37 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
       </div>
 
       {/* כותרת עליונה */}
-      <div className="max-w-4xl mx-auto mb-4">
-        <div className="bg-white rounded-lg shadow-md p-3 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 flex-wrap">
+      <div className="mx-auto mb-4 w-full max-w-5xl sm:mb-6">
+        <div className="surface-card rounded-3xl p-3 sm:p-4">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="clinical-kicker">
+                <span>{history.length + 1} צעד</span>
+              </div>
+              <div className="rounded-full bg-slate-900 px-3 py-1 font-mono text-[11px] text-white shadow-sm sm:text-xs">
+                ID: {currentNode.id}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-2">
             <button
               onClick={goBack}
               disabled={history.length === 0}
-              className="flex items-center gap-1 px-3 py-2 text-sm bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gray-200 px-3 py-2 text-sm transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50 sm:justify-start"
             >
               <span>←</span>
               <span className="hidden sm:inline">חזור</span>
             </button>
             <button
               onClick={restart}
-              className="flex items-center gap-1 px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-clinical-blue px-3 py-2 text-sm text-white transition-colors hover:bg-clinical-deep sm:justify-start"
             >
               <span>🔄</span>
               <span className="hidden sm:inline">התחל מחדש</span>
             </button>
             <button
               onClick={() => setIsSidebarOpen(true)}
-              className="flex items-center gap-1 px-3 py-2 text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:shadow-lg transition-all"
+              className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 py-2 text-sm text-white transition-all hover:shadow-lg sm:justify-start"
               title="פתח סימניות"
             >
               <span className="text-base">🔖</span>
@@ -351,7 +361,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             </button>
             <button
               onClick={() => toggleBookmark(currentNodeId)}
-              className={`flex items-center gap-1 px-3 py-2 text-sm rounded-lg transition-all ${
+              className={`col-span-2 flex min-w-0 items-center justify-center gap-1 rounded-2xl px-3 py-2 text-sm transition-all sm:col-auto sm:justify-start ${
                 bookmarkedNodes.has(currentNodeId)
                   ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -361,30 +371,24 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <span className="text-lg">{bookmarkedNodes.has(currentNodeId) ? '⭐' : '☆'}</span>
               <span className="hidden sm:inline text-xs">סמן</span>
             </button>
-            <div className="bg-gray-800 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs sm:text-sm font-mono">
-              ID: {currentNode.id}
-            </div>
           </div>
-          
-          <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
-            צעד {history.length + 1}
           </div>
         </div>
       </div>
 
       {/* תוכן הצומת */}
-      <div className="max-w-4xl mx-auto">
-        <div className={`bg-white rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl border-3 sm:border-4 ${config.border} overflow-hidden`}>
+      <div className="mx-auto w-full max-w-5xl">
+        <div className={`surface-card-strong overflow-hidden rounded-[28px] border-[3px] ${config.border}`}>
           {/* כותרת */}
-          <div className={`${config.bg} border-b-3 sm:border-b-4 ${config.border} p-4 sm:p-6`}>
-            <div className="flex items-start gap-3">
+          <div className={`${config.bg} border-b-[3px] ${config.border} p-4 sm:p-6 lg:p-8`}>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
               <div className="text-3xl sm:text-5xl">{config.icon}</div>
               <div className="flex-1">
-                <h1 className={`text-2xl sm:text-3xl md:text-4xl font-bold ${config.text} mb-1 sm:mb-2`}>
+                <h1 className={`font-display text-2xl font-extrabold sm:text-3xl md:text-4xl ${config.text} mb-1 sm:mb-2`}>
                   {currentNode.title}
                 </h1>
                 {currentNode.description && (
-                  <p className={`text-base sm:text-lg ${config.text} opacity-80`}>
+                  <p className={`max-w-3xl text-base leading-7 sm:text-lg ${config.text} opacity-80`}>
                     {currentNode.description}
                   </p>
                 )}
@@ -393,15 +397,15 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
           </div>
 
           {/* תוכן */}
-          <div className="p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6">
+          <div className="space-y-4 p-4 sm:space-y-6 sm:p-6 lg:p-8">
             {/* checkMethod */}
             {currentNode.content?.checkMethod && (
               <div className="bg-blue-50 rounded-lg border-l-4 border-blue-500 overflow-hidden">
                 <button
                   onClick={() => toggleSection('checkMethod')}
-                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-blue-100 transition-colors"
+                  className="flex w-full items-center justify-between gap-3 p-4 transition-colors hover:bg-blue-100 sm:p-5"
                 >
-                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                  <h3 className="flex min-w-0 items-center gap-2 text-right text-lg font-bold sm:text-xl">
                     <span>🔍</span>
                     <span>איך לבדוק</span>
                   </h3>
@@ -426,9 +430,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <div className="bg-indigo-50 rounded-lg border-l-4 border-indigo-500 overflow-hidden">
                 <button
                   onClick={() => toggleSection('about')}
-                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-indigo-100 transition-colors"
+                  className="flex w-full items-center justify-between gap-3 p-4 transition-colors hover:bg-indigo-100 sm:p-5"
                 >
-                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                  <h3 className="flex min-w-0 items-center gap-2 text-right text-lg font-bold sm:text-xl">
                     <span>ℹ️</span>
                     <span>הסבר</span>
                   </h3>
@@ -464,9 +468,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <div className="bg-purple-50 rounded-lg border-l-4 border-purple-500 overflow-hidden">
                 <button
                   onClick={() => toggleSection('whatToLookFor')}
-                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-purple-100 transition-colors"
+                  className="flex w-full items-center justify-between gap-3 p-4 transition-colors hover:bg-purple-100 sm:p-5"
                 >
-                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                  <h3 className="flex min-w-0 items-center gap-2 text-right text-lg font-bold sm:text-xl">
                     <span>👀</span>
                     <span>על מה לשים לב</span>
                   </h3>
@@ -502,9 +506,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <div className="bg-rose-50 rounded-lg border-l-4 border-rose-500 overflow-hidden">
                 <button
                   onClick={() => toggleSection('assessment')}
-                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-rose-100 transition-colors"
+                  className="flex w-full items-center justify-between gap-3 p-4 transition-colors hover:bg-rose-100 sm:p-5"
                 >
-                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                  <h3 className="flex min-w-0 items-center gap-2 text-right text-lg font-bold sm:text-xl">
                     <span>✅</span>
                     <span>הערכה</span>
                   </h3>
@@ -540,9 +544,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <div className="bg-amber-50 rounded-lg border-l-4 border-amber-500 overflow-hidden">
                 <button
                   onClick={() => toggleSection('explanation')}
-                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-amber-100 transition-colors"
+                  className="flex w-full items-center justify-between gap-3 p-4 transition-colors hover:bg-amber-100 sm:p-5"
                 >
-                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                  <h3 className="flex min-w-0 items-center gap-2 text-right text-lg font-bold sm:text-xl">
                     <span>💡</span>
                     <span>הסבר מתקדם</span>
                   </h3>
@@ -617,9 +621,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <div className="bg-green-50 rounded-lg border-l-4 border-green-500 overflow-hidden">
                 <button
                   onClick={() => toggleSection('treatment')}
-                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-green-100 transition-colors"
+                  className="flex w-full items-center justify-between gap-3 p-4 transition-colors hover:bg-green-100 sm:p-5"
                 >
-                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                  <h3 className="flex min-w-0 items-center gap-2 text-right text-lg font-bold sm:text-xl">
                     <span>💊</span>
                     <span>טיפול</span>
                   </h3>
@@ -655,9 +659,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <div className="bg-orange-50 rounded-lg border-l-4 border-orange-500 overflow-hidden">
                 <button
                   onClick={() => toggleSection('equipment')}
-                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-orange-100 transition-colors"
+                  className="flex w-full items-center justify-between gap-3 p-4 transition-colors hover:bg-orange-100 sm:p-5"
                 >
-                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                  <h3 className="flex min-w-0 items-center gap-2 text-right text-lg font-bold sm:text-xl">
                     <span>🧰</span>
                     <span>ציוד נדרש</span>
                   </h3>
@@ -689,9 +693,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <div className="bg-yellow-50 rounded-lg border-l-4 border-yellow-500 overflow-hidden">
                 <button
                   onClick={() => toggleSection('questions')}
-                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-yellow-100 transition-colors"
+                  className="flex w-full items-center justify-between gap-3 p-4 transition-colors hover:bg-yellow-100 sm:p-5"
                 >
-                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                  <h3 className="flex min-w-0 items-center gap-2 text-right text-lg font-bold sm:text-xl">
                     <span>❓</span>
                     <span>שאלות לשאול</span>
                   </h3>
@@ -721,9 +725,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <div className="bg-cyan-50 rounded-lg border-l-4 border-cyan-500 overflow-hidden">
                 <button
                   onClick={() => toggleSection('vitals')}
-                  className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-cyan-100 transition-colors"
+                  className="flex w-full items-center justify-between gap-3 p-4 transition-colors hover:bg-cyan-100 sm:p-5"
                 >
-                  <h3 className="font-bold text-lg sm:text-xl flex items-center gap-2">
+                  <h3 className="flex min-w-0 items-center gap-2 text-right text-lg font-bold sm:text-xl">
                     <span>📊</span>
                     <span>מדדים</span>
                   </h3>
@@ -755,16 +759,16 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
           </div>
 
           {/* כפתורי המשך */}
-          <div className={`${config.bg} border-t-4 ${config.border} p-4 sm:p-6`}>
+          <div className={`${config.bg} border-t-[3px] ${config.border} p-4 sm:p-6 lg:p-8`}>
             {nextOptions.length > 0 ? (
               <div className="space-y-2 sm:space-y-3">
-                <h3 className="font-bold text-lg sm:text-xl mb-3 sm:mb-4 text-center">מה הלאה?</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
+                <h3 className="mb-3 text-center font-display text-lg font-extrabold sm:mb-4 sm:text-xl">מה הלאה?</h3>
+                <div className="grid grid-cols-1 gap-2 sm:gap-3 lg:grid-cols-2">
                   {nextOptions.map((option, idx) => (
                     <button
                       key={idx}
                       onClick={() => navigateToNode(option.target)}
-                      className="w-full bg-white hover:bg-gray-50 text-gray-900 font-bold py-3 px-4 sm:py-4 sm:px-6 rounded-lg sm:rounded-xl border-2 sm:border-3 border-gray-300 hover:border-blue-500 transition-all shadow-md sm:shadow-lg hover:shadow-xl transform hover:scale-105"
+                      className="w-full rounded-2xl border-2 border-gray-300 bg-white px-4 py-3 font-bold text-gray-900 shadow-md transition-all hover:border-clinical-blue hover:bg-gray-50 hover:shadow-xl sm:px-6 sm:py-4"
                     >
                       <span className="text-base sm:text-lg">{option.label}</span>
                     </button>
