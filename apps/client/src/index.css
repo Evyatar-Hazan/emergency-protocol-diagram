@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,7 +7,29 @@
 /* RTL Support */
 :root {
   direction: rtl;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'IBM Plex Sans Hebrew', 'Heebo', sans-serif;
+  color-scheme: light;
+  --font-display: 'Heebo', 'IBM Plex Sans Hebrew', sans-serif;
+  --font-body: 'IBM Plex Sans Hebrew', 'Heebo', sans-serif;
+  --color-bg: #f4efe7;
+  --color-bg-muted: #efe7db;
+  --color-surface: rgba(255, 252, 247, 0.82);
+  --color-surface-strong: #fffaf2;
+  --color-border: rgba(57, 73, 89, 0.14);
+  --color-border-strong: rgba(16, 52, 84, 0.24);
+  --color-text: #16202c;
+  --color-text-muted: #506073;
+  --color-primary: #1d5f91;
+  --color-primary-strong: #0e4b76;
+  --color-accent: #bf7a2b;
+  --color-success: #2f7d65;
+  --color-danger: #b44836;
+  --color-ring: rgba(29, 95, 145, 0.22);
+  --shadow-soft: 0 18px 48px rgba(26, 43, 58, 0.08);
+  --shadow-strong: 0 24px 60px rgba(17, 35, 51, 0.14);
+  --radius-card: 24px;
+  --radius-pill: 999px;
+  --motion-standard: 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 [dir="ltr"] {
@@ -13,35 +37,128 @@
 }
 
 /* Custom Styles */
+html {
+  background:
+    radial-gradient(circle at top, rgba(29, 95, 145, 0.1), transparent 34%),
+    linear-gradient(180deg, #f8f3ec 0%, #f2eadf 100%);
+}
+
 body {
   margin: 0;
   padding: 0;
-  background-color: #f5f5f5;
   min-height: 100vh;
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at top, rgba(29, 95, 145, 0.1), transparent 34%),
+    linear-gradient(180deg, #f8f3ec 0%, #f2eadf 100%);
+  font-family: var(--font-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(29, 95, 145, 0.14);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-ring);
+  outline-offset: 2px;
 }
 
 /* Emergency Color Classes */
 .emergency-critical {
-  background-color: #ff0000;
+  background-color: #b44836;
   color: white;
 }
 
 .emergency-urgent {
-  background-color: #ff6666;
+  background-color: #d27b33;
   color: white;
 }
 
 .emergency-warning {
-  background-color: #ffaa66;
+  background-color: #efd6a6;
   color: #111827;
 }
 
 .emergency-stable {
-  background-color: #66aaff;
+  background-color: #77a7c7;
   color: white;
 }
 
 .emergency-normal {
-  background-color: #6f6;
+  background-color: #b8d4c7;
   color: #111827;
+}
+
+.app-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 12% 16%, rgba(191, 122, 43, 0.12), transparent 24%),
+    radial-gradient(circle at 88% 8%, rgba(29, 95, 145, 0.14), transparent 28%),
+    linear-gradient(180deg, rgba(255, 252, 247, 0.62) 0%, rgba(244, 239, 231, 0.9) 100%);
+}
+
+.surface-card {
+  background: var(--color-surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-soft);
+}
+
+.surface-card-strong {
+  background: linear-gradient(180deg, rgba(255, 250, 242, 0.96) 0%, rgba(255, 247, 236, 0.96) 100%);
+  border: 1px solid var(--color-border-strong);
+  box-shadow: var(--shadow-strong);
+}
+
+.clinical-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-pill);
+  background: rgba(29, 95, 145, 0.1);
+  color: var(--color-primary-strong);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.editorial-grid {
+  position: relative;
+}
+
+.editorial-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(20, 36, 50, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 36, 50, 0.03) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3), transparent 75%);
 }

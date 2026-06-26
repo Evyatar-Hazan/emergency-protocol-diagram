@@ -7,6 +7,7 @@ import { FullFlowDiagram } from './components/flow/FullFlowDiagram';
 import { StepByStepView } from './components/StepByStep/StepByStepView';
 import { VitalSignsView } from './components/VitalSigns/VitalSignsView';
 import { UserMenu } from './components/auth/UserMenu';
+import './App.css';
 
 type ViewMode = 'step-by-step' | 'diagram' | 'vital-signs';
 
@@ -47,10 +48,18 @@ function AppContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center" dir="rtl">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">טוען מערכת...</p>
+      <div className="app-shell flex min-h-screen items-center justify-center px-4" dir="rtl">
+        <div className="surface-card-strong w-full max-w-xl rounded-4xl px-8 py-12 text-center">
+          <span className="clinical-kicker mb-6">
+            סביבת למידה קלינית
+          </span>
+          <div className="mx-auto mb-5 h-16 w-16 animate-spin rounded-full border-[3px] border-clinical-blue/20 border-t-clinical-blue"></div>
+          <h1 className="mb-3 font-display text-3xl font-extrabold text-clinical-ink">
+            Emergency Protocol Diagram
+          </h1>
+          <p className="mx-auto max-w-md text-base leading-7 text-clinical-muted">
+            טוען מסלול למידה קליני לחובשים ומתלמדים עם התקדמות מודרכת, שליפה מהירה של מדדים ודיון מקצועי.
+          </p>
         </div>
       </div>
     );
@@ -59,16 +68,27 @@ function AppContent() {
   console.log('[App] activeProtocol:', activeProtocol);
 
   return (
-    <div className="min-h-screen bg-gray-100" dir="rtl">
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3 flex-1">
-            <h1 className="text-white font-bold text-lg sm:text-xl">🚑 UH Protocol</h1>
+    <div className="app-shell editorial-grid font-body text-clinical-ink" dir="rtl">
+      <div className="sticky top-0 z-50 border-b border-white/10 bg-clinical-header shadow-strong backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+          <div className="flex flex-1 items-center gap-4">
+            <div className="hidden h-12 w-[1px] bg-white/12 sm:block" />
+            <div className="min-w-0">
+              <span className="mb-2 inline-flex items-center rounded-full border border-white/12 bg-white/10 px-3 py-1 text-[11px] font-bold tracking-[0.18em] text-white/75">
+                CLINICAL LEARNING SYSTEM
+              </span>
+              <h1 className="truncate font-display text-lg font-extrabold text-white sm:text-2xl">
+                Emergency Protocol Diagram
+              </h1>
+              <p className="mt-1 hidden max-w-2xl text-sm leading-6 text-white/72 sm:block">
+                סביבת למידה אקדמית לחובשים ומתלמדים עם מסלול חשיבה צעד-אחר-צעד, מדדים מהירים ודיון מקצועי סביב כל צומת.
+              </p>
+            </div>
           </div>
 
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex flex-col gap-1.5 mr-3 p-2 hover:bg-blue-500 rounded-lg transition"
+            className="mr-1 flex flex-col gap-1.5 rounded-2xl border border-white/14 bg-white/10 p-3 transition hover:bg-white/16"
             aria-label="תפריט"
           >
             <span className={`w-6 h-0.5 bg-white transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
@@ -78,54 +98,60 @@ function AppContent() {
 
           <div className={`${
             isMenuOpen
-              ? 'absolute top-full left-0 right-0 bg-white border-t-4 border-blue-600 shadow-xl'
+              ? 'absolute left-0 right-0 top-full border-t border-white/10 bg-[#fffaf3]/95 shadow-strong backdrop-blur-2xl'
               : 'hidden'
           }`}>
-            <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-2">
+            <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6">
               <button
                 onClick={() => {
                   setViewMode('step-by-step');
                   setIsMenuOpen(false);
                 }}
-                className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                className={`w-full rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
                   viewMode === 'step-by-step'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-clinical-blue text-white shadow-soft'
+                    : 'bg-white/75 text-clinical-ink hover:bg-white'
                 }`}
               >
-                <span className="text-lg">📱</span>
-                <span>צעד-אחר-צעד</span>
+                <span className="flex items-center justify-center gap-3">
+                  <span className="text-lg">◎</span>
+                  <span>מסלול למידה צעד-אחר-צעד</span>
+                </span>
               </button>
               <button
                 onClick={() => {
                   setViewMode('diagram');
                   setIsMenuOpen(false);
                 }}
-                className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                className={`w-full rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
                   viewMode === 'diagram'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-clinical-blue text-white shadow-soft'
+                    : 'bg-white/75 text-clinical-ink hover:bg-white'
                 }`}
               >
-                <span className="text-lg">🗺️</span>
-                <span>תרשים מלא</span>
+                <span className="flex items-center justify-center gap-3">
+                  <span className="text-lg">◌</span>
+                  <span>מבט מערכת מתקדם</span>
+                </span>
               </button>
               <button
                 onClick={() => {
                   setViewMode('vital-signs');
                   setIsMenuOpen(false);
                 }}
-                className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+                className={`w-full rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
                   viewMode === 'vital-signs'
-                    ? 'bg-green-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-clinical-teal text-white shadow-soft'
+                    : 'bg-white/75 text-clinical-ink hover:bg-white'
                 }`}
               >
-                <span className="text-lg">📊</span>
-                <span>מדדים</span>
+                <span className="flex items-center justify-center gap-3">
+                  <span className="text-lg">▣</span>
+                  <span>מדדים מהירים</span>
+                </span>
               </button>
 
-              <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="mt-4 border-t border-slate-200/80 pt-4">
                 <UserMenu />
               </div>
             </div>
