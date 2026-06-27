@@ -452,6 +452,37 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
     });
   }
 
+  if (currentNode.content?.sources && currentNode.content.sources.length > 0) {
+    deepDiveSections.push({
+      key: 'sources',
+      title: 'מקורות',
+      icon: '🔗',
+      tone: 'bg-slate-50',
+      borderTone: 'border-slate-300',
+      content: (
+        <ul className="space-y-3">
+          {currentNode.content.sources.map((source, idx) => (
+            <li key={`${source.url}-${idx}`} className="rounded-2xl border border-slate-200 bg-white p-4">
+              <a
+                href={source.url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm font-semibold text-clinical-blue underline-offset-2 hover:underline sm:text-base"
+              >
+                {source.label}
+              </a>
+              {source.note && (
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  {source.note}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+      ),
+    });
+  }
+
   const renderAccordionSection = (section: SectionDefinition) => (
     <div key={section.key} className={`hover-lift overflow-hidden rounded-3xl border ${section.borderTone} ${section.tone}`}>
       <button

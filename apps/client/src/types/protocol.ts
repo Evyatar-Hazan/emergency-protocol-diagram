@@ -32,6 +32,12 @@ export interface ActionOption {
   target: string;
 }
 
+export interface ReferenceSource {
+  label: string;
+  url: string;
+  note?: string;
+}
+
 export interface Node {
   id: string;
   type: NodeType;
@@ -51,6 +57,7 @@ export interface Node {
     vitals?: string[];             // מדדים (סימנים חיוניים)
     treatment?: string | string[]; // טיפול (טקסט חופשי או רשימה)
     actions?: ActionOption[];      // כפתורי פעולה/ניווט מותאמים
+    sources?: ReferenceSource[];   // מקורות גלויים
   };
   
   // חיבורים
