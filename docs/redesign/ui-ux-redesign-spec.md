@@ -279,6 +279,12 @@ Preferred approaches:
 - bottom sheet on mobile
 - lower-priority panel after the core action
 
+Implementation checkpoint on 2026-06-27 for the community layer:
+
+- the discussion area now reads as a professional supporting layer with clearer framing and lower visual competition
+- Hebrew-first empty, loading, and error states replaced generic technical messaging
+- comment cards now communicate role, timing, moderation state, and reply depth more clearly
+
 ### 7. Next-Step Footer
 
 This area must make progression obvious.

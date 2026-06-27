@@ -34,7 +34,6 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   onCommentUpdated,
   level = 0,
 }) => {
-  const indentClasses = ['ml-0', 'ml-4', 'ml-8', 'ml-12'] as const;
   const { user } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(content);
@@ -42,7 +41,8 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const canEdit = user && (user.id === author.id || user.isAdmin);
+  const canEdit = Boolean(user && (user.id === author.id || user.isAdmin));
+  const depthClass = level === 0 ? '' : level === 1 ? 'sm:mr-6' : 'sm:mr-12';
 
   const handleEdit = async () => {
     if (!editContent.trim() || editContent === content) {
@@ -57,14 +57,15 @@ export const CommentItem: React.FC<CommentItemProps> = ({
       setIsEditing(false);
       onCommentUpdated?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update comment');
+      setError('לא הצלחנו לעדכן את התגובה. אפשר לנסות שוב.');
+      console.error('Failed to update comment:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Delete this comment?')) return;
+    if (!window.confirm('למחוק את התגובה הזו?')) return;
 
     try {
       setIsLoading(true);
@@ -72,132 +73,145 @@ export const CommentItem: React.FC<CommentItemProps> = ({
       await commentService.deleteComment(id);
       onCommentDeleted?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete comment');
+      setError('לא הצלחנו למחוק את התגובה. אפשר לנסות שוב.');
+      console.error('Failed to delete comment:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const timeAgo = (dateString: string) => {
+  const formatRelativeTime = (dateString: string) => {
     const now = new Date();
     const past = new Date(dateString);
     const seconds = Math.floor((now.getTime() - past.getTime()) / 1000);
 
-    if (seconds < 60) return 'just now';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-    return `${Math.floor(seconds / 86400)}d ago`;
+    if (seconds < 60) return 'הרגע';
+    if (seconds < 3600) return `לפני ${Math.floor(seconds / 60)} דק׳`;
+    if (seconds < 86400) return `לפני ${Math.floor(seconds / 3600)} שעות`;
+    if (seconds < 172800) return 'אתמול';
+    return `לפני ${Math.floor(seconds / 86400)} ימים`;
   };
 
-  const marginClass = indentClasses[Math.min(level, indentClasses.length - 1)];
-
   return (
-    <div className={`${marginClass} border-l-2 border-gray-200 pl-4 py-3`}>
-      <div className="flex items-start gap-3">
-        {author.picture && (
-          <img
-            src={author.picture}
-            alt={author.name || author.email}
-            className="w-8 h-8 rounded-full flex-shrink-0"
-          />
-        )}
-
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-medium text-sm text-gray-800">
-              {author.name || author.email.split('@')[0]}
-            </span>
-            {author.isAdmin && (
-              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
-                Admin
-              </span>
-            )}
-            <span className="text-xs text-gray-500">
-              {timeAgo(createdAt)}
-              {updatedAt && updatedAt !== createdAt && ' (edited)'}
-            </span>
-          </div>
-
-          {isEditing ? (
-            <div className="mt-2 space-y-2">
-              <textarea
-                value={editContent}
-                onChange={(e) => setEditContent(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                rows={2}
-              />
-              <div className="flex gap-2">
-                <button
-                  onClick={handleEdit}
-                  disabled={isLoading}
-                  className="px-3 py-1 text-sm bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded transition"
-                >
-                  {isLoading ? 'Saving...' : 'Save'}
-                </button>
-                <button
-                  onClick={() => setIsEditing(false)}
-                  className="px-3 py-1 text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 rounded transition"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
+    <div className={depthClass}>
+      <article className="rounded-[26px] border border-slate-200 bg-white p-4 shadow-soft sm:p-5">
+        <div className="flex items-start gap-3">
+          {author.picture ? (
+            <img
+              src={author.picture}
+              alt={author.name || author.email}
+              className="h-10 w-10 flex-shrink-0 rounded-full object-cover"
+            />
           ) : (
-            <>
-              <p className="text-gray-700 text-sm mt-2 break-words">{content}</p>
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-bold text-slate-600">
+              {(author.name || author.email).charAt(0).toUpperCase()}
+            </div>
+          )}
 
-              {error && (
-                <p className="text-xs text-red-600 mt-2">{error}</p>
-              )}
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm font-bold text-slate-900">
+                    {author.name || author.email.split('@')[0]}
+                  </span>
+                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
+                    author.isAdmin
+                      ? 'bg-clinical-blue/10 text-clinical-blue'
+                      : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {author.isAdmin ? 'מנהל/ת מערכת' : 'לומד/ת'}
+                  </span>
+                  {updatedAt && updatedAt !== createdAt && (
+                    <span className="rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-medium text-amber-700">
+                      נערך
+                    </span>
+                  )}
+                </div>
+                <p className="mt-1 text-xs text-slate-500">{formatRelativeTime(createdAt)}</p>
+              </div>
 
-              <div className="flex gap-3 mt-2">
+              <div className="flex flex-wrap items-center gap-3 text-xs font-semibold">
                 {level < 2 && (
                   <button
                     onClick={() => setShowReplyForm(!showReplyForm)}
-                    className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                    className="text-clinical-blue transition hover:text-clinical-deep"
                   >
-                    {showReplyForm ? 'Cancel' : 'Reply'}
+                    {showReplyForm ? 'סגור תגובה' : 'השב'}
                   </button>
                 )}
                 {canEdit && (
                   <>
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                      className="text-slate-600 transition hover:text-slate-900"
                     >
-                      Edit
+                      ערוך
                     </button>
                     <button
                       onClick={handleDelete}
                       disabled={isLoading}
-                      className="text-xs text-red-600 hover:text-red-800 font-medium disabled:text-gray-400"
+                      className="text-red-600 transition hover:text-red-800 disabled:text-slate-300"
                     >
-                      Delete
+                      מחק
                     </button>
                   </>
                 )}
               </div>
-            </>
-          )}
-
-          {showReplyForm && (
-            <div className="mt-4">
-              <CommentForm
-                nodeId={nodeId}
-                parentCommentId={id}
-                onCommentAdded={() => {
-                  setShowReplyForm(false);
-                  onCommentUpdated?.();
-                }}
-                placeholder="Write a reply..."
-              />
             </div>
-          )}
-        </div>
-      </div>
 
-      {replies && replies.length > 0 && (
-        <div className="mt-4 space-y-3">
+            {isEditing ? (
+              <div className="mt-3 space-y-3">
+                <textarea
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                  rows={3}
+                  className="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-800 outline-none transition focus:border-clinical-blue focus:ring-2 focus:ring-clinical-blue/15"
+                />
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={handleEdit}
+                    disabled={isLoading}
+                    className="rounded-2xl bg-clinical-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-clinical-deep disabled:bg-slate-300"
+                  >
+                    {isLoading ? 'שומר...' : 'שמור שינוי'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsEditing(false);
+                      setEditContent(content);
+                    }}
+                    className="rounded-2xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200"
+                  >
+                    ביטול
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-3 whitespace-pre-line text-sm leading-7 text-slate-700">{content}</p>
+            )}
+
+            {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
+
+            {showReplyForm && (
+              <div className="mt-4 border-t border-slate-200 pt-4">
+                <CommentForm
+                  nodeId={nodeId}
+                  parentCommentId={id}
+                  onCommentAdded={() => {
+                    setShowReplyForm(false);
+                    onCommentUpdated?.();
+                  }}
+                  placeholder="כתוב תגובה קצרה שמוסיפה ערך ללמידה..."
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </article>
+
+      {replies.length > 0 && (
+        <div className="mt-3 space-y-3 border-r border-slate-200 pr-3 sm:pr-5">
           {replies.map((reply) => (
             <CommentItem
               key={reply.id}

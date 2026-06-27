@@ -326,6 +326,8 @@ Phase 5 implementation note:
 
 ## Phase 6: Community Layer Redesign
 
+Status: Completed on 2026-06-27
+
 ### Task 6.1
 
 Reposition comments as a secondary but important layer.
@@ -375,6 +377,13 @@ Future backlog:
 - endorsed answers
 - FAQ extraction
 - profile reputation
+
+Phase 6 implementation note:
+
+- the community layer was reframed as a secondary professional discussion surface instead of a raw technical comment block
+- comment entry, loading, empty, and error states were rewritten into Hebrew-first academic-medical messaging
+- comment cards now clarify author role, time context, reply depth, and moderation actions more cleanly
+- reply and edit flows were integrated into calmer card-based interaction patterns that no longer compete visually with core learning content
 
 ## Phase 7: Trust, Language, and Accessibility
 
