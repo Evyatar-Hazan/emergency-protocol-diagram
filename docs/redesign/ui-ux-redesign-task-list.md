@@ -387,6 +387,8 @@ Phase 6 implementation note:
 
 ## Phase 7: Trust, Language, and Accessibility
 
+Status: Completed on 2026-06-27
+
 ### Task 7.1
 
 Remove mixed-language core UI.
@@ -406,6 +408,13 @@ Ensure AA contrast across redesigned surfaces.
 ### Task 7.5
 
 Improve screen-reader and semantic clarity where needed.
+
+Phase 7 implementation note:
+
+- visible English product labels were reduced across the core learning, quick-reference, auth, and discussion surfaces
+- menu, search, bookmark, and next-step interactions received stronger `aria` labeling and expansion state hints
+- login and trust messaging were rewritten into Hebrew-first product language
+- the product now presents a more consistent trust layer before the final polish and launch pass
 
 ## Phase 8: Visual Polish and Product Character
 

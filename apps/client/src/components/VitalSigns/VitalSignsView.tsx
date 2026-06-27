@@ -189,7 +189,7 @@ export function VitalSignsView() {
           <div className="grid gap-6 border-b border-slate-200/70 bg-gradient-to-l from-clinical-deep via-clinical-blue to-clinical-teal px-5 py-6 text-white sm:px-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:px-8 lg:py-8">
             <div>
               <span className="mb-3 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-bold tracking-[0.18em] text-white/80">
-                QUICK REFERENCE
+                שליפה מהירה
               </span>
               <h1 className="font-display text-3xl font-extrabold sm:text-4xl">
                 מדדים מהירים לפי ABCDE
@@ -224,6 +224,7 @@ export function VitalSignsView() {
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder="חפש מדד, טווח, סטטוס או מונח קליני"
+                    aria-label="חיפוש מדדים וערכים"
                     className="w-full bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400 sm:text-base"
                   />
                 </label>
@@ -371,6 +372,7 @@ export function VitalSignsView() {
                           : 'bg-slate-100 text-slate-400 hover:text-slate-700'
                       }`}
                       title={isFavorite ? 'הסר ממועדפים' : 'שמור למועדפים'}
+                      aria-label={isFavorite ? `הסר את ${card.parameterName} מהמועדפים` : `שמור את ${card.parameterName} למועדפים`}
                     >
                       {isFavorite ? '★' : '☆'}
                     </button>

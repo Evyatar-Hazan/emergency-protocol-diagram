@@ -546,10 +546,11 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                           onClick={() => toggleBookmark(node.id)}
                           className="flex-shrink-0 text-xl text-yellow-500 transition-transform hover:scale-110 sm:text-2xl"
                           title="הסר סימניה"
+                          aria-label={`הסר סימניה עבור ${node.label}`}
                         >
                           ⭐
                         </button>
-                        <button onClick={() => jumpToNode(node.id)} className="flex-1 text-right">
+                        <button onClick={() => jumpToNode(node.id)} className="flex-1 text-right" aria-label={`עבור אל ${node.label}`}>
                           <div className="text-sm font-medium text-gray-900 transition-colors hover:text-blue-600 sm:text-base">
                             {node.label}
                           </div>
@@ -615,9 +616,10 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                 </button>
                 <button
                   onClick={() => setIsSidebarOpen(true)}
-                  className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 py-2 text-sm text-white transition-all hover:shadow-lg"
-                  title="פתח סימניות"
-                >
+                    className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 py-2 text-sm text-white transition-all hover:shadow-lg"
+                    title="פתח סימניות"
+                    aria-label="פתח את רשימת הסימניות"
+                  >
                   <span className="text-base">🔖</span>
                   <span>סימניות</span>
                   {bookmarkedNodes.size > 0 && (
@@ -634,6 +636,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
                   title={hasBookmark ? 'הסר סימניה' : 'הוסף סימניה'}
+                  aria-label={hasBookmark ? 'הסר את הצעד הזה מהסימניות' : 'שמור את הצעד הזה לסימניות'}
                 >
                   <span className="text-lg">{hasBookmark ? '⭐' : '☆'}</span>
                   <span>{hasBookmark ? 'שמור ללמידה' : 'שמור לחזרה'}</span>
@@ -654,8 +657,8 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                     {config.icon}
                   </div>
                   <div className="flex-1">
-                    <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
-                      Clinical learning node
+                    <p className="mb-2 text-sm font-semibold tracking-[0.2em] text-slate-500">
+                      יחידת למידה קלינית
                     </p>
                     <h1 className={`mb-2 font-display text-2xl font-extrabold sm:text-3xl md:text-4xl ${config.text}`}>
                       {currentNode.title}
@@ -685,8 +688,8 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               </div>
 
               <div className="surface-card rounded-3xl border border-white/70 p-5">
-                <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                  Focus for this step
+                <p className="mb-3 text-xs font-bold tracking-[0.18em] text-slate-500">
+                  מוקד הצעד הנוכחי
                 </p>
                 <div className="space-y-3">
                   <div className="rounded-2xl bg-white px-4 py-3 shadow-sm">
@@ -717,7 +720,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <section className="space-y-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Immediate action</p>
+                    <p className="text-xs font-bold tracking-[0.18em] text-slate-500">פעולה מיידית</p>
                     <h2 className="font-display text-2xl font-bold text-slate-900">מה עושים עכשיו</h2>
                   </div>
                   <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
@@ -731,7 +734,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             {learningSections.length > 0 && (
               <section className="space-y-4">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Clinical interpretation</p>
+                  <p className="text-xs font-bold tracking-[0.18em] text-slate-500">פרשנות קלינית</p>
                   <h2 className="font-display text-2xl font-bold text-slate-900">הבנה והערכה</h2>
                 </div>
                 <div className="grid gap-4">{learningSections.map(renderAccordionSection)}</div>
@@ -741,7 +744,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             {deepDiveSections.length > 0 && (
               <section className="space-y-4">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Deep learning</p>
+                  <p className="text-xs font-bold tracking-[0.18em] text-slate-500">העמקה לימודית</p>
                   <h2 className="font-display text-2xl font-bold text-slate-900">העמקה קלינית</h2>
                 </div>
                 <div className="grid gap-4">{deepDiveSections.map(renderAccordionSection)}</div>
@@ -750,7 +753,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
 
             <section className="space-y-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Professional discussion</p>
+                <p className="text-xs font-bold tracking-[0.18em] text-slate-500">דיון מקצועי</p>
                 <h2 className="font-display text-2xl font-bold text-slate-900">דיון ולמידה משותפת</h2>
               </div>
               <div className="rounded-[28px] border border-slate-200 bg-slate-50/80 p-3 sm:p-4">
@@ -763,7 +766,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             {nextOptions.length > 0 ? (
               <div className="space-y-4">
                 <div className="text-center">
-                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Next decision</p>
+                  <p className="text-xs font-bold tracking-[0.18em] text-slate-500">החלטה הבאה</p>
                   <h3 className="font-display text-2xl font-extrabold text-slate-900">מה הצעד הבא?</h3>
                   <p className="mt-2 text-sm text-slate-600 sm:text-base">
                     בחר את ההמשך המתאים כדי לשמור על רצף למידה ברור.
@@ -775,9 +778,10 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                       key={idx}
                       onClick={() => navigateToNode(option.target)}
                       className="w-full rounded-3xl border-2 border-white/70 bg-white px-5 py-4 text-right shadow-md transition-all hover:-translate-y-0.5 hover:border-clinical-blue hover:bg-gray-50 hover:shadow-xl sm:px-6"
+                      aria-label={`עבור לאפשרות ${idx + 1}: ${option.label}`}
                     >
-                      <span className="mb-2 block text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
-                        Option {idx + 1}
+                      <span className="mb-2 block text-xs font-bold tracking-[0.18em] text-slate-400">
+                        אפשרות {idx + 1}
                       </span>
                       <span className="block text-base font-bold text-slate-900 sm:text-lg">{option.label}</span>
                     </button>

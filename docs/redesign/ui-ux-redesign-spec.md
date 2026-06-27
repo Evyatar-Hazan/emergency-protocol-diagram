@@ -290,6 +290,12 @@ Implementation checkpoint on 2026-06-27 for the community layer:
 This area must make progression obvious.
 The user should always know what comes next.
 
+Implementation checkpoint on 2026-06-27 for trust, language, and accessibility:
+
+- visible product framing is now substantially more Hebrew-first across the main surfaces
+- navigation and key interaction controls now expose stronger accessibility hints through labels and expanded-state semantics
+- login, trust, and supporting UI copy now better match the academic-medical tone of the product
+
 Implementation checkpoint on 2026-06-26 for the step-by-step redesign:
 
 - the step experience now opens with a stronger clinical hero and context bar

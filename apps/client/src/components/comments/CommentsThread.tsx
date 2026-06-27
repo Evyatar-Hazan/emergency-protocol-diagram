@@ -69,7 +69,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
       <div className="flex flex-col gap-4 rounded-[28px] border border-slate-200 bg-white p-5 shadow-soft sm:p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <div className="text-xs font-bold tracking-[0.18em] text-clinical-muted">COMMUNITY LAYER</div>
+            <div className="text-xs font-bold tracking-[0.18em] text-clinical-muted">שכבת קהילה</div>
             <h3 className="mt-2 text-xl font-bold text-clinical-ink sm:text-2xl">{title}</h3>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-clinical-muted">
               מקום לשאלות, חידודים מקצועיים ותובנות לימודיות סביב הצומת הנוכחי. הדיון נשאר משני למסלול, אבל תומך בלמידה עמוקה יותר.

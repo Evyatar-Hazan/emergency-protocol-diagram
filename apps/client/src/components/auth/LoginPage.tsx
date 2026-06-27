@@ -26,14 +26,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center p-4" dir="rtl">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Emergency Protocols
+            פרוטוקולי חירום
           </h1>
           <p className="text-gray-600">
-            Sign in to access protocols and add comments
+            התחבר כדי לגשת למסלולי הלמידה ולהשתתף בדיונים מקצועיים
           </p>
         </div>
 
@@ -44,7 +44,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
               onClick={() => setError(null)}
               className="mt-2 text-xs text-red-600 hover:text-red-700 underline"
             >
-              Dismiss
+              סגור
             </button>
           </div>
         )}
@@ -59,19 +59,19 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         {isLoading && (
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-            <p className="text-gray-600 mt-4">Signing in...</p>
+            <p className="text-gray-600 mt-4">מתחבר...</p>
           </div>
         )}
 
         <div className="mt-8 pt-6 border-t border-gray-200">
           <h3 className="text-sm font-semibold text-gray-700 mb-3">
-            🔒 Security & Privacy
+            🔒 אבטחה ופרטיות
           </h3>
           <ul className="text-xs text-gray-600 space-y-2">
-            <li>• Your data is encrypted and secure</li>
-            <li>• We use Google OAuth for authentication</li>
-            <li>• No passwords are stored</li>
-            <li>• Only your name and email are used</li>
+            <li>• המידע נשמר בצורה מאובטחת ומוצפנת</li>
+            <li>• ההתחברות מתבצעת באמצעות Google OAuth</li>
+            <li>• לא נשמרות סיסמאות במערכת</li>
+            <li>• נעשה שימוש רק בשם ובאימייל לצורך הזדהות</li>
           </ul>
         </div>
       </div>

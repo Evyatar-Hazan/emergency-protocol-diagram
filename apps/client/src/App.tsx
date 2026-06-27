@@ -78,7 +78,7 @@ function AppContent() {
             <div className="hidden h-12 w-[1px] bg-white/12 sm:block" />
             <div className="min-w-0">
               <span className="mb-2 inline-flex items-center rounded-full border border-white/12 bg-white/10 px-3 py-1 text-[11px] font-bold tracking-[0.18em] text-white/75">
-                CLINICAL LEARNING SYSTEM
+                מערכת למידה קלינית
               </span>
               <h1 className="truncate font-display text-lg font-extrabold text-white sm:text-2xl">
                 Emergency Protocol Diagram
@@ -116,21 +116,26 @@ function AppContent() {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="mr-1 flex flex-col gap-1.5 rounded-2xl border border-white/14 bg-white/10 p-3 transition hover:bg-white/16"
             aria-label="תפריט"
+            aria-expanded={isMenuOpen}
+            aria-controls="main-mobile-menu"
           >
             <span className={`w-6 h-0.5 bg-white transition-all ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
             <span className={`w-6 h-0.5 bg-white transition-all ${isMenuOpen ? 'opacity-0' : ''}`}></span>
             <span className={`w-6 h-0.5 bg-white transition-all ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
           </button>
 
-          <div className={`${
+          <div
+            id="main-mobile-menu"
+            className={`${
             isMenuOpen
               ? 'absolute left-0 right-0 top-full border-t border-white/10 bg-[#fffaf3]/95 shadow-strong backdrop-blur-2xl'
               : 'hidden'
-          }`}>
+          }`}
+          >
             <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 sm:px-6">
               <div className="mb-2 flex flex-col gap-1 rounded-3xl border border-slate-200/80 bg-white/80 p-3 text-right">
                 <span className="text-[11px] font-bold tracking-[0.18em] text-clinical-muted">
-                  PRIMARY PRODUCT PATHS
+                  נתיבי המוצר הראשיים
                 </span>
                 <p className="text-sm leading-6 text-slate-600">
                   הניווט הראשי מחולק למסלול למידה מודרך ולשליפה מהירה של מדדים. תרשים המערכת המלא נשאר ככלי משני בלבד.
@@ -168,7 +173,7 @@ function AppContent() {
               {showDiagramTools && (
                 <div className="rounded-3xl border border-slate-200/80 bg-white/85 p-3 text-right">
                   <div className="mb-2 text-xs font-bold tracking-[0.14em] text-clinical-muted">
-                    SECONDARY TOOL
+                    כלי משני
                   </div>
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-sm leading-6 text-slate-600">

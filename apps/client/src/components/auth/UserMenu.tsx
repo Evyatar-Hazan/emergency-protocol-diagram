@@ -20,6 +20,9 @@ export const UserMenu: React.FC = () => {
         onClick={() => setIsOpen(!isOpen)}
         className="w-full lg:w-auto flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-500 lg:hover:bg-gray-100 transition text-white lg:text-gray-800"
         title={user.email}
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
+        aria-label="פתח את תפריט המשתמש"
       >
         {user.picture && (
           <img
@@ -42,7 +45,7 @@ export const UserMenu: React.FC = () => {
             <p className="text-sm font-medium text-gray-800">{user.name || user.email}</p>
             <p className="text-xs text-gray-500">{user.email}</p>
             {user.isAdmin && (
-              <p className="text-xs text-blue-600 font-semibold mt-2">👑 Admin</p>
+              <p className="text-xs text-blue-600 font-semibold mt-2">👑 מנהל/ת</p>
             )}
           </div>
 
