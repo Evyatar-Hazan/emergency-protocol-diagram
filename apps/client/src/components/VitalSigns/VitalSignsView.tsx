@@ -185,7 +185,7 @@ export function VitalSignsView() {
   return (
     <div className="app-shell px-3 py-4 sm:px-5 sm:py-6 lg:px-8" dir="rtl">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-5">
-        <section className="surface-card-strong overflow-hidden rounded-[32px]">
+        <section className="surface-card-strong clinical-panel rise-in overflow-hidden rounded-[32px]">
           <div className="grid gap-6 border-b border-slate-200/70 bg-gradient-to-l from-clinical-deep via-clinical-blue to-clinical-teal px-5 py-6 text-white sm:px-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:px-8 lg:py-8">
             <div>
               <span className="mb-3 inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-bold tracking-[0.18em] text-white/80">
@@ -309,9 +309,9 @@ export function VitalSignsView() {
         </section>
 
         {highlightedCards.length > 0 && !query && activeCategory === 'all' && !showFavoritesOnly && (
-          <section className="grid gap-4 lg:grid-cols-3">
+          <section className="rise-in-delay-1 grid gap-4 lg:grid-cols-3">
             {highlightedCards.map((card) => (
-              <div key={`highlight-${card.id}`} className="surface-card rounded-[28px] p-5">
+              <div key={`highlight-${card.id}`} className="surface-card hover-lift rounded-[28px] p-5">
                 <div className="mb-4 flex items-start justify-between gap-3">
                   <div>
                     <div className="text-xs font-bold tracking-[0.18em] text-clinical-muted">שליפה מהירה</div>
@@ -335,7 +335,7 @@ export function VitalSignsView() {
         )}
 
         {filteredCards.length === 0 ? (
-          <section className="surface-card-strong rounded-[32px] p-8 text-center">
+          <section className="surface-card-strong rise-in-delay-1 rounded-[32px] p-8 text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-3xl">
               ⊘
             </div>
@@ -345,13 +345,13 @@ export function VitalSignsView() {
             </p>
           </section>
         ) : (
-          <section className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+          <section className="rise-in-delay-2 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
             {filteredCards.map((card) => {
               const meta = categoryMeta.find((category) => category.key === card.categoryKey)!;
               const isFavorite = favorites.has(card.id);
 
               return (
-                <article key={card.id} className="surface-card-strong rounded-[30px] p-5">
+                <article key={card.id} className="surface-card-strong hover-lift rounded-[30px] p-5">
                   <div className="mb-4 flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="mb-2 flex flex-wrap items-center gap-2">
@@ -392,7 +392,7 @@ export function VitalSignsView() {
           </section>
         )}
 
-        <section className="surface-card rounded-[30px] p-5 sm:p-6">
+        <section className="surface-card hover-lift rounded-[30px] p-5 sm:p-6">
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
             <div>
               <div className="text-xs font-bold tracking-[0.18em] text-clinical-muted">שימוש נכון במסך</div>

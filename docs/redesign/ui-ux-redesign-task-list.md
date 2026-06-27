@@ -418,6 +418,8 @@ Phase 7 implementation note:
 
 ## Phase 8: Visual Polish and Product Character
 
+Status: Completed on 2026-06-27
+
 ### Task 8.1
 
 Add controlled motion and transitions.
@@ -433,6 +435,12 @@ Refine illustrations, icons, and accent details.
 ### Task 8.4
 
 Check that the final result feels distinct and not generic.
+
+Phase 8 implementation note:
+
+- shared motion, hover-lift, shimmer, and rise-in behaviors were added to make the product feel intentional rather than static
+- key learning and quick-reference surfaces now use more layered polish through texture, sheen, and refined elevation
+- loading and hero states were upgraded to feel closer to a finished academic-clinical product
 
 ## Phase 9: Verification and Launch Readiness
 

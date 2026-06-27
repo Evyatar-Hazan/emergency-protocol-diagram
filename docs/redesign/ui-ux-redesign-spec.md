@@ -179,6 +179,12 @@ Use minimal but meaningful motion:
 - refined section expansion
 - no noisy micro-interactions
 
+Implementation checkpoint on 2026-06-27 for visual polish:
+
+- shared motion patterns now create softer entry and hover behavior across the product
+- hero, panel, and card surfaces gained additional depth without drifting into generic SaaS styling
+- the visual system now feels more deliberate and productized ahead of final launch verification
+
 ## Experience Principles
 
 1. One primary action per screen.

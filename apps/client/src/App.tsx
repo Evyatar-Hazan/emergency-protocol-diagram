@@ -52,11 +52,13 @@ function AppContent() {
   if (isLoading) {
     return (
       <div className="app-shell flex min-h-screen items-center justify-center px-4" dir="rtl">
-        <div className="surface-card-strong w-full max-w-xl rounded-4xl px-8 py-12 text-center">
+        <div className="surface-card-strong clinical-panel rise-in w-full max-w-xl rounded-4xl px-8 py-12 text-center">
           <span className="clinical-kicker mb-6">
             סביבת למידה קלינית
           </span>
-          <div className="mx-auto mb-5 h-16 w-16 animate-spin rounded-full border-[3px] border-clinical-blue/20 border-t-clinical-blue"></div>
+          <div className="pulse-glow mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full border border-clinical-blue/10 bg-white/70">
+            <div className="h-12 w-12 animate-spin rounded-full border-[3px] border-clinical-blue/20 border-t-clinical-blue"></div>
+          </div>
           <h1 className="mb-3 font-display text-3xl font-extrabold text-clinical-ink">
             Emergency Protocol Diagram
           </h1>
@@ -77,7 +79,7 @@ function AppContent() {
           <div className="flex flex-1 items-center gap-4">
             <div className="hidden h-12 w-[1px] bg-white/12 sm:block" />
             <div className="min-w-0">
-              <span className="mb-2 inline-flex items-center rounded-full border border-white/12 bg-white/10 px-3 py-1 text-[11px] font-bold tracking-[0.18em] text-white/75">
+              <span className="shimmer-line mb-2 inline-flex items-center rounded-full border border-white/12 bg-white/10 px-3 py-1 text-[11px] font-bold tracking-[0.18em] text-white/75">
                 מערכת למידה קלינית
               </span>
               <h1 className="truncate font-display text-lg font-extrabold text-white sm:text-2xl">

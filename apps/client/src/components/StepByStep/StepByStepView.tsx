@@ -453,7 +453,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   }
 
   const renderAccordionSection = (section: SectionDefinition) => (
-    <div key={section.key} className={`overflow-hidden rounded-3xl border ${section.borderTone} ${section.tone}`}>
+    <div key={section.key} className={`hover-lift overflow-hidden rounded-3xl border ${section.borderTone} ${section.tone}`}>
       <button
         onClick={() => toggleSection(section.key)}
         className="flex w-full items-center justify-between gap-3 p-5 text-right transition-colors hover:bg-white/40"
@@ -578,7 +578,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
       </div>
 
       <div className="mx-auto mb-4 w-full max-w-5xl sm:mb-6">
-        <div className="surface-card rounded-3xl p-4 sm:p-5">
+        <div className="surface-card clinical-panel rise-in rounded-3xl p-4 sm:p-5">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
               <div className="space-y-2">
@@ -648,7 +648,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
       </div>
 
       <div className="mx-auto w-full max-w-5xl">
-        <div className={`surface-card-strong overflow-hidden rounded-[28px] border-[3px] ${config.border}`}>
+        <div className={`surface-card-strong clinical-panel rise-in-delay-1 overflow-hidden rounded-[28px] border-[3px] ${config.border}`}>
           <div className={`${config.bg} border-b-[3px] ${config.border} p-5 sm:p-6 lg:p-8`}>
             <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
               <div className="space-y-4">
@@ -674,7 +674,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                 {primaryActionCards.length > 0 && (
                   <div className="grid gap-3 md:grid-cols-3">
                     {primaryActionCards.map((card) => (
-                      <div key={card.label} className="rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm">
+                      <div key={card.label} className="hover-lift rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm">
                         <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
                           {card.label}
                         </p>
@@ -687,7 +687,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                 )}
               </div>
 
-              <div className="surface-card rounded-3xl border border-white/70 p-5">
+              <div className="surface-card hover-lift rounded-3xl border border-white/70 p-5">
                 <p className="mb-3 text-xs font-bold tracking-[0.18em] text-slate-500">
                   מוקד הצעד הנוכחי
                 </p>
@@ -756,7 +756,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                 <p className="text-xs font-bold tracking-[0.18em] text-slate-500">דיון מקצועי</p>
                 <h2 className="font-display text-2xl font-bold text-slate-900">דיון ולמידה משותפת</h2>
               </div>
-              <div className="rounded-[28px] border border-slate-200 bg-slate-50/80 p-3 sm:p-4">
+              <div className="hover-lift rounded-[28px] border border-slate-200 bg-slate-50/80 p-3 sm:p-4">
                 <CommentsThread nodeId={currentNodeId} title="דיון והערות על הצומת" />
               </div>
             </section>
