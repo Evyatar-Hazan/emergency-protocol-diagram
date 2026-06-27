@@ -408,3 +408,9 @@ The redesign is successful when:
 4. Deep learning remains available without overwhelming the user.
 5. Community feels professional and valuable.
 6. The product gains a distinct visual identity that fits emergency medicine training.
+
+Launch-readiness checkpoint on 2026-06-27:
+
+- local regression verification passed on the redesigned product surface
+- desktop and mobile spot checks confirmed stable layout, hierarchy, and Hebrew-first presentation
+- production deployment verification confirmed that the live site reflects the redesign work shipped from `main`
