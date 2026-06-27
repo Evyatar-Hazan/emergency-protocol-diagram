@@ -74,6 +74,12 @@ This should function as a compact retrieval tool:
 - favorites
 - compact cards
 
+Implementation checkpoint on 2026-06-26 for quick reference:
+
+- the quick-reference experience now centers on retrieval speed with search, category filters, age switching, and favorites
+- vital-sign content was converted from long stacked sections into compact, scannable cards
+- the surface now supports rapid comparison while keeping safety framing visible
+
 ### Community
 
 This should support high-trust professional interaction:

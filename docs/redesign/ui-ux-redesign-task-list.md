@@ -288,6 +288,8 @@ Phase 4 implementation note:
 
 ## Phase 5: Quick Reference Redesign
 
+Status: Completed on 2026-06-26
+
 ### Task 5.1
 
 Redesign the quick reference landing structure.
@@ -314,6 +316,13 @@ Convert current reference content into compact, scannable cards.
 ### Task 5.4
 
 Add favorites or saved quick-reference items.
+
+Phase 5 implementation note:
+
+- the quick reference screen was rebuilt into a retrieval-first surface instead of a long academic list
+- users can now switch age group, filter by ABCDE section, search by term, and narrow to saved items
+- each metric now appears as a compact clinical card with clearer severity/status chips
+- a lightweight quick-pick row was added to surface the first most useful metrics without overwhelming the screen
 
 ## Phase 6: Community Layer Redesign
 
