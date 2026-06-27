@@ -580,8 +580,8 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
       <div className="mx-auto mb-4 w-full max-w-5xl sm:mb-6">
         <div className="surface-card clinical-panel rise-in rounded-3xl p-4 sm:p-5">
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-              <div className="space-y-2">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div className="space-y-3">
                 <div className="clinical-kicker">
                   <span>{protocolLabel}</span>
                 </div>
@@ -592,34 +592,47 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   <div className={`rounded-full border px-3 py-1 text-xs font-semibold ${config.border} ${config.bg} ${config.text}`}>
                     {config.icon} {config.label}
                   </div>
-                  <div className="rounded-full border border-slate-200 bg-white px-3 py-1 font-mono text-[11px] text-slate-500 shadow-sm sm:text-xs">
+                  <div className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-center font-mono text-[11px] text-slate-500 shadow-sm sm:w-auto sm:rounded-full sm:py-1 sm:text-xs">
                     {currentNode.id}
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-end">
-                <button
-                  onClick={goBack}
-                  disabled={history.length === 0}
-                  className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gray-200 px-3 py-2 text-sm transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <span>←</span>
-                  <span>חזור</span>
-                </button>
+              <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:items-center md:justify-end">
                 <button
                   onClick={restart}
-                  className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-clinical-blue px-3 py-2 text-sm text-white transition-colors hover:bg-clinical-deep"
+                  className="col-span-2 flex min-w-0 items-center justify-center gap-2 rounded-2xl bg-clinical-blue px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-clinical-deep md:col-auto md:px-3 md:py-2 md:font-medium"
                 >
                   <span>🔄</span>
                   <span>התחל מחדש</span>
                 </button>
                 <button
+                  onClick={() => toggleBookmark(currentNodeId)}
+                  className={`col-span-2 flex min-w-0 items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium transition-all md:col-auto md:px-3 md:py-2 ${
+                    hasBookmark
+                      ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  }`}
+                  title={hasBookmark ? 'הסר סימניה' : 'הוסף סימניה'}
+                  aria-label={hasBookmark ? 'הסר את הצעד הזה מהסימניות' : 'שמור את הצעד הזה לסימניות'}
+                >
+                  <span className="text-lg">{hasBookmark ? '⭐' : '☆'}</span>
+                  <span>{hasBookmark ? 'שמור ללמידה' : 'שמור לחזרה'}</span>
+                </button>
+                <button
+                  onClick={goBack}
+                  disabled={history.length === 0}
+                  className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gray-200 px-3 py-3 text-sm font-medium transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50 md:px-3 md:py-2"
+                >
+                  <span>←</span>
+                  <span>חזור</span>
+                </button>
+                <button
                   onClick={() => setIsSidebarOpen(true)}
-                    className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 py-2 text-sm text-white transition-all hover:shadow-lg"
-                    title="פתח סימניות"
-                    aria-label="פתח את רשימת הסימניות"
-                  >
+                  className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 py-3 text-sm font-medium text-white transition-all hover:shadow-lg md:px-3 md:py-2"
+                  title="פתח סימניות"
+                  aria-label="פתח את רשימת הסימניות"
+                >
                   <span className="text-base">🔖</span>
                   <span>סימניות</span>
                   {bookmarkedNodes.size > 0 && (
@@ -627,19 +640,6 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                       {bookmarkedNodes.size}
                     </span>
                   )}
-                </button>
-                <button
-                  onClick={() => toggleBookmark(currentNodeId)}
-                  className={`col-span-2 flex min-w-0 items-center justify-center gap-1 rounded-2xl px-3 py-2 text-sm transition-all sm:col-auto ${
-                    hasBookmark
-                      ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
-                  title={hasBookmark ? 'הסר סימניה' : 'הוסף סימניה'}
-                  aria-label={hasBookmark ? 'הסר את הצעד הזה מהסימניות' : 'שמור את הצעד הזה לסימניות'}
-                >
-                  <span className="text-lg">{hasBookmark ? '⭐' : '☆'}</span>
-                  <span>{hasBookmark ? 'שמור ללמידה' : 'שמור לחזרה'}</span>
                 </button>
               </div>
             </div>
@@ -650,7 +650,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
       <div className="mx-auto w-full max-w-5xl">
         <div className={`surface-card-strong clinical-panel rise-in-delay-1 overflow-hidden rounded-[28px] border-[3px] ${config.border}`}>
           <div className={`${config.bg} border-b-[3px] ${config.border} p-5 sm:p-6 lg:p-8`}>
-            <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
+            <div className="space-y-4">
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/70 bg-white/80 text-3xl shadow-sm sm:h-16 sm:w-16 sm:text-4xl">
@@ -685,32 +685,6 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                     ))}
                   </div>
                 )}
-              </div>
-
-              <div className="surface-card hover-lift rounded-3xl border border-white/70 p-5">
-                <p className="mb-3 text-xs font-bold tracking-[0.18em] text-slate-500">
-                  מוקד הצעד הנוכחי
-                </p>
-                <div className="space-y-3">
-                  <div className="rounded-2xl bg-white px-4 py-3 shadow-sm">
-                    <p className="text-xs font-semibold text-slate-500">מטרה</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-700">
-                      להבין מה בודקים עכשיו, מה מפרשנים, ומה הפעולה הבאה במסלול.
-                    </p>
-                  </div>
-                  <div className="rounded-2xl bg-white px-4 py-3 shadow-sm">
-                    <p className="text-xs font-semibold text-slate-500">ניווט</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-700">
-                      המשך בצעד אחד ברור בכל מסך, בלי להעמיס את כל המידע בבת אחת.
-                    </p>
-                  </div>
-                  <div className="rounded-2xl bg-white px-4 py-3 shadow-sm">
-                    <p className="text-xs font-semibold text-slate-500">סימון אישי</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-700">
-                      {hasBookmark ? 'הצעד הזה כבר נשמר לחזרה מהירה.' : 'אפשר לשמור את הצעד הזה לסקירה מאוחרת.'}
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
