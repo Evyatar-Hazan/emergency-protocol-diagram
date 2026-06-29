@@ -202,6 +202,13 @@ Phase 3 implementation note:
 
 Status: Completed on 2026-06-26
 
+Clinical content checkpoint on 2026-06-29:
+
+- source display was activated inside the step-by-step node experience
+- CPR core content was already aligned in a previous pass
+- airway and choking nodes were aligned in this pass to public BLS-facing sources from MDA, United Hatzalah, and the Ministry of Health
+- remaining clinical audit work should continue by protocol family in priority order
+
 ### Task 4.1
 
 Redesign the step-by-step top context bar.

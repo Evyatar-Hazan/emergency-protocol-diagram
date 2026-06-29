@@ -185,6 +185,12 @@ Implementation checkpoint on 2026-06-27 for visual polish:
 - hero, panel, and card surfaces gained additional depth without drifting into generic SaaS styling
 - the visual system now feels more deliberate and productized ahead of final launch verification
 
+Implementation checkpoint on 2026-06-29 for clinical content trust:
+
+- airway and choking guidance in the learning flow was aligned to public BLS-facing sources
+- step nodes now expose source links directly inside the UI for safer academic review
+- ALS-only instructions were reduced in the airway layer so the product stays closer to the intended trainee scope
+
 ## Experience Principles
 
 1. One primary action per screen.
