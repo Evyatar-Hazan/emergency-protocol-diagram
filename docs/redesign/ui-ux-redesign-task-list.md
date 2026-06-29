@@ -207,7 +207,16 @@ Clinical content checkpoint on 2026-06-29:
 - source display was activated inside the step-by-step node experience
 - CPR core content was already aligned in a previous pass
 - airway and choking nodes were aligned in this pass to public BLS-facing sources from MDA, United Hatzalah, and the Ministry of Health
+- extended breathing nodes for asthma, COPD exacerbation, and pneumonia were cleaned up, sourced, and reduced toward trainee-facing BLS wording
 - remaining clinical audit work should continue by protocol family in priority order
+
+Remaining clinical audit queue on 2026-06-29:
+
+- Breathing: remaining extended breathing review
+- Circulation: STEMI, VT, SVT, AFib, bradycardia, hypertensive emergency, and final extended review
+- Disability: core audit, visible sources, ALS cleanup
+- Exposure: core audit, visible sources, ALS cleanup
+- Cross-cutting: source consistency, broader ALS leakage cleanup, and production verification after each pass
 
 ### Task 4.1
 
