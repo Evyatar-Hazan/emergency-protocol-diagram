@@ -4148,6 +4148,13 @@
           "מרגיש קר/חם?",
           "אלרגיות?",
           "תרופות?"
+        ],
+        "sources": [
+          {
+            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
+            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
+            "note": "חשיפה מבוקרת, סקר משני ושמירה על חום הגוף כחלק מהערכת שדה."
+          }
         ]
       },
       "next": "exposure_status"
@@ -4160,7 +4167,14 @@
       "description": "זיהוי בעיות סביבתיות או טראומה נסתרת",
       "severity": "urgent",
       "content": {
-        "checkMethod": "מה מצאת?\n- טמפרטורה תקינה (36-37.5°C)\n- טראומה נוספת?\n- כוויות?\n- סימני היפותרמיה/היפרתרמיה?"
+        "checkMethod": "מה מצאת?\n- טמפרטורה תקינה (36-37.5°C)\n- טראומה נוספת?\n- כוויות?\n- סימני היפותרמיה/היפרתרמיה?",
+        "sources": [
+          {
+            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
+            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
+            "note": "סיכום ממצאי החשיפה והחלטה על מסלול המשך לפי טמפרטורה, כוויות או טראומה נסתרת."
+          }
+        ]
       },
       "options": [
         {
@@ -4277,6 +4291,18 @@
           "טבע במים?",
           "שתה אלכוהול?",
           "מחלות לב?"
+        ],
+        "sources": [
+          {
+            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
+            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
+            "note": "זיהוי היפותרמיה, טיפול עדין, חימום והמשך פינוי."
+          },
+          {
+            "label": "משרד הבריאות - היערכות לקור",
+            "url": "https://www.gov.il/he/pages/cold_weather",
+            "note": "סיכוני קור והגנה על אוכלוסיות בסיכון."
+          }
         ]
       },
       "next": "exposure_complete"
@@ -4361,6 +4387,18 @@
           "שתה מים?",
           "תרופות?",
           "מחלות רקע?"
+        ],
+        "sources": [
+          {
+            "label": "משרד הבריאות - התגוננות ממכת חום",
+            "url": "https://www.gov.il/he/pages/heat_stroke",
+            "note": "זיהוי עומס חום, מכת חום, וקירור מהיר."
+          },
+          {
+            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
+            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
+            "note": "תמיכת שדה, קירור ופינוי בחשד למכת חום."
+          }
         ]
       },
       "next": "exposure_complete"
@@ -4456,6 +4494,18 @@
           "במקום סגור? (שאיפת עשן)",
           "חשמל? כימי?",
           "משקל?"
+        ],
+        "sources": [
+          {
+            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
+            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
+            "note": "הערכת עומק, שטח ומיקום כוויה, קירור ראשוני וכיסוי מתאים."
+          },
+          {
+            "label": "משרד הבריאות - מידע ראשוני על כוויות",
+            "url": "https://www.gov.il/he/pages/burns",
+            "note": "עקרונות קירור ראשוני ופנייה להמשך טיפול."
+          }
         ]
       },
       "next": "exposure_complete"
@@ -4545,6 +4595,13 @@
           "- מחלות רקע?",
           "- אכלת לאחרונה?",
           "- מה קרה?"
+        ],
+        "sources": [
+          {
+            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
+            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
+            "note": "סקר משני שיטתי, שימוש ב-DCAP-BTLS ותיעוד ממצאים."
+          }
         ]
       },
       "next": "exposure_complete"
