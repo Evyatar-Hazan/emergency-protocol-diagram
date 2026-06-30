@@ -1,6 +1,7 @@
 import type { FlowData, Protocol } from '../types/protocol';
 // import cpr from './cpr.json';
 // import abcdeMedical from './abcde-medical.json';
+import { applySourceFallbacks } from './sourceFallbacks';
 import unifiedFlow from './unified-flow.json';
 
 /**
@@ -13,7 +14,7 @@ export const protocolsData: FlowData = {
   version: '2.0.0',
   language: 'he',
   protocols: {
-    unified_flow: unifiedFlow as Protocol,  // הפרוטוקול המאוחד - זרימה אחת מלאה
+    unified_flow: applySourceFallbacks(unifiedFlow as Protocol),  // הפרוטוקול המאוחד - זרימה אחת מלאה
     // cpr: cpr as Protocol,
     // abcde_medical: abcdeMedical as Protocol,
   },
