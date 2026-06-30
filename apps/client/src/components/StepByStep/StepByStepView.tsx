@@ -15,6 +15,19 @@ type SectionDefinition = {
   content: ReactNode;
 };
 
+type SchemaShortcut = {
+  nodeId: string;
+  label: string;
+  description: string;
+};
+
+type SchemaShortcutGroup = {
+  key: string;
+  title: string;
+  icon: string;
+  shortcuts: SchemaShortcut[];
+};
+
 export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   const [currentNodeId, setCurrentNodeId] = useState<string>('unified_flow:report_departure');
   const [history, setHistory] = useState<string[]>([]);
@@ -185,6 +198,129 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   };
 
   const nextOptions = getNextOptions();
+
+  const schemaShortcutGroups: SchemaShortcutGroup[] = [
+    {
+      key: 'core-flow',
+      title: 'ליבת הפרוטוקול',
+      icon: '🧭',
+      shortcuts: [
+        {
+          nodeId: 'unified_flow:scene_assessment',
+          label: 'S והתרשמות זירה',
+          description: 'כניסה מהירה לשלב הזירה, הסכנות והבנת המקרה.',
+        },
+        {
+          nodeId: 'unified_flow:avpu_check',
+          label: 'AVPU והכרה',
+          description: 'מעבר ישיר לבדיקת ערנות ותגובה.',
+        },
+        {
+          nodeId: 'unified_flow:abcde_assessment',
+          label: 'שער ABCDE',
+          description: 'קפיצה לשלב בחירת המסלול הקליני המוביל.',
+        },
+      ],
+    },
+    {
+      key: 'critical-response',
+      title: 'אירועים דחופים',
+      icon: '🚨',
+      shortcuts: [
+        {
+          nodeId: 'unified_flow:cpr_protocol',
+          label: 'החייאה',
+          description: 'כניסה ישירה למסלול החייאה ו-AED.',
+        },
+        {
+          nodeId: 'unified_flow:trauma_protocol',
+          label: 'טראומה ודימום',
+          description: 'שלב X ודימום פורץ לפני המשך טראומה.',
+        },
+        {
+          nodeId: 'unified_flow:abcde_trauma',
+          label: 'טראומה - XABCDE',
+          description: 'כניסה מהירה למסלול הטראומה המלא.',
+        },
+      ],
+    },
+    {
+      key: 'clinical-branches',
+      title: 'ענפי בדיקה מרכזיים',
+      icon: '🩺',
+      shortcuts: [
+        {
+          nodeId: 'unified_flow:breathing_assessment',
+          label: 'B - נשימה',
+          description: 'קפיצה לסכמת הערכת נשימה.',
+        },
+        {
+          nodeId: 'unified_flow:circulation_assessment',
+          label: 'C - מחזור דם',
+          description: 'קפיצה לסכמת הערכת מחזור דם.',
+        },
+        {
+          nodeId: 'unified_flow:disability_assessment',
+          label: 'D - נוירולוגיה',
+          description: 'קפיצה להערכה נוירולוגית ושינוי הכרה.',
+        },
+        {
+          nodeId: 'unified_flow:exposure_assessment',
+          label: 'E - חשיפה',
+          description: 'קפיצה לחשיפה, סביבה וסקר משני.',
+        },
+      ],
+    },
+    {
+      key: 'support-layers',
+      title: 'שכבות עזר ממוקדות',
+      icon: '📚',
+      shortcuts: [
+        {
+          nodeId: 'unified_flow:secondary_survey',
+          label: 'סקר משני',
+          description: 'כניסה ישירה לשלב האנמנזה והסקירה המשלימה.',
+        },
+        {
+          nodeId: 'unified_flow:special_patient_overview',
+          label: 'חולה מיוחד',
+          description: 'קפיצה להנחיות התאמה לילד, קשיש, הריון וסיעודי.',
+        },
+        {
+          nodeId: 'unified_flow:operational_support_overview',
+          label: 'שכבת תפעול',
+          description: 'תיעוד, מוניטור, ניהול צוות והפעלת אמבולנס.',
+        },
+      ],
+    },
+    {
+      key: 'scene-exceptions',
+      title: 'תרחישי זירה מיוחדים',
+      icon: '⚠️',
+      shortcuts: [
+        {
+          nodeId: 'unified_flow:mass_casualty_protocol',
+          label: 'אר"ן',
+          description: 'קפיצה למסלול אר"ן וטריאז׳.',
+        },
+        {
+          nodeId: 'unified_flow:hazmat_protocol',
+          label: 'חומ"ס',
+          description: 'קפיצה למסלול חומרים מסוכנים ובטיחות זירה.',
+        },
+      ],
+    },
+  ];
+
+  const availableSchemaShortcutGroups = schemaShortcutGroups
+    .map((group) => ({
+      ...group,
+      shortcuts: group.shortcuts.filter((shortcut) => {
+        const parsedShortcut = parseNodeId(shortcut.nodeId);
+        return Boolean(parsedShortcut && protocols[parsedShortcut.protocolId]?.nodes[parsedShortcut.nodeKey]);
+      }),
+    }))
+    .filter((group) => group.shortcuts.length > 0);
 
   const jumpToNode = (nodeId: string) => {
     if (nodeId !== currentNodeId) {
@@ -523,11 +659,11 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between bg-gradient-to-l from-purple-600 to-blue-600 p-4 text-white shadow-lg sm:p-5">
             <div className="flex items-center gap-3">
-              <span className="text-2xl sm:text-3xl">🔖</span>
+              <span className="text-2xl sm:text-3xl">🧰</span>
               <div>
-                <h2 className="text-lg font-bold sm:text-xl">נקודות חזרה מהירה</h2>
+                <h2 className="text-lg font-bold sm:text-xl">כלי עזר מהירים</h2>
                 <p className="text-xs text-white/80 sm:text-sm">
-                  {bookmarkedNodes.size} {bookmarkedNodes.size === 1 ? 'סימניה' : 'סימניות'}
+                  קפיצה לסכמות ונקודות חזרה שמורות
                 </p>
               </div>
             </div>
@@ -541,6 +677,54 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
           </div>
 
           <div className="flex-1 overflow-y-auto">
+            {availableSchemaShortcutGroups.length > 0 && (
+              <div className="border-b border-slate-200 bg-slate-50/80 p-4 sm:p-5">
+                <div className="mb-4">
+                  <div className="text-xs font-bold tracking-[0.18em] text-clinical-muted">קפיצה לסכמות</div>
+                  <h3 className="mt-2 text-lg font-bold text-slate-900 sm:text-xl">ניווט משני לפי נושא</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    הכלי הזה נועד לקפוץ לסכמה ספציפית לצורך רענון או תחקור, בלי לשנות את ההיגיון של הפרוטוקול הראשי.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  {availableSchemaShortcutGroups.map((group) => (
+                    <div key={group.key} className="rounded-3xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4">
+                      <div className="mb-3 flex items-center gap-2">
+                        <span className="text-xl">{group.icon}</span>
+                        <h4 className="text-sm font-bold text-slate-900 sm:text-base">{group.title}</h4>
+                      </div>
+                      <div className="space-y-2">
+                        {group.shortcuts.map((shortcut) => {
+                          const isCurrentShortcut = shortcut.nodeId === currentNodeId;
+
+                          return (
+                            <button
+                              key={shortcut.nodeId}
+                              onClick={() => jumpToNode(shortcut.nodeId)}
+                              className={`w-full rounded-2xl border px-4 py-3 text-right transition-all ${
+                                isCurrentShortcut
+                                  ? 'border-clinical-blue bg-clinical-blue/10 shadow-sm'
+                                  : 'border-slate-200 bg-slate-50 hover:border-clinical-blue/40 hover:bg-white'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between gap-3">
+                                <span className="text-sm font-bold text-slate-900">{shortcut.label}</span>
+                                <span className="text-xs font-semibold text-clinical-muted">פתח</span>
+                              </div>
+                              <p className="mt-1 text-xs leading-5 text-slate-500 sm:text-sm">
+                                {shortcut.description}
+                              </p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {getBookmarkedNodesList().length === 0 ? (
               <div className="flex h-full flex-col items-center justify-center p-6 text-center sm:p-8">
                 <div className="mb-4 text-6xl sm:mb-6 sm:text-7xl">☆</div>
@@ -661,11 +845,11 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                 <button
                   onClick={() => setIsSidebarOpen(true)}
                   className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 py-3 text-sm font-medium text-white transition-all hover:shadow-lg md:px-3 md:py-2"
-                  title="פתח סימניות"
-                  aria-label="פתח את רשימת הסימניות"
+                  title="פתח כלי עזר מהירים"
+                  aria-label="פתח את קפיצות הסכמות והסימניות"
                 >
-                  <span className="text-base">🔖</span>
-                  <span>סימניות</span>
+                  <span className="text-base">🧰</span>
+                  <span>סכמות וסימניות</span>
                   {bookmarkedNodes.size > 0 && (
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-bold text-purple-600">
                       {bookmarkedNodes.size}
