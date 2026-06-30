@@ -142,7 +142,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   const severity = currentNode.severity || 'normal';
   const config = severityConfig[severity as keyof typeof severityConfig] || severityConfig.normal;
   const stepCount = history.length + 1;
-  const protocolLabel = currentProtocol.name || parsed?.protocolId || 'מסלול למידה';
+  const protocolLabel = currentProtocol.name || parsed?.protocolId || 'פרוטוקול ראשי';
   const nodeDescription = currentNode.description?.trim();
   const hasBookmark = bookmarkedNodes.has(currentNodeId);
 
@@ -525,7 +525,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             <div className="flex items-center gap-3">
               <span className="text-2xl sm:text-3xl">🔖</span>
               <div>
-                <h2 className="text-lg font-bold sm:text-xl">הסימניות שלי</h2>
+                <h2 className="text-lg font-bold sm:text-xl">נקודות חזרה מהירה</h2>
                 <p className="text-xs text-white/80 sm:text-sm">
                   {bookmarkedNodes.size} {bookmarkedNodes.size === 1 ? 'סימניה' : 'סימניות'}
                 </p>
@@ -544,7 +544,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             {getBookmarkedNodesList().length === 0 ? (
               <div className="flex h-full flex-col items-center justify-center p-6 text-center sm:p-8">
                 <div className="mb-4 text-6xl sm:mb-6 sm:text-7xl">☆</div>
-                <h3 className="mb-2 text-lg font-bold text-gray-800 sm:mb-3 sm:text-xl">אין סימניות עדיין</h3>
+                <h3 className="mb-2 text-lg font-bold text-gray-800 sm:mb-3 sm:text-xl">אין נקודות חזרה עדיין</h3>
                 <p className="mb-4 max-w-xs text-sm leading-relaxed text-gray-600 sm:mb-6 sm:text-base">
                   כדי להוסיף סימניה, לחץ על כפתור הכוכב בחלק העליון של כל צומת
                 </p>
@@ -554,7 +554,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                     <span className="text-sm font-bold text-blue-900 sm:text-base">טיפ</span>
                   </div>
                   <p className="text-right text-xs text-blue-800 sm:text-sm">
-                    סמן צמתים שאתה חוזר אליהם לעתים קרובות לגישה מהירה ונוחה
+                    שמור צמתים קריטיים או מורכבים כדי לחזור אליהם במהירות במהלך תרגול, תחקור או רענון
                   </p>
                 </div>
               </div>
@@ -648,7 +648,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   aria-label={hasBookmark ? 'הסר את הצעד הזה מהסימניות' : 'שמור את הצעד הזה לסימניות'}
                 >
                   <span className="text-lg">{hasBookmark ? '⭐' : '☆'}</span>
-                  <span>{hasBookmark ? 'שמור ללמידה' : 'שמור לחזרה'}</span>
+                  <span>{hasBookmark ? 'נשמר לחזרה מהירה' : 'שמור לחזרה מהירה'}</span>
                 </button>
                 <button
                   onClick={goBack}
@@ -689,7 +689,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   </div>
                   <div className="flex-1">
                     <p className="mb-2 text-sm font-semibold tracking-[0.2em] text-slate-500">
-                      יחידת למידה קלינית
+                      שלב בפרוטוקול הראשי
                     </p>
                     <h1 className={`mb-2 font-display text-2xl font-extrabold sm:text-3xl md:text-4xl ${config.text}`}>
                       {currentNode.title}
@@ -739,8 +739,8 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             {learningSections.length > 0 && (
               <section className="space-y-4">
                 <div>
-                  <p className="text-xs font-bold tracking-[0.18em] text-slate-500">פרשנות קלינית</p>
-                  <h2 className="font-display text-2xl font-bold text-slate-900">הבנה והערכה</h2>
+                  <p className="text-xs font-bold tracking-[0.18em] text-slate-500">הערכת מצב והמשך טיפול</p>
+                  <h2 className="font-display text-2xl font-bold text-slate-900">מה המשמעות הקלינית עכשיו</h2>
                 </div>
                 <div className="grid gap-4">{learningSections.map(renderAccordionSection)}</div>
               </section>
@@ -749,8 +749,8 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             {deepDiveSections.length > 0 && (
               <section className="space-y-4">
                 <div>
-                  <p className="text-xs font-bold tracking-[0.18em] text-slate-500">העמקה לימודית</p>
-                  <h2 className="font-display text-2xl font-bold text-slate-900">העמקה קלינית</h2>
+                  <p className="text-xs font-bold tracking-[0.18em] text-slate-500">שכבת עזר והקשר</p>
+                  <h2 className="font-display text-2xl font-bold text-slate-900">הבהרות, רקע ומקורות</h2>
                 </div>
                 <div className="grid gap-4">{deepDiveSections.map(renderAccordionSection)}</div>
               </section>
@@ -758,8 +758,8 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
 
             <section className="space-y-4">
               <div>
-                <p className="text-xs font-bold tracking-[0.18em] text-slate-500">דיון מקצועי</p>
-                <h2 className="font-display text-2xl font-bold text-slate-900">דיון ולמידה משותפת</h2>
+                <p className="text-xs font-bold tracking-[0.18em] text-slate-500">שכבת קהילה והבהרות</p>
+                <h2 className="font-display text-2xl font-bold text-slate-900">דיון מקצועי משני לפרוטוקול</h2>
               </div>
               <div className="hover-lift rounded-[28px] border border-slate-200 bg-slate-50/80 p-3 sm:p-4">
                 <CommentsThread nodeId={currentNodeId} title="דיון והערות על הצומת" />
@@ -774,7 +774,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   <p className="text-xs font-bold tracking-[0.18em] text-slate-500">החלטה הבאה</p>
                   <h3 className="font-display text-2xl font-extrabold text-slate-900">מה הצעד הבא?</h3>
                   <p className="mt-2 text-sm text-slate-600 sm:text-base">
-                    בחר את ההמשך המתאים כדי לשמור על רצף למידה ברור.
+                    בחר את ההמשך המתאים כדי לשמור על רצף פרוטוקול ברור וללא דילוגים.
                   </p>
                 </div>
                 <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">

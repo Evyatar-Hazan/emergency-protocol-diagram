@@ -29,7 +29,7 @@ interface CommentsThreadProps {
 
 export const CommentsThread: React.FC<CommentsThreadProps> = ({
   nodeId,
-  title = 'דיון והערות על הצומת',
+  title = 'הערות והבהרות על הצומת',
 }) => {
   const { isAuthenticated, user } = useAuthStore();
   const [comments, setComments] = useState<Comment[]>([]);
@@ -72,7 +72,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
             <div className="text-xs font-bold tracking-[0.18em] text-clinical-muted">שכבת קהילה</div>
             <h3 className="mt-2 text-xl font-bold text-clinical-ink sm:text-2xl">{title}</h3>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-clinical-muted">
-              מקום לשאלות, חידודים מקצועיים ותובנות לימודיות סביב הצומת הנוכחי. הדיון נשאר משני למסלול, אבל תומך בלמידה עמוקה יותר.
+              מקום לשאלות, חידודים מקצועיים והבהרות סביב הצומת הנוכחי. הדיון נשאר משני לפרוטוקול, ותפקידו לחדד את הביצוע בלי לשנות את הסדר.
             </p>
           </div>
 
@@ -108,7 +108,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
       {isLoading ? (
         <div className="rounded-[28px] border border-slate-200 bg-white px-5 py-10 text-center shadow-soft">
           <div className="mx-auto mb-3 h-10 w-10 animate-spin rounded-full border-[3px] border-clinical-blue/15 border-t-clinical-blue"></div>
-          <p className="text-sm font-medium text-slate-700">טוען את הדיון המקצועי...</p>
+          <p className="text-sm font-medium text-slate-700">טוען את שכבת ההבהרות...</p>
           <p className="mt-2 text-xs text-slate-500">אוסף תגובות, שאלות והערות סביב הצומת הזה.</p>
         </div>
       ) : comments.length === 0 ? (
@@ -116,9 +116,9 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-2xl">
             💬
           </div>
-          <h4 className="text-lg font-bold text-slate-900">עדיין אין דיון על הצומת הזה</h4>
+          <h4 className="text-lg font-bold text-slate-900">עדיין אין הערות על הצומת הזה</h4>
           <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-500">
-            אפשר לפתוח את הדיון עם שאלה, הבהרה לימודית או טיפ מקצועי שיעזור למתלמדים הבאים להבין את ההיגיון הקליני.
+            אפשר לפתוח כאן שאלה, הבהרה מקצועית או דגש ביצועי שיעזרו לחדד את ההחלטה בצומת הזה.
           </p>
         </div>
       ) : (

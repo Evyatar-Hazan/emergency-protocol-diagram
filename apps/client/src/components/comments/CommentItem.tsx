@@ -202,7 +202,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                     setShowReplyForm(false);
                     onCommentUpdated?.();
                   }}
-                  placeholder="כתוב תגובה קצרה שמוסיפה ערך ללמידה..."
+                  placeholder="כתוב תגובה קצרה שמחדדת ביצוע, החלטה או דגש מקצועי..."
                 />
               </div>
             )}

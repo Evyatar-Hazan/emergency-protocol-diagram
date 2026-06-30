@@ -33,7 +33,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
             פרוטוקולי חירום
           </h1>
           <p className="text-gray-600">
-            התחבר כדי לגשת למסלולי הלמידה ולהשתתף בדיונים מקצועיים
+            התחבר כדי לשמור נקודות חזרה, לעקוב אחרי הפרוטוקול ולהשתתף בהבהרות מקצועיות
           </p>
         </div>
 

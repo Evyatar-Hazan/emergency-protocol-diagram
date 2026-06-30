@@ -54,7 +54,7 @@ function AppContent() {
       <div className="app-shell flex min-h-screen items-center justify-center px-4" dir="rtl">
         <div className="surface-card-strong clinical-panel rise-in w-full max-w-xl rounded-4xl px-8 py-12 text-center">
           <span className="clinical-kicker mb-6">
-            סביבת למידה קלינית
+            פרוטוקול חירום מונחה
           </span>
           <div className="pulse-glow mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full border border-clinical-blue/10 bg-white/70">
             <div className="h-12 w-12 animate-spin rounded-full border-[3px] border-clinical-blue/20 border-t-clinical-blue"></div>
@@ -63,7 +63,7 @@ function AppContent() {
             Emergency Protocol Diagram
           </h1>
           <p className="mx-auto max-w-md text-base leading-7 text-clinical-muted">
-            טוען מסלול למידה קליני לחובשים ומתלמדים עם התקדמות מודרכת, שליפה מהירה של מדדים ודיון מקצועי.
+            טוען פרוטוקול צעד-אחר-צעד לחובשים עם ניווט קשיח, שליפה מהירה של מדדים ושכבות עזר מקצועיות.
           </p>
         </div>
       </div>
@@ -80,13 +80,13 @@ function AppContent() {
             <div className="hidden h-12 w-[1px] bg-white/12 sm:block" />
             <div className="min-w-0">
               <span className="shimmer-line mb-2 inline-flex items-center rounded-full border border-white/12 bg-white/10 px-3 py-1 text-[11px] font-bold tracking-[0.18em] text-white/75">
-                מערכת למידה קלינית
+                פרוטוקול חירום ראשי
               </span>
               <h1 className="truncate font-display text-lg font-extrabold text-white sm:text-2xl">
                 Emergency Protocol Diagram
               </h1>
               <p className="mt-1 hidden max-w-2xl text-sm leading-6 text-white/72 sm:block">
-                סביבת למידה אקדמית לחובשים ומתלמדים עם מסלול חשיבה צעד-אחר-צעד, מדדים מהירים ודיון מקצועי סביב כל צומת.
+                פרוטוקול חירום מונחה לחובשים ולמתלמדים, עם סדר עבודה קשיח, מדדים מהירים ושכבות עזר סביב כל צומת.
               </p>
             </div>
           </div>
@@ -100,7 +100,7 @@ function AppContent() {
                   : 'bg-white/10 text-white hover:bg-white/16'
               }`}
             >
-              מסלול למידה
+              פרוטוקול ראשי
             </button>
             <button
               onClick={() => setViewMode('vital-signs')}
@@ -140,7 +140,7 @@ function AppContent() {
                   נתיבי המוצר הראשיים
                 </span>
                 <p className="text-sm leading-6 text-slate-600">
-                  הניווט הראשי מחולק למסלול למידה מודרך ולשליפה מהירה של מדדים. תרשים המערכת המלא נשאר ככלי משני בלבד.
+                  הניווט הראשי מחולק לפרוטוקול חובה צעד-אחר-צעד ולשליפה מהירה של מדדים. תרשים המערכת המלא נשאר כלי עזר משני בלבד.
                 </p>
               </div>
               <button
@@ -157,7 +157,7 @@ function AppContent() {
               >
                 <span className="flex items-center justify-center gap-3">
                   <span className="text-lg">◎</span>
-                  <span>מסלול למידה צעד-אחר-צעד</span>
+                  <span>פרוטוקול ראשי צעד-אחר-צעד</span>
                 </span>
               </button>
               <button
@@ -179,7 +179,7 @@ function AppContent() {
                   </div>
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-sm leading-6 text-slate-600">
-                      תרשים המערכת נשאר זמין למדריכים, סקירה מתקדמת והבנת ההקשר הרחב, אבל אינו חלק מהמסלול הראשי.
+                      תרשים המערכת נשאר זמין לסקירה מתקדמת, הדרכה והקשר רחב, אבל אינו חלק ממסלול הביצוע הראשי.
                     </p>
                     <button
                       onClick={() => {
@@ -229,14 +229,14 @@ function AppContent() {
                   מבט מערכת מתקדם
                 </h2>
                 <p className="mt-2 max-w-3xl text-sm leading-6 text-clinical-muted">
-                  התרשים המלא זמין לסקירה מערכתית, הדרכה והבנת הקשרים רחבים, אבל אינו חלק מזרימת הלמידה הראשית.
+                  התרשים המלא זמין לסקירה מערכתית, הדרכה והבנת הקשרים רחבים, אבל אינו חלק מזרימת הפרוטוקול הראשית.
                 </p>
               </div>
               <button
                 onClick={() => setSecondaryTool('none')}
                 className="rounded-2xl bg-clinical-blue px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-clinical-deep"
               >
-                חזרה למסלול הראשי
+                חזרה לפרוטוקול הראשי
               </button>
             </div>
           </div>

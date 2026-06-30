@@ -28,7 +28,7 @@ export const CommentForm: React.FC<CommentFormProps> = ({
           <div>
             <p className="text-sm font-semibold text-blue-900">התחבר כדי להשתתף בדיון</p>
             <p className="mt-1 text-sm leading-6 text-blue-800">
-              לאחר התחברות אפשר להוסיף הערות, לענות לאחרים ולבנות שכבת למידה מקצועית סביב כל צומת.
+              לאחר התחברות אפשר להוסיף הערות, לענות לאחרים ולבנות שכבת הבהרות מקצועית סביב כל צומת.
             </p>
           </div>
           <div className="w-full sm:w-64">
@@ -89,7 +89,7 @@ export const CommentForm: React.FC<CommentFormProps> = ({
             <p className="text-sm font-medium text-red-700">{error}</p>
           ) : (
             <p className="text-xs text-slate-500">
-              שמור על ניסוח מקצועי, מכבד ורלוונטי ללמידה.
+              שמור על ניסוח מקצועי, מכבד ורלוונטי לביצוע הפרוטוקול.
             </p>
           )}
         </div>
