@@ -146,7 +146,7 @@
         },
         {
           "label": "אין דימום פורץ - המשך להכרה",
-          "target": "avpu_check"
+          "target": "trauma_avpu_check"
         }
       ]
     },
@@ -282,7 +282,7 @@
           "מה הזמן שעבר מתחילת הדימום?"
         ]
       },
-      "next": "avpu_check"
+      "next": "trauma_avpu_check"
     },
     
     "medical_protocol": {
@@ -1109,12 +1109,444 @@
     "abcde_trauma": {
       "id": "abcde_trauma",
       "type": "info",
-      "title": "פרוטוקול טראומה - בפיתוח",
-      "description": "מסלול טראומטי מפורט יתווסף בהמשך",
-      "severity": "warning",
+      "title": "מסלול טראומה - XABCDE",
+      "description": "בטראומה עובדים במסלול קשיח: S -> X -> AVPU -> A -> B -> C -> D -> E",
+      "severity": "critical",
       "content": {
-        "treatment": "פרוטוקול ABCDE מיוחד לטראומה עדיין לא זמין.\n\nבינתיים, המשך עם הערכת ABCDE רגילה והקפד על:\n• יציבות עמוד שדרה צווארי\n• בדיקת דימום פנימי\n• מנגנון הפגיעה\n• הערכת חבלה רב-מערכתית"
-      }
+        "treatment": "בטראומה לא מדלגים שלבים:\n1. S - בטיחות זירה ומנגנון פציעה\n2. X - דימום מסיבי\n3. AVPU - מצב הכרה מהיר\n4. A - נתיב אוויר + C-spine\n5. B - נשימה וחזה\n6. C - פרפוזיה, הלם, בטן/אגן\n7. D - נוירולוגיה\n8. E - חשיפה, חימום, סקר שניוני ופינוי"
+      },
+      "next": "trauma_primary_priorities"
+    },
+
+    "trauma_primary_priorities": {
+      "id": "trauma_primary_priorities",
+      "type": "action",
+      "title": "S - זירה, קינמטיקה ודחיפות פינוי",
+      "description": "בפצוע טראומה מתחילים מהבנת המנגנון, הסכנה והצורך בפינוי מהיר",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "ודא שהזירה בטוחה לך, לצוות ולנפגע",
+          "הבן את מנגנון הפגיעה: מהירות, גובה, חדירה, התהפכות, אופנוע, הולך רגל, פיצוץ",
+          "חפש רמזים לקינמטיקה קשה: שמשה שבורה, הגה עקום, חגורה, קסדה, מרחק היזרקות",
+          "זכור עקרון PHTLS: לא מתעכבים על טיפול שאינו מציל חיים בשטח",
+          "אם מדובר בפצוע קשה - כוון לפינוי מהיר כבר מההתחלה"
+        ],
+        "questions": [
+          "מה פגע במה ובאיזו עוצמה?",
+          "הייתה נפילה מגובה או היזרקות?",
+          "האם היה שימוש באמצעי בטיחות?",
+          "האם יש יותר מנפגע אחד או סיכון זירתי נוסף?"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-1 מבוא לטראומה",
+            "url": "https://drive.google.com/file/d/1qVrELB2-4J7WTNL21x16z3IYWP9uX0Kr/view?usp=drivesdk",
+            "note": "קינמטיקה, מנגנון פגיעה וסיכוני זירה."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע",
+            "url": "https://drive.google.com/file/d/1nvH--jPQlaqd0NE9Gn0eR4MY0A7vhEgE/view?usp=drivesdk",
+            "note": "PHTLS, שעת הזהב, S ו-XABCDE."
+          }
+        ]
+      },
+      "next": "trauma_protocol"
+    },
+
+    "trauma_avpu_check": {
+      "id": "trauma_avpu_check",
+      "type": "decision",
+      "title": "AVPU בפצוע טראומה",
+      "description": "אחרי X בודקים הכרה במהירות כדי לכוון את המשך ה-XABCDE",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "בדוק במהירות:\n- Alert: ערני ומתקשר\n- Voice: מגיב לקול\n- Pain: מגיב לכאב\n- Unresponsive: לא מגיב\n\nזכור:\n- A/V עדיין לא שולל פציעה קשה\n- P/U מעלה מיד חשד לפגיעת ראש, היפוקסיה, הלם או שילוב ביניהם",
+        "whatToLookFor": [
+          "האם הפצוע פותח עיניים ומתקשר?",
+          "האם יש בלבול, אגרסיביות או ירידה בהכרה?",
+          "האם יש קושי בדיבור, הקאה או פרכוס?",
+          "האם יש פגיעה נראית לעין בראש או בפנים?"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע",
+            "url": "https://drive.google.com/file/d/1nvH--jPQlaqd0NE9Gn0eR4MY0A7vhEgE/view?usp=drivesdk",
+            "note": "בסבב הראשוני בטראומה משלבים AVPU לפני המשך D."
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "label": "A / V - ממשיך למסלול טראומה",
+          "target": "trauma_airway_gate"
+        },
+        {
+          "label": "P / U - חשד לפצוע קשה / ראש / הלם",
+          "target": "trauma_airway_gate"
+        }
+      ]
+    },
+
+    "trauma_airway_gate": {
+      "id": "trauma_airway_gate",
+      "type": "decision",
+      "title": "A - נתיב אוויר בטראומה",
+      "description": "בטראומה כל איום על נתיב האוויר נבדק יחד עם חשד לפגיעת עמש\"צ",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "בדוק מיד:\n- האם הפצוע מדבר או משמיע קול תקין\n- האם יש דם, הקאות, שברי פנים, נפיחות או גוף זר\n- האם יש חשד לפגיעת צוואר/עמוד שדרה צווארי\n- האם צריך Jaw Thrust, סקשיין או ייצוב ידני",
+        "whatToLookFor": [
+          "פגיעות פנים/צוואר",
+          "שינוי קול, נחירות, גרגור או קושי בבליעה",
+          "הפרשות או דם בפה",
+          "מנגנון שמחייב שמירת C-spine"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-4 פגיעות פנים, צוואר וראש",
+            "url": "https://drive.google.com/file/d/1zcApz8BhFJ7AJ8khzve6qCmJ8vHOswiQ/view?usp=drivesdk",
+            "note": "נתיב אוויר בטראומה, שברי פנים, C-spine ו-Jaw Thrust."
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "label": "יש איום על נתיב האוויר / חשד לפגיעת פנים-צוואר",
+          "target": "trauma_airway"
+        },
+        {
+          "label": "נתיב אוויר יציב כרגע - המשך ל-B",
+          "target": "trauma_breathing_gate"
+        }
+      ]
+    },
+
+    "trauma_breathing_gate": {
+      "id": "trauma_breathing_gate",
+      "type": "decision",
+      "title": "B - נשימה וחבלת חזה",
+      "description": "חפש בטראומה מצוקה נשימתית, פצע חודר, חזה צף או דימום/אוויר בחלל החזה",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "בדוק חזה חשוף ככל שניתן:\n- סימטריה בתנועת בית חזה\n- פצע חודר או 'פצע יונק'\n- תנועה פרדוקסלית\n- קולות נשימה מופחתים\n- כאב חזה, קוצר נשימה, סטורציה נמוכה או כחלון",
+        "whatToLookFor": [
+          "פצע חודר בחזה",
+          "חזה צף / נשימה פרדוקסלית",
+          "חשד לפנאומוטורקס או המוטורקס",
+          "פיח/כוויה/שאיפת עשן"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-5 פגיעות בית חזה",
+            "url": "https://drive.google.com/file/d/1Umun5rMEtOQb54e0cZsg36LhpfnI-BJ3/view?usp=drivesdk",
+            "note": "חזה אוויר, חזה צף, חזה דם, חבישת חזה וטמפונדה."
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "label": "פצע חודר / פצע יונק בחזה",
+          "target": "sucking_chest_wound"
+        },
+        {
+          "label": "חזה צף / תנועה פרדוקסלית",
+          "target": "flail_chest"
+        },
+        {
+          "label": "קוצר נשימה + חשד לדם/אוויר בחזה",
+          "target": "hemothorax"
+        },
+        {
+          "label": "כווייה / שאיפת עשן / חזה בלי ממצא מסכן חיים מיידי",
+          "target": "trauma_circulation_gate"
+        }
+      ]
+    },
+
+    "trauma_circulation_gate": {
+      "id": "trauma_circulation_gate",
+      "type": "decision",
+      "title": "C - מחזור, דימום פנימי ובטן/אגן",
+      "description": "אחרי X בודקים גם סימני הלם, בטן/אגן ומוקדי דימום שלא נשלטו",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "בדוק במהירות:\n- דופק, צבע עור, טמפ' עור, מילוי קפילרי ומצב הכרה\n- האם יש סימני הלם בלי מקור חיצוני ברור\n- האם יש רגישות/קשיון בבטן, סימן חגורה, אגן כואב או לא יציב\n- האם יש שתן/צואה דמיים או חשד לדימום פנימי",
+        "whatToLookFor": [
+          "דימום חיצוני משמעותי",
+          "סימני הלם",
+          "בטן רגישה/קשה/תפוחה",
+          "כאב אגן, מנגנון קשה או שתן דמי"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-3 הלם ועצירת דימומים",
+            "url": "https://drive.google.com/file/d/1vKldvsyRFTi8fgW25nocAaVI3WFMGoP4/view?usp=drivesdk",
+            "note": "הלם, דימום חיצוני, חוסם עורקים וחשד לדימום פנימי."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-6 פגיעות בטן",
+            "url": "https://drive.google.com/file/d/1kkK5LOIOLIPYcCp1XlclodHHepsl-2_M/view?usp=drivesdk",
+            "note": "פגיעות בטן/אגן וזיהוי דימום פנימי."
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "label": "דימום חיצוני שלא נשלט / צריך שליטה מיידית",
+          "target": "external_bleeding"
+        },
+        {
+          "label": "סימני הלם / חשד לדימום פנימי",
+          "target": "shock_type"
+        },
+        {
+          "label": "פגיעת בטן / אגן / יציאת איברים",
+          "target": "trauma_abdomen_pelvis"
+        },
+        {
+          "label": "אין ממצא מסכן חיים מיידי ב-C - המשך ל-D",
+          "target": "trauma_disability_gate"
+        }
+      ]
+    },
+
+    "trauma_abdomen_pelvis": {
+      "id": "trauma_abdomen_pelvis",
+      "type": "action",
+      "title": "טראומת בטן / אגן",
+      "description": "חשוד לדימום פנימי, פגיעה באיברים או שבר אגן",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "התייחס לכל פצוע בטן/אגן כחשוד לדימום פנימי עד שיוכח אחרת",
+          "אל תתעכב על אבחנה מדויקת בשטח - הדגש הוא זיהוי ופינוי מהיר",
+          "אל תתן אוכל או שתייה",
+          "אם יש גוף זר תקוע - קבע ואל תשלוף",
+          "אם יש יציאת איברים - כסה בכיסוי סטרילי לח ושמור על חום גוף",
+          "אם יש חשד לשבר אגן או קינמטיקה קשה - תנועה עדינה ופינוי דחוף",
+          "נטר סימני הלם והזעק סיוע מתקדם אם יש הידרדרות"
+        ],
+        "questions": [
+          "הייתה חגורת בטיחות, פגיעה מכידון או פצע חודר?",
+          "יש כאב בטן/אגן או קושי להזיז רגליים?",
+          "יש שתן או צואה דמיים?",
+          "בנשים: הריון אפשרי או דימום נרתיקי?"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-6 פגיעות בטן",
+            "url": "https://drive.google.com/file/d/1kkK5LOIOLIPYcCp1XlclodHHepsl-2_M/view?usp=drivesdk",
+            "note": "פגיעות בטן/אגן, יציאת איברים, דימום פנימי ופינוי דחוף."
+          }
+        ]
+      },
+      "next": "trauma_disability_gate"
+    },
+
+    "trauma_disability_gate": {
+      "id": "trauma_disability_gate",
+      "type": "decision",
+      "title": "D - נוירולוגיה בטראומה",
+      "description": "בדוק ראש, הכרה, אישונים, תחושה/תנועה וסימנים לעמ\"ש",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "בשלב D בטראומה בדוק:\n- AVPU/GCS ומגמת שינוי\n- אישונים\n- תנועה ותחושה בגפיים\n- חשד לפגיעת ראש, עמ\"ש או פרכוס לאחר טראומה",
+        "whatToLookFor": [
+          "ירידה בהכרה או בלבול",
+          "אישונים לא שווים",
+          "חולשה/שיתוק/נימול בגפיים",
+          "כאב צוואר/גב או מנגנון שמחשיד לעמ\"ש"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-4 פגיעות פנים, צוואר וראש",
+            "url": "https://drive.google.com/file/d/1zcApz8BhFJ7AJ8khzve6qCmJ8vHOswiQ/view?usp=drivesdk",
+            "note": "פגיעות ראש, GCS, אישונים וחשד לעמ\"ש צווארי."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-8 פגיעות עמוד שדרה",
+            "url": "https://drive.google.com/file/d/1LtWCb1Qjl0MLlPkwNzdjdVczbeTRcFca/view?usp=drivesdk",
+            "note": "הערכת תחושה/תנועה וחשד לפגיעת עמוד שדרה."
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "label": "פגיעת ראש / ירידה בהכרה / חשד ICP",
+          "target": "head_trauma"
+        },
+        {
+          "label": "כאב צוואר/גב / חסר נוירולוגי / חשד לעמ\"ש",
+          "target": "trauma_spine_extremity"
+        },
+        {
+          "label": "ללא ממצא נוירולוגי דחוף - המשך ל-E",
+          "target": "trauma_exposure_gate"
+        }
+      ]
+    },
+
+    "trauma_spine_extremity": {
+      "id": "trauma_spine_extremity",
+      "type": "action",
+      "title": "עמוד שדרה / גפיים / שלד",
+      "description": "חשד לפגיעת עמ\"ש, שבר, פריקה או פגיעת גפה משמעותית",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "שמור על תנועה מינימלית ועל ייצוב ידני/מכני לפי הצורך",
+          "בדוק PMS: דופק, תנועה ותחושה דיסטלית",
+          "קבע גפה פגועה במנח שמצאת אם אין הוראה אחרת",
+          "בפגיעה פתוחה או גוף זר - חבוש, עצור דימום ואל תחזיר עצם/גוף זר",
+          "בחשד לעמ\"ש או נזק נוירולוגי - פנה בדחיפות והמשך ניטור",
+          "זכור ששבר אגן, ירך או פגיעה רב-מערכתית עלולים להסביר גם הלם"
+        ],
+        "questions": [
+          "יש נימול, חולשה או אובדן תחושה?",
+          "יש כאב גב/צוואר או חבלה ישירה?",
+          "האם יש עיוות, שבר פתוח או קיצור גפה?",
+          "הפגיעה מבודדת או כחלק מטראומה רב-מערכתית?"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-7 פגיעות במערכת השלד",
+            "url": "https://drive.google.com/file/d/1nxV9y3BmGJmhE0llfPUxPo4nj0RuIRXb/view?usp=drivesdk",
+            "note": "שברים, פריקות, PMS ועקרונות קיבוע."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-8 פגיעות עמוד שדרה",
+            "url": "https://drive.google.com/file/d/1LtWCb1Qjl0MLlPkwNzdjdVczbeTRcFca/view?usp=drivesdk",
+            "note": "חשד לעמ\"ש, תנועה מינימלית ופינוי זהיר."
+          }
+        ]
+      },
+      "next": "trauma_exposure_gate"
+    },
+
+    "trauma_exposure_gate": {
+      "id": "trauma_exposure_gate",
+      "type": "decision",
+      "title": "E - חשיפה, חום וסקר שניוני",
+      "description": "חשוף, חפש פציעות נוספות, שמור על חום, וסגור את הסקר המשני בלי לעכב פינוי",
+      "severity": "urgent",
+      "content": {
+        "checkMethod": "בשלב E:\n- חשוף לפי צורך כדי לא לפספס פציעות\n- חפש DCAP-BTLS מראש עד רגל\n- בדוק גב, גפיים ואזורים מוסתרים אם ניתן בבטחה\n- שמור על צנעת הפרט ומנע היפותרמיה\n- השלֵם סקר שניוני רק אם לא מעכב פינוי של פצוע דחוף",
+        "whatToLookFor": [
+          "כוויות, פיח, עשן או פציעות עור/רקמה רכה",
+          "חשד לטביעה, התחשמלות או פגיעת אקלים",
+          "נשיכה/הכשה/פגיעה ימית",
+          "פציעות נוספות שלא עלו בסבב הראשוני"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע",
+            "url": "https://drive.google.com/file/d/1nvH--jPQlaqd0NE9Gn0eR4MY0A7vhEgE/view?usp=drivesdk",
+            "note": "שלב E, חשיפה, סקר שניוני ושמירה על חום."
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "label": "כוויות / שאיפת עשן / רקמות רכות",
+          "target": "burns"
+        },
+        {
+          "label": "טביעה / התחשמלות / פגיעת אקלים",
+          "target": "trauma_environmental"
+        },
+        {
+          "label": "נשיכה / הכשה / בעל חיים / פגיעה ימית",
+          "target": "trauma_animal_bites"
+        },
+        {
+          "label": "סקר שניוני ופינוי",
+          "target": "trauma_secondary_survey"
+        }
+      ]
+    },
+
+    "trauma_environmental": {
+      "id": "trauma_environmental",
+      "type": "action",
+      "title": "טביעה / התחשמלות / פגיעות אקלים",
+      "description": "מצבי טראומה סביבתיים דורשים בטיחות, ABC, חימום ופינוי דחוף",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "בטביעה או התחשמלות - בטיחות המציל והצוות קודמת",
+          "בצע ABCDE, החייאה לפי צורך וחבר AED מוקדם כשנדרש",
+          "חפש פגיעות נלוות: עמ\"ש, כוויות, חבלות מנפילה, הפרשות או הקאה",
+          "תן חמצן לפי צורך ושמור על חום גוף",
+          "בפגיעות חום/קור - הוצא מהסביבה הפוגעת, התחל קירור/חימום מתאים ופנה",
+          "כל המקרים הללו דורשים פינוי והערכה גם אם השתפרו זמנית"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-10 טביעה והתחשמלות",
+            "url": "https://drive.google.com/file/d/1KCWf52cC3EnQ3SU9xpPx3XqBbsAyRcd7/view?usp=drivesdk",
+            "note": "טביעה, התחשמלות, בטיחות, ABC, AED ופינוי."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-11 פגיעות אקלים",
+            "url": "https://drive.google.com/file/d/1yepCSJJvqBhbxCBANmTB5TLWAvzuxT3Z/view?usp=drivesdk",
+            "note": "פגיעות חום/קור, קירור/חימום וזיהוי חומרה."
+          }
+        ]
+      },
+      "next": "trauma_secondary_survey"
+    },
+
+    "trauma_animal_bites": {
+      "id": "trauma_animal_bites",
+      "type": "action",
+      "title": "נשיכות / הכשות / פגיעות בעלי חיים",
+      "description": "שליטה בדימום, מניעת תנועה ופינוי בחשד לחשיפה לכלבת או לארס",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "פעל לפי ABCDE ועצור דימום אם קיים",
+          "בחשד לנשיכה - נקה וחבוש, וציין חשד לכלבת",
+          "בהכשה/עקיצה ארסית - הרגע את המטופל, מנע תזוזה, הסר חפצים לוחצים וקבע את הגפה",
+          "אל תחתוך, אל תמצוץ ארס ואל תניח חסם עורקים",
+          "בפגיעה ימית - הוצא מהמים, טפל לפי סוג הפגיעה והמשך פינוי",
+          "אם יש אנפילקסיס או הידרדרות - עבור למסלול אלרגי/ALS דחוף"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-12 פגיעות בעלי חיים",
+            "url": "https://drive.google.com/file/d/1u-42aLJ4vyyK7l8klmIbDV8Qz-kI0_pX/view?usp=drivesdk",
+            "note": "נשיכות, כלבת, הכשות, עקיצות ופגיעות ימיות."
+          }
+        ]
+      },
+      "next": "trauma_secondary_survey"
+    },
+
+    "trauma_secondary_survey": {
+      "id": "trauma_secondary_survey",
+      "type": "action",
+      "title": "סקר שניוני ופינוי בפצוע טראומה",
+      "description": "בדיקה מראש לרגל, הערכה חוזרת והכנה לפינוי דחוף בלי לעכב טיפול מציל חיים",
+      "severity": "urgent",
+      "content": {
+        "treatment": [
+          "בצע סקר שניוני מראש לרגל אם מצב הפצוע מאפשר",
+          "חפש DCAP-BTLS בכל הגוף, כולל גב ואזורים מוסתרים",
+          "חזור על מדדים, AVPU/GCS ו-ABCDE אם יש שינוי",
+          "תעד מנגנון פגיעה, ממצאים, טיפולים ושעת חסם עורקים אם הונח",
+          "אם זה פצוע קשה - אל תתעכב: load and go למרכז טראומה",
+          "שמור על חום גוף, פרטיות ורצף דיווח מסודר לצוות המפנה"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע",
+            "url": "https://drive.google.com/file/d/1nvH--jPQlaqd0NE9Gn0eR4MY0A7vhEgE/view?usp=drivesdk",
+            "note": "סבב שניוני, הערכה חוזרת, שעת הזהב ופינוי מהיר."
+          }
+        ]
+      },
+      "next": "exposure_complete"
     },
     
     "airway_assessment": {
