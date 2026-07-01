@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { commentService } from '../../services/api';
 import { CommentForm } from './CommentForm';
+import { parseCommentContent } from './commentTaxonomy';
 
 interface CommentItemProps {
   id: string;
@@ -43,6 +44,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
 
   const canEdit = Boolean(user && (user.id === author.id || user.isAdmin));
   const depthClass = level === 0 ? '' : level === 1 ? 'sm:mr-6' : 'sm:mr-12';
+  const parsedContent = parseCommentContent(content);
 
   const handleEdit = async () => {
     if (!editContent.trim() || editContent === content) {
@@ -127,6 +129,11 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                       נערך
                     </span>
                   )}
+                  {parsedContent.kindLabel && (
+                    <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700">
+                      {parsedContent.kindLabel}
+                    </span>
+                  )}
                 </div>
                 <p className="mt-1 text-xs text-slate-500">{formatRelativeTime(createdAt)}</p>
               </div>
@@ -188,7 +195,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                 </div>
               </div>
             ) : (
-              <p className="mt-3 whitespace-pre-line text-sm leading-7 text-slate-700">{content}</p>
+              <p className="mt-3 whitespace-pre-line text-sm leading-7 text-slate-700">{parsedContent.body}</p>
             )}
 
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}

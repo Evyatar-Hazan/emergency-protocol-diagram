@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { commentService } from '../../services/api';
 import { GoogleLoginButton } from '../auth/GoogleLoginButton';
+import { buildCommentPayload, COMMENT_KIND_OPTIONS } from './commentTaxonomy';
 
 interface CommentFormProps {
   nodeId: string;
   parentCommentId?: string;
   onCommentAdded?: () => void;
   placeholder?: string;
+  initialContent?: string;
 }
 
 export const CommentForm: React.FC<CommentFormProps> = ({
@@ -15,11 +17,17 @@ export const CommentForm: React.FC<CommentFormProps> = ({
   parentCommentId,
   onCommentAdded,
   placeholder = 'כתוב כאן שאלה, חידוד או תובנה מקצועית...',
+  initialContent = '',
 }) => {
   const { user, isAuthenticated } = useAuthStore();
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(initialContent);
+  const [selectedKind, setSelectedKind] = useState(COMMENT_KIND_OPTIONS[0].label);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setContent(initialContent);
+  }, [initialContent]);
 
   if (!isAuthenticated || !user) {
     return (
@@ -46,8 +54,9 @@ export const CommentForm: React.FC<CommentFormProps> = ({
     try {
       setIsLoading(true);
       setError(null);
-      await commentService.createComment(nodeId, content, parentCommentId);
+      await commentService.createComment(nodeId, buildCommentPayload(selectedKind, content), parentCommentId);
       setContent('');
+      setSelectedKind(COMMENT_KIND_OPTIONS[0].label);
       onCommentAdded?.();
     } catch (err) {
       setError('לא הצלחנו לפרסם את ההודעה. אפשר לנסות שוב בעוד רגע.');
@@ -65,12 +74,34 @@ export const CommentForm: React.FC<CommentFormProps> = ({
             {parentCommentId ? 'תגובה לדיון קיים' : 'הוספת תגובה מקצועית'}
           </p>
           <p className="mt-1 text-xs text-slate-500">
-            כתוב קצר, ברור ורלוונטי לצומת הנוכחי.
+            בחר סוג תגובה, ואז כתוב קצר, ברור ורלוונטי לצומת הנוכחי.
           </p>
         </div>
         <div className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-500 shadow-sm">
           {user.name?.split(' ')[0] || user.email.split('@')[0]}
         </div>
+      </div>
+
+      <div className="mb-3 grid gap-2 sm:grid-cols-2">
+        {COMMENT_KIND_OPTIONS.map((option) => {
+          const isSelected = selectedKind === option.label;
+
+          return (
+            <button
+              key={option.label}
+              type="button"
+              onClick={() => setSelectedKind(option.label)}
+              className={`rounded-2xl border px-3 py-3 text-right transition ${
+                isSelected
+                  ? 'border-clinical-blue bg-clinical-blue/5 shadow-sm'
+                  : 'border-slate-200 bg-white hover:border-slate-300'
+              }`}
+            >
+              <div className="text-sm font-bold text-slate-900">{option.label}</div>
+              <div className="mt-1 text-xs leading-5 text-slate-500">{option.description}</div>
+            </button>
+          );
+        })}
       </div>
 
       <textarea
@@ -89,7 +120,7 @@ export const CommentForm: React.FC<CommentFormProps> = ({
             <p className="text-sm font-medium text-red-700">{error}</p>
           ) : (
             <p className="text-xs text-slate-500">
-              שמור על ניסוח מקצועי, מכבד ורלוונטי לביצוע הפרוטוקול.
+              שמור על ניסוח מקצועי, מכבד ורלוונטי לביצוע הפרוטוקול. סוג התגובה יופיע בראש ההודעה.
             </p>
           )}
         </div>

@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import type { Protocol, Node } from '../../types/protocol';
 import { CommentsThread } from '../comments/CommentsThread';
+import { nodeLearningGuidance } from './nodeLearningGuidance';
 
 interface StepByStepViewProps {
   protocols: Record<string, Protocol>;
@@ -158,6 +159,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   const protocolLabel = currentProtocol.name || parsed?.protocolId || 'פרוטוקול ראשי';
   const nodeDescription = currentNode.description?.trim();
   const hasBookmark = bookmarkedNodes.has(currentNodeId);
+  const nodeGuidance = nodeLearningGuidance[currentNodeId];
 
   const getNextOptions = (): Array<{ label: string; target: string }> => {
     if (currentNode.content?.actions && currentNode.content.actions.length > 0) {
@@ -483,6 +485,81 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             </li>
           ))}
         </ul>
+      ),
+    });
+  }
+
+  if (nodeGuidance?.pearls && nodeGuidance.pearls.length > 0) {
+    learningSections.push({
+      key: 'pearls',
+      title: 'דגשי מדריך',
+      icon: '💡',
+      tone: 'bg-yellow-50',
+      borderTone: 'border-yellow-300',
+      content: (
+        <ul className="space-y-2.5">
+          {nodeGuidance.pearls.map((item, idx) => (
+            <li key={idx} className="flex items-start gap-3">
+              <span className="mt-1 text-yellow-600">•</span>
+              <span className="text-sm leading-7 text-slate-700 sm:text-base">{item}</span>
+            </li>
+          ))}
+        </ul>
+      ),
+    });
+  }
+
+  if (nodeGuidance?.pitfalls && nodeGuidance.pitfalls.length > 0) {
+    learningSections.push({
+      key: 'pitfalls',
+      title: 'טעויות נפוצות',
+      icon: '⚠️',
+      tone: 'bg-rose-50',
+      borderTone: 'border-rose-300',
+      content: (
+        <ul className="space-y-2.5">
+          {nodeGuidance.pitfalls.map((item, idx) => (
+            <li key={idx} className="flex items-start gap-3">
+              <span className="mt-1 text-rose-600">•</span>
+              <span className="text-sm leading-7 text-slate-700 sm:text-base">{item}</span>
+            </li>
+          ))}
+        </ul>
+      ),
+    });
+  }
+
+  if (nodeGuidance?.reviewQuestions && nodeGuidance.reviewQuestions.length > 0) {
+    deepDiveSections.push({
+      key: 'reviewQuestions',
+      title: 'שאלות חזרה',
+      icon: '🧪',
+      tone: 'bg-teal-50',
+      borderTone: 'border-teal-300',
+      content: (
+        <ul className="space-y-2.5">
+          {nodeGuidance.reviewQuestions.map((item, idx) => (
+            <li key={idx} className="flex items-start gap-3">
+              <span className="mt-1 text-teal-600">•</span>
+              <span className="text-sm leading-7 text-slate-700 sm:text-base">{item}</span>
+            </li>
+          ))}
+        </ul>
+      ),
+    });
+  }
+
+  if (nodeGuidance?.mentorNote) {
+    deepDiveSections.push({
+      key: 'mentorNote',
+      title: 'הערת מדריך',
+      icon: '🎯',
+      tone: 'bg-fuchsia-50',
+      borderTone: 'border-fuchsia-300',
+      content: (
+        <p className="whitespace-pre-line text-sm leading-7 text-slate-700 sm:text-base">
+          {nodeGuidance.mentorNote}
+        </p>
       ),
     });
   }

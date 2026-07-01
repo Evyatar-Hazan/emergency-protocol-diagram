@@ -27,6 +27,12 @@ interface CommentsThreadProps {
   title?: string;
 }
 
+const DISCUSSION_PROMPTS = [
+  'איזו טעות ביצועית הכי קל לעשות בצומת הזה, ואיך נמנעים ממנה?',
+  'מהו הממצא הקריטי שבגללו צריך לעבור לשלב הבא בלי להתעכב?',
+  'איזו שאלה קצרה באנמנזה הכי עוזרת להבין מה באמת קורה כאן?',
+];
+
 export const CommentsThread: React.FC<CommentsThreadProps> = ({
   nodeId,
   title = 'הערות והבהרות על הצומת',
@@ -35,6 +41,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [draftSuggestion, setDraftSuggestion] = useState('');
 
   const loadComments = useCallback(async () => {
     try {
@@ -74,6 +81,13 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
             <p className="mt-2 max-w-2xl text-sm leading-6 text-clinical-muted">
               מקום לשאלות, חידודים מקצועיים והבהרות סביב הצומת הנוכחי. הדיון נשאר משני לפרוטוקול, ותפקידו לחדד את הביצוע בלי לשנות את הסדר.
             </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">שאלה</span>
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">הבהרה</span>
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">טיפ ביצועי</span>
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">תיקון קליני</span>
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">מקור</span>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2 sm:min-w-[220px]">
@@ -90,7 +104,33 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
           </div>
         </div>
 
-        <CommentForm nodeId={nodeId} onCommentAdded={handleCommentAdded} />
+        <CommentForm
+          nodeId={nodeId}
+          onCommentAdded={() => {
+            setDraftSuggestion('');
+            handleCommentAdded();
+          }}
+          initialContent={draftSuggestion}
+        />
+
+        <div className="rounded-[24px] border border-dashed border-slate-300 bg-slate-50/70 p-4">
+          <p className="text-sm font-semibold text-slate-900">איך פותחים דיון טוב?</p>
+          <p className="mt-1 text-xs leading-6 text-slate-500">
+            מומלץ להתמקד בשאלה אחת, ממצא אחד או טעות אחת שקל לפספס. כל כפתור כאן ממלא פתיח שאפשר לערוך.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {DISCUSSION_PROMPTS.map((prompt) => (
+              <button
+                key={prompt}
+                type="button"
+                onClick={() => setDraftSuggestion(prompt)}
+                className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-clinical-blue hover:text-clinical-blue"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+        </div>
 
         {error && (
           <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3">
@@ -120,6 +160,20 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
           <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-500">
             אפשר לפתוח כאן שאלה, הבהרה מקצועית או דגש ביצועי שיעזרו לחדד את ההחלטה בצומת הזה.
           </p>
+          <div className="mx-auto mt-5 grid max-w-2xl gap-3 text-right sm:grid-cols-3">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div className="text-sm font-bold text-slate-900">שאלה טובה</div>
+              <p className="mt-1 text-xs leading-6 text-slate-500">שואלת על צומת אחד, סימן אחד או החלטה אחת.</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div className="text-sm font-bold text-slate-900">טיפ ביצועי</div>
+              <p className="mt-1 text-xs leading-6 text-slate-500">מוסיף דגש פרקטי קצר שעוזר בשטח או בתרגול.</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div className="text-sm font-bold text-slate-900">תיקון איכותי</div>
+              <p className="mt-1 text-xs leading-6 text-slate-500">מחדד תוכן מול מקור ולא סוטה מהזרימה הראשית.</p>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">
