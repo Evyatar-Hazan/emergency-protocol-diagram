@@ -132,6 +132,10 @@
           "target": "hazmat_protocol"
         },
         {
+          "label": "🤿 תאונת צלילה / יציאה מהמים / אירוע סביב צלילה",
+          "target": "diving_emergency_overview"
+        },
+        {
           "label": "👀 מטופל בודד - המשך להתרשמות ומצב ראשוני",
           "target": "initial_presentation_gate"
         }
