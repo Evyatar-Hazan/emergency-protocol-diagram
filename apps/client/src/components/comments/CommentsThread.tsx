@@ -3,6 +3,7 @@ import { commentService } from '../../services/api';
 import { useAuthStore } from '../../store/authStore';
 import { CommentForm } from './CommentForm';
 import { CommentItem } from './CommentItem';
+import { getDiscussionSeeds } from './discussionSeeds';
 
 interface Comment {
   id: string;
@@ -27,12 +28,6 @@ interface CommentsThreadProps {
   title?: string;
 }
 
-const DISCUSSION_PROMPTS = [
-  'איזו טעות ביצועית הכי קל לעשות בצומת הזה, ואיך נמנעים ממנה?',
-  'מהו הממצא הקריטי שבגללו צריך לעבור לשלב הבא בלי להתעכב?',
-  'איזו שאלה קצרה באנמנזה הכי עוזרת להבין מה באמת קורה כאן?',
-];
-
 export const CommentsThread: React.FC<CommentsThreadProps> = ({
   nodeId,
   title = 'הערות והבהרות על הצומת',
@@ -42,6 +37,8 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [draftSuggestion, setDraftSuggestion] = useState('');
+  const [draftKind, setDraftKind] = useState<string | undefined>(undefined);
+  const discussionSeeds = getDiscussionSeeds(nodeId);
 
   const loadComments = useCallback(async () => {
     try {
@@ -108,9 +105,11 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
           nodeId={nodeId}
           onCommentAdded={() => {
             setDraftSuggestion('');
+            setDraftKind(undefined);
             handleCommentAdded();
           }}
           initialContent={draftSuggestion}
+          initialKind={draftKind}
         />
 
         <div className="rounded-[24px] border border-dashed border-slate-300 bg-slate-50/70 p-4">
@@ -119,14 +118,17 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
             מומלץ להתמקד בשאלה אחת, ממצא אחד או טעות אחת שקל לפספס. כל כפתור כאן ממלא פתיח שאפשר לערוך.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
-            {DISCUSSION_PROMPTS.map((prompt) => (
+            {discussionSeeds.map((seed) => (
               <button
-                key={prompt}
+                key={`${seed.kind}:${seed.title}`}
                 type="button"
-                onClick={() => setDraftSuggestion(prompt)}
+                onClick={() => {
+                  setDraftKind(seed.kind);
+                  setDraftSuggestion(seed.prompt);
+                }}
                 className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-clinical-blue hover:text-clinical-blue"
               >
-                {prompt}
+                {seed.title}
               </button>
             ))}
           </div>
@@ -161,18 +163,21 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
             אפשר לפתוח כאן שאלה, הבהרה מקצועית או דגש ביצועי שיעזרו לחדד את ההחלטה בצומת הזה.
           </p>
           <div className="mx-auto mt-5 grid max-w-2xl gap-3 text-right sm:grid-cols-3">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div className="text-sm font-bold text-slate-900">שאלה טובה</div>
-              <p className="mt-1 text-xs leading-6 text-slate-500">שואלת על צומת אחד, סימן אחד או החלטה אחת.</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div className="text-sm font-bold text-slate-900">טיפ ביצועי</div>
-              <p className="mt-1 text-xs leading-6 text-slate-500">מוסיף דגש פרקטי קצר שעוזר בשטח או בתרגול.</p>
-            </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div className="text-sm font-bold text-slate-900">תיקון איכותי</div>
-              <p className="mt-1 text-xs leading-6 text-slate-500">מחדד תוכן מול מקור ולא סוטה מהזרימה הראשית.</p>
-            </div>
+            {discussionSeeds.slice(0, 3).map((seed) => (
+              <button
+                key={`empty-${seed.kind}-${seed.title}`}
+                type="button"
+                onClick={() => {
+                  setDraftKind(seed.kind);
+                  setDraftSuggestion(seed.prompt);
+                }}
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-right transition hover:border-clinical-blue hover:bg-white"
+              >
+                <div className="text-sm font-bold text-slate-900">{seed.title}</div>
+                <p className="mt-1 text-xs font-semibold text-clinical-blue">{seed.kind}</p>
+                <p className="mt-2 text-xs leading-6 text-slate-500">{seed.prompt}</p>
+              </button>
+            ))}
           </div>
         </div>
       ) : (

@@ -10,6 +10,7 @@ interface CommentFormProps {
   onCommentAdded?: () => void;
   placeholder?: string;
   initialContent?: string;
+  initialKind?: string;
 }
 
 export const CommentForm: React.FC<CommentFormProps> = ({
@@ -18,16 +19,23 @@ export const CommentForm: React.FC<CommentFormProps> = ({
   onCommentAdded,
   placeholder = 'כתוב כאן שאלה, חידוד או תובנה מקצועית...',
   initialContent = '',
+  initialKind,
 }) => {
   const { user, isAuthenticated } = useAuthStore();
   const [content, setContent] = useState(initialContent);
-  const [selectedKind, setSelectedKind] = useState(COMMENT_KIND_OPTIONS[0].label);
+  const [selectedKind, setSelectedKind] = useState(initialKind ?? COMMENT_KIND_OPTIONS[0].label);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setContent(initialContent);
   }, [initialContent]);
+
+  useEffect(() => {
+    if (initialKind) {
+      setSelectedKind(initialKind);
+    }
+  }, [initialKind]);
 
   if (!isAuthenticated || !user) {
     return (
