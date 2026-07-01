@@ -59,12 +59,12 @@
 | `37-mass-casualty-incident` | מכוסה | `scene_assessment` | `mass_casualty_protocol` | אר"ן נכנס כבר מהזירה | אין |
 | `38-hazmat-incidents` | מכוסה | `scene_assessment` | `hazmat_protocol` | חומ"ס נכנס כבר מהזירה | אין |
 | `39-pregnancy-and-delivery` | מכוסה | `special_patient_pregnancy` | `pregnancy_special_considerations`, `labor_assessment`, `imminent_delivery` | הריון ולידה מיוצגים | אין |
-| `40-obstetric-emergencies` | חלקי-טוב | `special_patient_pregnancy` | `obstetric_emergency`, `obstetric_transport`, `imminent_delivery`, `newborn_initial_care`, `postpartum_maternal_care` | מצבי חירום מיילדותיים מיוצגים באופן שימושי | אפשר להרחיב עוד תתי-סיבוכים אם נרצה |
+| `40-obstetric-emergencies` | מכוסה | `special_patient_pregnancy` | `obstetric_emergency`, `preeclampsia_eclampsia`, `pregnancy_bleeding_emergency`, `ectopic_pregnancy_emergency`, `obstetric_delivery_complication`, `pregnancy_trauma_emergency`, `newborn_initial_care`, `postpartum_maternal_care` | יש כעת פיצול ברור בין רעלת/אקלמפסיה, דימום בהריון, הריון חוץ רחמי, סיבוך לידה פעילה וטראומה בהריון, עם חיבור גם לילוד במצוקה ולאם אחרי לידה | טיפול תרופתי/מיילדותי מתקדם נשאר מחוץ ליעד ה-BLS |
 | `41-prevention-and-healthy-lifestyle` | לא יעד זרימה | `secondary_survey` | `secondary_survey` | לא מיועד לזרימת שטח | אין |
 | `42-home-medications-awareness` | משני | `secondary_survey` | `secondary_survey`, `altered_mental_status`, `poisoning_overdose` | קיים כאנמנזה משלימה | אין |
-| `43-monitor-and-ecg-operation` | משני | `secondary_survey_finish` | `monitor_ecg_operation`, `operational_support_overview` | מיוצג נכון כשכבת תפעול | אין |
-| `44-team-management` | משני | `secondary_survey_finish` | `team_management_operational`, `operational_support_overview` | מיוצג כשכבת תפעול | אין |
-| `45-ambulance-operation-and-driving-protocol` | משני | `secondary_survey_finish` | `ambulance_operations`, `operational_support_overview` | מיוצג כשכבת תפעול | אין |
+| `43-monitor-and-ecg-operation` | משני | `secondary_survey_finish` | `monitor_ecg_operation`, `operational_support_overview` | מיוצג נכון כשכבת תפעול משנית, עם דגש שהמוניטור הוא כלי זיהוי והכוונה ולא ענף קליני ראשי | נשאר reference מכוון ולא ייכנס לליבת ה-flow |
+| `44-team-management` | משני | `secondary_survey_finish` | `team_management_operational`, `operational_support_overview` | מיוצג כשכבת תפעול משנית, עם חלוקת תפקידים, משוב וקבלת החלטות תחת לחץ | נשאר reference מכוון ולא ייכנס לליבת ה-flow |
+| `45-ambulance-operation-and-driving-protocol` | משני | `secondary_survey_finish` | `ambulance_operations`, `operational_support_overview` | מיוצג כשכבת תפעול משנית, עם מוקד, פינוי, דיווח ונסיעת חירום | נשאר reference מכוון ולא ייכנס לליבת ה-flow |
 
 ## מסקנה
 
@@ -77,3 +77,4 @@
 7. אזור `טביעה / התחשמלות` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר הוספת שער כניסה סביבתי וצמתי משנה נפרדים לטביעה, התחשמלות ומצבי חום/קור.
 8. אזור `נשיכות / הכשות / פגיעות ימיות` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול לצמתי `animal_bite_rabies`, `venomous_bite_sting`, `marine_animal_injury`, `bee_sting_reaction` ו-`bee_sting_local_management`.
 9. אזור `רקמות רכות / כוויות / שאיפת עשן` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר הוספת שער `trauma_soft_tissue_burns` ופיצול לצמתי `burns`, `smoke_inhalation` ו-`soft_tissue_wound_support`.
+10. אזור `מצבי חירום מיילדותיים` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול `obstetric_emergency` לענפי `preeclampsia_eclampsia`, `pregnancy_bleeding_emergency`, `ectopic_pregnancy_emergency`, `obstetric_delivery_complication` ו-`pregnancy_trauma_emergency`.

@@ -83,7 +83,7 @@
 | `37-mass-casualty-incident` | אר"ן | `mass_casualty_protocol`, `scene_assessment`, `initial_presentation_gate` | מכוסה | קיים ככניסת זירה מוקדמת. |
 | `38-hazmat-incidents` | חומ"ס | `hazmat_protocol`, `scene_assessment` | מכוסה | קיים ככניסת זירה מוקדמת. |
 | `39-pregnancy-and-delivery` | הריון ולידה | `special_patient_pregnancy`, `pregnancy_special_considerations`, `labor_assessment`, `imminent_delivery` | מכוסה | קיים ענף ייעודי. |
-| `40-obstetric-emergencies` | מצבי חירום בלידה | `labor_assessment`, `obstetric_transport`, `imminent_delivery`, `newborn_initial_care`, `obstetric_emergency` | חלקי-טוב | ייצוג טוב, עם מקום להרחבה רוחבית. |
+| `40-obstetric-emergencies` | מצבי חירום בלידה | `labor_assessment`, `obstetric_transport`, `imminent_delivery`, `obstetric_emergency`, `preeclampsia_eclampsia`, `pregnancy_bleeding_emergency`, `ectopic_pregnancy_emergency`, `obstetric_delivery_complication`, `pregnancy_trauma_emergency`, `newborn_initial_care` | מכוסה | פיצול מפורש בין רעלת/אקלמפסיה, דימום, הריון חוץ רחמי, סיבוך לידה פעילה וטראומה בהריון. |
 | `41-prevention-and-healthy-lifestyle` | מניעה ואורח חיים | `secondary_survey` | לא יעד זרימה | תוכן חינוכי/מניעתי, לא פרוטוקול שטח. |
 | `42-home-medications-awareness` | תרופות בבית המטופל | `secondary_survey`, `altered_mental_status`, `poisoning_overdose` | משני | חלק חשוב לאנמנזה, לא מסלול נפרד. |
 | `43-monitor-and-ecg-operation` | מוניטור/ECG | `monitor_ecg_operation`, `operational_support_overview` | משני | נשמר נכון כשכבת תפעול. |

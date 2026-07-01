@@ -26,7 +26,7 @@
 | 8 | חשד לשבץ / פרכוס / שינוי הכרה | `scene_assessment -> avpu_check -> disability_assessment -> disability_status` | עובר | ענפי D בנויים היטב אחרי הסבבים הקודמים |
 | 9 | חולה מדבק / דקירת מחט / חשיפה לנוזלי גוף | `scene_assessment -> ... -> secondary_survey_finish -> infectious_exposure_control` | עובר עם שכבת עזר | לא ענף ליבה מוקדם, אבל קיים כשכבת המשך ברורה |
 | 10 | תאונת צלילה | `scene_assessment -> diving_emergency_overview` | עובר | נוסף חיבור מוקדם מהזירה |
-| 11 | הריון / לידה / מצב חירום מיילדותי | `scene_assessment -> avpu_check -> special_patient_pregnancy -> labor_assessment / obstetric_emergency` | עובר | יש פיצול טוב בין לידה קרובה לסיבוך |
+| 11 | הריון / לידה / מצב חירום מיילדותי | `scene_assessment -> avpu_check -> special_patient_pregnancy -> labor_assessment / obstetric_emergency -> preeclampsia_eclampsia / pregnancy_bleeding_emergency / ectopic_pregnancy_emergency / obstetric_delivery_complication / pregnancy_trauma_emergency` | עובר | יש כעת פיצול טוב גם בין לידה קרובה לסיבוך וגם בין סוגי הסיבוכים המיילדותיים עצמם |
 | 12 | אר"ן | `scene_assessment -> mass_casualty_protocol` | עובר | זיהוי מוקדם מהזירה |
 | 13 | חומ"ס | `scene_assessment -> hazmat_protocol` | עובר | זיהוי מוקדם מהזירה |
 | 14 | פגיעות שלד / עמ"ש / קיבועים | `scene_assessment -> trauma_protocol -> abcde_trauma -> trauma_spine_extremity -> trauma_spine_precautions / trauma_fracture_assessment -> trauma_splinting` | עובר | נוסף פיצול ברור בין חשד לעמ"ש, שבר/פריקה, שבר פתוח וקיבוע עם PMS |
