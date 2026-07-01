@@ -870,10 +870,73 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
       </div>
 
       <div className="mx-auto mb-4 w-full max-w-5xl sm:mb-6">
-        <div className="surface-card clinical-panel rise-in rounded-3xl p-4 sm:p-5">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div className="space-y-3">
+        <div className="surface-card clinical-panel rise-in rounded-3xl p-2.5 sm:hidden">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between gap-2">
+              <div className="min-w-0 rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-700">
+                <span className="truncate">{protocolLabel}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <div className="rounded-full bg-slate-900 px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm">
+                  צעד {stepCount}
+                </div>
+                <div className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${config.border} ${config.bg} ${config.text}`}>
+                  {config.label}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 gap-1.5">
+              <button
+                onClick={restart}
+                className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-clinical-blue px-2 py-2 text-[11px] font-semibold text-white shadow-sm transition-colors hover:bg-clinical-deep"
+              >
+                <span>🔄</span>
+                <span>חדש</span>
+              </button>
+              <button
+                onClick={() => toggleBookmark(currentNodeId)}
+                className={`flex min-w-0 items-center justify-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-medium transition-all ${
+                  hasBookmark
+                    ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                }`}
+                title={hasBookmark ? 'הסר סימניה' : 'הוסף סימניה'}
+                aria-label={hasBookmark ? 'הסר את הצעד הזה מהסימניות' : 'שמור את הצעד הזה לסימניות'}
+              >
+                <span>{hasBookmark ? '⭐' : '☆'}</span>
+                <span>{hasBookmark ? 'נשמר' : 'שמור'}</span>
+              </button>
+              <button
+                onClick={goBack}
+                disabled={history.length === 0}
+                className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gray-200 px-2 py-2 text-[11px] font-medium transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <span>←</span>
+                <span>חזור</span>
+              </button>
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-2 py-2 text-[11px] font-medium text-white transition-all hover:shadow-lg"
+                title="פתח כלי עזר מהירים"
+                aria-label="פתח את קפיצות הסכמות והסימניות"
+              >
+                <span>🧰</span>
+                <span>כלים</span>
+                {bookmarkedNodes.size > 0 && (
+                  <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-purple-600">
+                    {bookmarkedNodes.size}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="hidden surface-card clinical-panel rise-in rounded-3xl p-5 sm:block">
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+              <div className="space-y-2">
                 <div className="clinical-kicker">
                   <span>{protocolLabel}</span>
                 </div>
@@ -884,23 +947,23 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   <div className={`rounded-full border px-3 py-1 text-xs font-semibold ${config.border} ${config.bg} ${config.text}`}>
                     {config.icon} {config.label}
                   </div>
-                  <div className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-center font-mono text-[11px] text-slate-500 shadow-sm sm:w-auto sm:rounded-full sm:py-1 sm:text-xs">
+                  <div className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5 text-center font-mono text-[11px] text-slate-500 shadow-sm sm:w-auto sm:rounded-full sm:py-1 sm:text-xs">
                     {currentNode.id}
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:items-center md:justify-end">
+              <div className="flex flex-wrap items-center justify-end gap-2">
                 <button
                   onClick={restart}
-                  className="col-span-2 flex min-w-0 items-center justify-center gap-2 rounded-2xl bg-clinical-blue px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-clinical-deep md:col-auto md:px-3 md:py-2 md:font-medium"
+                  className="flex min-w-0 items-center justify-center gap-2 rounded-2xl bg-clinical-blue px-3 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-clinical-deep"
                 >
                   <span>🔄</span>
                   <span>התחל מחדש</span>
                 </button>
                 <button
                   onClick={() => toggleBookmark(currentNodeId)}
-                  className={`col-span-2 flex min-w-0 items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-medium transition-all md:col-auto md:px-3 md:py-2 ${
+                  className={`flex min-w-0 items-center justify-center gap-2 rounded-2xl px-3 py-2 text-sm font-medium transition-all ${
                     hasBookmark
                       ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
                       : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -914,14 +977,14 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                 <button
                   onClick={goBack}
                   disabled={history.length === 0}
-                  className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gray-200 px-3 py-3 text-sm font-medium transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50 md:px-3 md:py-2"
+                  className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gray-200 px-3 py-2 text-sm font-medium transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <span>←</span>
                   <span>חזור</span>
                 </button>
                 <button
                   onClick={() => setIsSidebarOpen(true)}
-                  className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 py-3 text-sm font-medium text-white transition-all hover:shadow-lg md:px-3 md:py-2"
+                  className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 py-2 text-sm font-medium text-white transition-all hover:shadow-lg"
                   title="פתח כלי עזר מהירים"
                   aria-label="פתח את קפיצות הסכמות והסימניות"
                 >
