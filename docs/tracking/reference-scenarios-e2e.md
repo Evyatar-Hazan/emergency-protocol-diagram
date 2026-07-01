@@ -32,9 +32,11 @@
 | 14 | פגיעות שלד / עמ"ש / קיבועים | `scene_assessment -> trauma_protocol -> abcde_trauma -> trauma_spine_extremity -> trauma_spine_precautions / trauma_fracture_assessment -> trauma_splinting` | עובר | נוסף פיצול ברור בין חשד לעמ"ש, שבר/פריקה, שבר פתוח וקיבוע עם PMS |
 | 15 | טביעה / התחשמלות | `scene_assessment -> trauma_environmental -> drowning_incident / electrical_injury -> drowning_resuscitation / drowning_post_rescue / electrical_resuscitation / electrical_conscious_management` | עובר | נוסף שער כניסה ייעודי מהזירה ופיצול ברור לפי מנגנון ומצב המטופל |
 | 16 | נשיכה / הכשה / פגיעה ימית | `scene_assessment -> trauma_protocol -> abcde_trauma -> trauma_exposure_gate -> trauma_animal_bites -> animal_bite_rabies / venomous_bite_sting / marine_animal_injury / bee_sting_reaction` | עובר | נוסף פיצול ברור בין חשד לכלבת, ארס, פגיעה ימית ועקיצת דבורה עם חיבור לאנפילקסיס כשצריך |
+| 17 | כוויה / שאיפת עשן / פצע רקמה רכה | `scene_assessment -> trauma_protocol -> abcde_trauma -> trauma_exposure_gate -> trauma_soft_tissue_burns -> burns / smoke_inhalation / soft_tissue_wound_support` | עובר | נוסף שער ייעודי שמבדיל בין כוויה עצמה, שאיפת עשן שדורשת חשד נשימתי גבוה, ופצעי רקמה רכה או גוף זר תקוע |
 
 ## מסקנה
 
 1. תרחישי הליבה של BLS, טראומה, חולה רפואי, הריון/לידה, אר"ן וחומ"ס עוברים היטב.
 2. הפערים שנותרו הם בעיקר בעולמות שהוגדרו כבר כ-`חלקי-טוב`, ולא כאזורי שבירה לא ידועים.
 3. בכך שכבת ה-`coverage proof` ברמת תרחיש משתמש קיימת כעת באופן מפורש ומתועד.
+4. כל ששת אזורי ההשלמה הטראומטיים שביחידה 3 מקבלים כעת גם תרחיש E2E מפורש ברמת flow מלא.
