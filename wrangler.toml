@@ -3,4 +3,14 @@ name = "emergency-protocol-diagram"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-02-22"
 
+[[d1_databases]]
+binding = "DB"
+database_name = "emergency-protocol-community"
+database_id = "7f0e63c3-bfef-4d16-8e11-2e2e6a15ebfd"
+
 [env.production]
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "emergency-protocol-community"
+database_id = "7f0e63c3-bfef-4d16-8e11-2e2e6a15ebfd"

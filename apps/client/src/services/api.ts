@@ -63,6 +63,19 @@ export const authService = {
     return { token, user };
   },
 
+  loginAsGuest: async (name: string) => {
+    const response = await apiClient.post('/auth/guest-login', { name });
+    const { token, user } = unwrapApiData<{
+      token: string;
+      user: ApiUser;
+    }>(response.data);
+
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('user', JSON.stringify(user));
+
+    return { token, user };
+  },
+
   getCurrentUser: async () => {
     const response = await apiClient.get('/auth/me');
     return unwrapApiData<{ user: ApiUser }>(response.data);

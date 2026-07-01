@@ -13,6 +13,8 @@ type ViewMode = 'step-by-step' | 'vital-signs';
 type SecondaryTool = 'none' | 'diagram';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+const hasGoogleClientId =
+  Boolean(googleClientId) && !googleClientId.includes('your_google_client_id_here');
 
 function AppContent() {
   const { flowData, activeProtocol, loadData, setActiveProtocol } = useFlowStore();
@@ -253,8 +255,12 @@ function AppContent() {
 
 export default function App() {
   return (
-    <GoogleOAuthProvider clientId={googleClientId}>
+    hasGoogleClientId ? (
+      <GoogleOAuthProvider clientId={googleClientId}>
+        <AppContent />
+      </GoogleOAuthProvider>
+    ) : (
       <AppContent />
-    </GoogleOAuthProvider>
+    )
   );
 }

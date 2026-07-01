@@ -2,6 +2,7 @@ import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import type { CredentialResponse } from '@react-oauth/google';
 import { useAuthStore } from '../../store/authStore';
+import { GuestLoginCard } from './GuestLoginCard';
 
 interface GoogleLoginButtonProps {
   onSuccess?: () => void;
@@ -17,6 +18,7 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   variant = 'default',
 }) => {
   const { loginWithGoogle } = useAuthStore();
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
   const handleSuccess = async (credentialResponse: CredentialResponse) => {
     try {
@@ -36,6 +38,14 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
     console.error('Login error:', error);
     onError?.(error);
   };
+
+  if (!googleClientId || googleClientId.includes('your_google_client_id_here')) {
+    return (
+      <div className={className}>
+        <GuestLoginCard onSuccess={onSuccess} onError={onError} compact />
+      </div>
+    );
+  }
 
   // קבע עיצוב בהתאם לvariant
   const containerClasses = {
