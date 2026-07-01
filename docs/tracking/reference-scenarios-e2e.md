@@ -30,7 +30,7 @@
 | 12 | אר"ן | `scene_assessment -> mass_casualty_protocol` | עובר | זיהוי מוקדם מהזירה |
 | 13 | חומ"ס | `scene_assessment -> hazmat_protocol` | עובר | זיהוי מוקדם מהזירה |
 | 14 | פגיעות שלד / עמ"ש / קיבועים | `scene_assessment -> trauma_protocol -> abcde_trauma -> trauma_spine_extremity -> trauma_spine_precautions / trauma_fracture_assessment -> trauma_splinting` | עובר | נוסף פיצול ברור בין חשד לעמ"ש, שבר/פריקה, שבר פתוח וקיבוע עם PMS |
-| 15 | טביעה / התחשמלות | `scene_assessment -> initial_presentation_gate -> breathing_check / cpr_protocol / secondary_survey` | חלקי אך מובן | יש כיסוי שימושי דרך זירה + החייאה, אך לא ענף ייעודי שלם |
+| 15 | טביעה / התחשמלות | `scene_assessment -> trauma_environmental -> drowning_incident / electrical_injury -> drowning_resuscitation / drowning_post_rescue / electrical_resuscitation / electrical_conscious_management` | עובר | נוסף שער כניסה ייעודי מהזירה ופיצול ברור לפי מנגנון ומצב המטופל |
 | 16 | נשיכה / הכשה / פגיעה ימית | `scene_assessment -> ... -> secondary_survey -> trauma_animal_bites` | חלקי אך מובן | מיוצג, אך לא מפוצל עד הסוף לכל תת-תרחיש |
 
 ## מסקנה

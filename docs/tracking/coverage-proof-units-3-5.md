@@ -35,7 +35,7 @@
 | `23-musculoskeletal-trauma-and-splinting` | מכוסה | `trauma_secondary_survey` | `trauma_spine_extremity`, `trauma_fracture_assessment`, `trauma_splinting`, `trauma_open_fracture_bleeding` | יש כעת פיצול מפורש בין הערכת שבר/פריקה, שליטה בדימום/שבר פתוח וקיבוע עם PMS | אין |
 | `24-spinal-trauma-and-extrication` | מכוסה | `trauma_airway_gate` | `trauma_airway`, `trauma_spine_extremity`, `trauma_spine_precautions`, `trauma_secondary_survey` | C-spine משולב רוחבית, ונוסף כעת ענף ייעודי לחשד לעמ\"ש, הערכה נוירולוגית וחילוץ זהיר | חילוץ מתקדם נשאר guidance ולא תמרון טכני מלא |
 | `25-soft-tissue-burns-and-smoke-inhalation` | חלקי-טוב | `exposure_assessment` | `burns`, `airway_assessment`, `breathing_assessment` | כוויות מיוצגות היטב, ושאיפת עשן נלכדת דרך A/B | אין ענף עשן עצמאי |
-| `26-drowning-and-electrical-injury` | חלקי-טוב | `scene_assessment` | `rescue_breathing`, `cpr_protocol`, `secondary_survey` | טביעה/התחשמלות מכוונות דרך זירה + החייאה | אין ענף ייעודי מלא לכל מנגנון |
+| `26-drowning-and-electrical-injury` | מכוסה | `scene_assessment` | `trauma_environmental`, `drowning_incident`, `drowning_resuscitation`, `drowning_post_rescue`, `electrical_injury`, `electrical_resuscitation`, `electrical_conscious_management` | יש כעת שער כניסה ייעודי מהזירה, ופיצול מפורש בין טביעה להתחשמלות ובין מצב החייאתי למטופל נושם/בהכרה | אין |
 | `27-environmental-injuries` | מכוסה | `exposure_assessment` | `trauma_environmental`, `hypothermia`, `hyperthermia` | חום/קור מיוצגים כענף מלא | אין |
 | `28-animal-bites-venomous-and-marine-injuries` | חלקי-טוב | `secondary_survey` | `trauma_animal_bites`, `anaphylaxis_breathing` | יש ייצוג ראשוני שימושי | אין פיצול מלא לארס/ימי/נשיכות |
 
@@ -72,3 +72,4 @@
 2. `חלקי-טוב` כעת אינו "חור לא ידוע", אלא בחירה מתועדת של רמת עומק נוכחית.
 3. מודולים שסווגו כ-`משני` או `לא יעד זרימה` לא מהווים חוסר, אלא החלטת מוצר לשמור על הזרימה הראשית נקייה.
 4. אזור `שלד / קיבועים / עמ"ש` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול ייעודי לצמתי `trauma_spine_precautions`, `trauma_fracture_assessment`, `trauma_splinting` ו-`trauma_open_fracture_bleeding`.
+5. אזור `טביעה / התחשמלות` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר הוספת שער כניסה סביבתי וצמתי משנה נפרדים לטביעה, התחשמלות ומצבי חום/קור.
