@@ -31,7 +31,7 @@
 | `19-shock-and-hemorrhage-control` | מכוסה | `trauma_protocol` | `stop_bleeding`, `trauma_bleeding_control`, `trauma_wound_packing`, `trauma_tourniquet_control`, `trauma_shock_assessment`, `trauma_compensated_shock`, `trauma_decompensated_shock`, `trauma_internal_bleeding` | יש כעת פיצול מפורש בין לחץ ישיר, packing, חסם עורקים, הלם מפוצה/בלתי מפוצה וחשד לדימום פנימי בטראומה | פרוטוקולי fluid resuscitation ו-ALS נשארים מחוץ ליעד ה-BLS |
 | `20-face-neck-and-head-trauma` | מכוסה | `trauma_airway_gate` | `trauma_airway`, `head_trauma` | ראש/פנים/צוואר מיוצגים בענפי A ו-D | אין |
 | `21-chest-trauma` | מכוסה | `trauma_breathing_gate` | `flail_chest`, `sucking_chest_wound`, `hemothorax`, `pneumothorax` | תתי-תרחישי חזה קיימים | אין |
-| `22-abdominal-trauma` | חלקי-טוב | `trauma_circulation_gate` | `trauma_abdomen_pelvis`, `abdominal_emergency`, `acute_abdomen`, `gi_bleed` | בטן/אגן מיוצגים היטב כענף פעיל | אפשר לפצל עוד תתי-דפוסי טראומה בטנית |
+| `22-abdominal-trauma` | מכוסה | `trauma_circulation_gate` | `trauma_abdomen_pelvis`, `trauma_penetrating_abdomen`, `trauma_blunt_abdomen`, `trauma_evisceration`, `trauma_pelvic_injury` | יש כעת פיצול מפורש בין פגיעה חודרת, קהה, יציאת איברים ופגיעת אגן, עם דגש על דימום פנימי ופינוי דחוף | אבחון האיבר הפגוע והטיפול הכירורגי נשארים מחוץ ליעד ה-BLS |
 | `23-musculoskeletal-trauma-and-splinting` | מכוסה | `trauma_secondary_survey` | `trauma_spine_extremity`, `trauma_fracture_assessment`, `trauma_splinting`, `trauma_open_fracture_bleeding` | יש כעת פיצול מפורש בין הערכת שבר/פריקה, שליטה בדימום/שבר פתוח וקיבוע עם PMS | אין |
 | `24-spinal-trauma-and-extrication` | מכוסה | `trauma_airway_gate` | `trauma_airway`, `trauma_spine_extremity`, `trauma_spine_precautions`, `trauma_secondary_survey` | C-spine משולב רוחבית, ונוסף כעת ענף ייעודי לחשד לעמ\"ש, הערכה נוירולוגית וחילוץ זהיר | חילוץ מתקדם נשאר guidance ולא תמרון טכני מלא |
 | `25-soft-tissue-burns-and-smoke-inhalation` | חלקי-טוב | `exposure_assessment` | `burns`, `airway_assessment`, `breathing_assessment` | כוויות מיוצגות היטב, ושאיפת עשן נלכדת דרך A/B | אין ענף עשן עצמאי |
@@ -72,6 +72,7 @@
 2. `חלקי-טוב` כעת אינו "חור לא ידוע", אלא בחירה מתועדת של רמת עומק נוכחית.
 3. מודולים שסווגו כ-`משני` או `לא יעד זרימה` לא מהווים חוסר, אלא החלטת מוצר לשמור על הזרימה הראשית נקייה.
 4. אזור `הלם / עצירת דימומים` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול לצמתי `trauma_bleeding_control`, `trauma_wound_packing`, `trauma_tourniquet_control`, `trauma_shock_assessment`, `trauma_compensated_shock`, `trauma_decompensated_shock` ו-`trauma_internal_bleeding`.
-5. אזור `שלד / קיבועים / עמ"ש` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול ייעודי לצמתי `trauma_spine_precautions`, `trauma_fracture_assessment`, `trauma_splinting` ו-`trauma_open_fracture_bleeding`.
-6. אזור `טביעה / התחשמלות` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר הוספת שער כניסה סביבתי וצמתי משנה נפרדים לטביעה, התחשמלות ומצבי חום/קור.
-7. אזור `נשיכות / הכשות / פגיעות ימיות` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול לצמתי `animal_bite_rabies`, `venomous_bite_sting`, `marine_animal_injury`, `bee_sting_reaction` ו-`bee_sting_local_management`.
+5. אזור `טראומת בטן / אגן` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול לצמתי `trauma_penetrating_abdomen`, `trauma_blunt_abdomen`, `trauma_evisceration` ו-`trauma_pelvic_injury`.
+6. אזור `שלד / קיבועים / עמ"ש` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול ייעודי לצמתי `trauma_spine_precautions`, `trauma_fracture_assessment`, `trauma_splinting` ו-`trauma_open_fracture_bleeding`.
+7. אזור `טביעה / התחשמלות` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר הוספת שער כניסה סביבתי וצמתי משנה נפרדים לטביעה, התחשמלות ומצבי חום/קור.
+8. אזור `נשיכות / הכשות / פגיעות ימיות` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול לצמתי `animal_bite_rabies`, `venomous_bite_sting`, `marine_animal_injury`, `bee_sting_reaction` ו-`bee_sting_local_management`.

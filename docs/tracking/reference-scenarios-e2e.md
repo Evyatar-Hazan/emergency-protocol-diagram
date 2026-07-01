@@ -22,7 +22,7 @@
 | 4 | כאב חזה / ACS / דיסקציה / כאב לא קרדיאלי | `scene_assessment -> avpu_check -> abcde_assessment -> circulation_assessment -> acs_assessment` | עובר | יש הבחנה בטיחותית טובה בלי לקבוע אבחנה סופית בשטח |
 | 5 | טראומה עם דימום מסכן חיים | `scene_assessment -> initial_presentation_gate -> trauma_protocol -> stop_bleeding -> trauma_bleeding_control -> trauma_tourniquet_control / trauma_wound_packing -> trauma_shock_assessment` | עובר | המסלול מתחיל נכון ב-X, וממשיך כעת גם להחלטה ברורה בין לחץ ישיר, packing, חסם עורקים והערכת הלם |
 | 6 | חבלת חזה | `scene_assessment -> trauma_protocol -> abcde_trauma -> trauma_breathing_gate` | עובר | תתי-ענפים קיימים ומובחנים |
-| 7 | בטן חריפה / GI bleed / חסימת מעיים / כאב אגן | `scene_assessment -> avpu_check -> abcde_assessment -> circulation_assessment -> abdominal_emergency` | עובר | יש רצף שימושי לענפי הבטן |
+| 7 | טראומת בטן / אגן / יציאת איברים | `scene_assessment -> trauma_protocol -> abcde_trauma -> trauma_circulation_gate -> trauma_abdomen_pelvis -> trauma_penetrating_abdomen / trauma_blunt_abdomen / trauma_evisceration / trauma_pelvic_injury` | עובר | יש כעת פיצול ברור בין פגיעה חודרת, קהה, יציאת איברים ופגיעת אגן |
 | 8 | חשד לשבץ / פרכוס / שינוי הכרה | `scene_assessment -> avpu_check -> disability_assessment -> disability_status` | עובר | ענפי D בנויים היטב אחרי הסבבים הקודמים |
 | 9 | חולה מדבק / דקירת מחט / חשיפה לנוזלי גוף | `scene_assessment -> ... -> secondary_survey_finish -> infectious_exposure_control` | עובר עם שכבת עזר | לא ענף ליבה מוקדם, אבל קיים כשכבת המשך ברורה |
 | 10 | תאונת צלילה | `scene_assessment -> diving_emergency_overview` | עובר | נוסף חיבור מוקדם מהזירה |
