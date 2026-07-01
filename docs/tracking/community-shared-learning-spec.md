@@ -58,6 +58,13 @@
 - `abcde_assessment`
 - `cpr_protocol`
 - `trauma_protocol`
+- `choking_protocol`
+- `acute_coronary_syndrome`
+- `stroke`
+- `seizure`
+- `trauma_shock_assessment`
+- `imminent_delivery`
+- `obstetric_emergency`
 
 ## Definition of Done לשכבת Community / Shared Learning
 
@@ -71,7 +78,7 @@
 
 ## מה נשאר להרחיב בעתיד
 
-- הרחבת שכבת `דגשי מדריך / טעויות / שאלות חזרה` לעוד צמתים קליניים.
+- הרחבת שכבת `דגשי מדריך / טעויות / שאלות חזרה` לעוד צמתים קליניים מעבר ל-batch שכבר הוטמע.
 - הוספת seed content אמיתי לפי נושאים מההדרכה.
 - הוספת סינון/חיפוש לפי סוג תגובה אם נפח הדיון יגדל.
 - חיבור עתידי בין sources, דיון ותיקונים מקצועיים למסלול editorial מסודר.
