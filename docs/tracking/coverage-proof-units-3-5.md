@@ -32,8 +32,8 @@
 | `20-face-neck-and-head-trauma` | מכוסה | `trauma_airway_gate` | `trauma_airway`, `head_trauma` | ראש/פנים/צוואר מיוצגים בענפי A ו-D | אין |
 | `21-chest-trauma` | מכוסה | `trauma_breathing_gate` | `flail_chest`, `sucking_chest_wound`, `hemothorax`, `pneumothorax` | תתי-תרחישי חזה קיימים | אין |
 | `22-abdominal-trauma` | חלקי-טוב | `trauma_circulation_gate` | `trauma_abdomen_pelvis`, `abdominal_emergency`, `acute_abdomen`, `gi_bleed` | בטן/אגן מיוצגים היטב כענף פעיל | אפשר לפצל עוד תתי-דפוסי טראומה בטנית |
-| `23-musculoskeletal-trauma-and-splinting` | חלקי-טוב | `trauma_secondary_survey` | `trauma_spine_extremity` | יש ייצוג גפיים/שלד ברמת BLS | אין פיצול מפורש לכל סוג קיבוע/שבר |
-| `24-spinal-trauma-and-extrication` | חלקי-טוב | `trauma_airway_gate` | `trauma_airway`, `trauma_spine_extremity`, `trauma_secondary_survey` | C-spine משולב רוחבית בזרימה | חילוץ נשאר שכבת guidance ולא ענף נפרד |
+| `23-musculoskeletal-trauma-and-splinting` | מכוסה | `trauma_secondary_survey` | `trauma_spine_extremity`, `trauma_fracture_assessment`, `trauma_splinting`, `trauma_open_fracture_bleeding` | יש כעת פיצול מפורש בין הערכת שבר/פריקה, שליטה בדימום/שבר פתוח וקיבוע עם PMS | אין |
+| `24-spinal-trauma-and-extrication` | מכוסה | `trauma_airway_gate` | `trauma_airway`, `trauma_spine_extremity`, `trauma_spine_precautions`, `trauma_secondary_survey` | C-spine משולב רוחבית, ונוסף כעת ענף ייעודי לחשד לעמ\"ש, הערכה נוירולוגית וחילוץ זהיר | חילוץ מתקדם נשאר guidance ולא תמרון טכני מלא |
 | `25-soft-tissue-burns-and-smoke-inhalation` | חלקי-טוב | `exposure_assessment` | `burns`, `airway_assessment`, `breathing_assessment` | כוויות מיוצגות היטב, ושאיפת עשן נלכדת דרך A/B | אין ענף עשן עצמאי |
 | `26-drowning-and-electrical-injury` | חלקי-טוב | `scene_assessment` | `rescue_breathing`, `cpr_protocol`, `secondary_survey` | טביעה/התחשמלות מכוונות דרך זירה + החייאה | אין ענף ייעודי מלא לכל מנגנון |
 | `27-environmental-injuries` | מכוסה | `exposure_assessment` | `trauma_environmental`, `hypothermia`, `hyperthermia` | חום/קור מיוצגים כענף מלא | אין |
@@ -71,3 +71,4 @@
 1. לכל מודול ביחידות 3-5 יש כעת סטטוס מפורש וראיית מיפוי ברורה.
 2. `חלקי-טוב` כעת אינו "חור לא ידוע", אלא בחירה מתועדת של רמת עומק נוכחית.
 3. מודולים שסווגו כ-`משני` או `לא יעד זרימה` לא מהווים חוסר, אלא החלטת מוצר לשמור על הזרימה הראשית נקייה.
+4. אזור `שלד / קיבועים / עמ"ש` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול ייעודי לצמתי `trauma_spine_precautions`, `trauma_fracture_assessment`, `trauma_splinting` ו-`trauma_open_fracture_bleeding`.
