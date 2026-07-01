@@ -95,3 +95,4 @@
 - `2026-07-01` - `GAP-013` הועבר ל-`in_progress`. תת-פער ראשון שנסגר: מודול `31-abdominal-emergencies` עבר מ-`חלקי-טוב` ל-`מכוסה` לאחר הוספת `bowel_obstruction` ו-`pelvic_gynecologic_emergency` ל-`unified-flow.json` ועדכון מסמך המיפוי.
 - `2026-07-01` - תת-פער שני תחת `GAP-013` נסגר: מודול `29-respiratory-emergencies-advanced` עבר מ-`חלקי-טוב` ל-`מכוסה` לאחר חיבור מפורש של `pulmonary_embolism` מתוך `breathing_problem_type` ועדכון מסמך המיפוי.
 - `2026-07-01` - תת-פער שלישי תחת `GAP-013` נסגר: מודול `30-cardiac-emergencies-advanced` עבר מ-`חלקי-טוב` ל-`מכוסה` לאחר הוספת `non_cardiac_chest_pain` למסלול `acs_assessment` ועדכון מסמך המיפוי כך שישקף גם את `aortic_dissection`.
+- `2026-07-01` - תת-פער רביעי תחת `GAP-013` נסגר: מודול `32-infectious-diseases` עבר מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול `infectious_exposure_control` לשער החלטה מסודר עם `infection_control_precautions`, `bloodborne_exposure_response` ו-`infection_scene_hygiene`.
