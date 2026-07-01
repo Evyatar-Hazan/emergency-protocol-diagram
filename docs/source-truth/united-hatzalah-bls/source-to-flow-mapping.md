@@ -67,7 +67,7 @@
 
 | מודול מקור | נושא | צמתים רלוונטיים ב-`unified-flow.json` | סטטוס | הערות |
 |---|---|---|---|---|
-| `29-respiratory-emergencies-advanced` | דלקת ריאות, PE, השלמות נשימה | `breathing_status`, `pneumonia`, `hyperventilation`, `shock_type` | חלקי-טוב | `PE` עדיין ללא צומת ייעודי. |
+| `29-respiratory-emergencies-advanced` | דלקת ריאות, PE, השלמות נשימה | `breathing_status`, `breathing_problem_type`, `pneumonia`, `pulmonary_embolism`, `hyperventilation`, `shock_type` | מכוסה | `PE` מחובר כעת בצורה מפורשת גם משער המיון הנשימתי, בנוסף לצומת הייעודי. |
 | `30-cardiac-emergencies-advanced` | הפרעות קצב, פתולוגיות אאורטה | `circulation_status`, `acs_assessment`, `arrhythmia_bradycardia`, `arrhythmia_svt`, `arrhythmia_afib`, `arrhythmia_vt` | חלקי-טוב | הפרעות קצב מיוצגות; אאורטה/כאב חזה לא-לבבי פחות. |
 | `31-abdominal-emergencies` | בטן חריפה, GI bleed, UTI, כליות | `abdominal_emergency`, `acute_abdomen`, `gi_bleed`, `appendicitis_suspicion`, `bowel_obstruction`, `renal_colic_uti`, `pelvic_gynecologic_emergency`, `secondary_survey` | מכוסה | נוסף כעת גם כיסוי ייעודי לחסימת מעיים ולהריון חוץ רחמי/כאב אגן דחוף. |
 | `32-infectious-diseases` | זיהומים, חשיפה ביולוגית, מנינגיטיס | `meningitis`, `septic_shock`, `infectious_exposure_control`, `secondary_survey` | חלקי-טוב | כיסוי טוב, עם מקום לחידוד רוחבי. |
