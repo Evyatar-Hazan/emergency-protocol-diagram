@@ -20,7 +20,7 @@
 | 2 | חנק בילד/תינוק | `scene_assessment -> avpu_check -> airway_assessment -> choking_protocol / infant_choking` | עובר | יש פיצול ברור לפי גיל וסוג חסימה |
 | 3 | חולה נשימתי עם PE / דלקת ריאות / אסטמה | `scene_assessment -> avpu_check -> abcde_assessment -> breathing_assessment -> breathing_problem_type` | עובר | ענף הנשימה מחובר טוב גם להשלמות מתקדמות |
 | 4 | כאב חזה / ACS / דיסקציה / כאב לא קרדיאלי | `scene_assessment -> avpu_check -> abcde_assessment -> circulation_assessment -> acs_assessment` | עובר | יש הבחנה בטיחותית טובה בלי לקבוע אבחנה סופית בשטח |
-| 5 | טראומה עם דימום מסכן חיים | `scene_assessment -> initial_presentation_gate -> trauma_protocol -> stop_bleeding -> abcde_trauma` | עובר | המסלול מתחיל נכון ב-X לפני שאר הטראומה |
+| 5 | טראומה עם דימום מסכן חיים | `scene_assessment -> initial_presentation_gate -> trauma_protocol -> stop_bleeding -> trauma_bleeding_control -> trauma_tourniquet_control / trauma_wound_packing -> trauma_shock_assessment` | עובר | המסלול מתחיל נכון ב-X, וממשיך כעת גם להחלטה ברורה בין לחץ ישיר, packing, חסם עורקים והערכת הלם |
 | 6 | חבלת חזה | `scene_assessment -> trauma_protocol -> abcde_trauma -> trauma_breathing_gate` | עובר | תתי-ענפים קיימים ומובחנים |
 | 7 | בטן חריפה / GI bleed / חסימת מעיים / כאב אגן | `scene_assessment -> avpu_check -> abcde_assessment -> circulation_assessment -> abdominal_emergency` | עובר | יש רצף שימושי לענפי הבטן |
 | 8 | חשד לשבץ / פרכוס / שינוי הכרה | `scene_assessment -> avpu_check -> disability_assessment -> disability_status` | עובר | ענפי D בנויים היטב אחרי הסבבים הקודמים |

@@ -1498,11 +1498,11 @@
       "conditions": [
         {
           "label": "דימום חיצוני שלא נשלט / צריך שליטה מיידית",
-          "target": "external_bleeding"
+          "target": "trauma_bleeding_control"
         },
         {
           "label": "סימני הלם / חשד לדימום פנימי",
-          "target": "shock_type"
+          "target": "trauma_shock_assessment"
         },
         {
           "label": "פגיעת בטן / אגן / יציאת איברים",
@@ -1513,6 +1513,222 @@
           "target": "trauma_disability_gate"
         }
       ]
+    },
+
+    "trauma_bleeding_control": {
+      "id": "trauma_bleeding_control",
+      "type": "decision",
+      "title": "טראומה - איך עוצרים את הדימום עכשיו",
+      "description": "בדימום טראומטי בוחרים מהר בין לחץ ישיר, packing או חסם עורקים לפי מיקום וסוג הדימום",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "בחר את אמצעי השליטה לפי הממצא:\n- לחץ ישיר ותחבושת לחץ הם קו ראשון לרוב הדימומים\n- פצעי מעבר במפשעה/בית שחי/צוואר/עכוז מתאימים יותר ל-packing\n- דימום גפיים מסיבי, קטיעה או מצב שלא מאפשר שליטה ידנית מחייבים חסם עורקים",
+        "whatToLookFor": [
+          "האם מדובר בגפה או באזור מעבר",
+          "האם הדימום נשלט בלחץ ישיר רציף",
+          "האם יש קטיעה מלאה/חלקית",
+          "האם הזירה, מספר הפצועים או מצב A/B לא מאפשרים להתעכב על לחץ ידני ממושך"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-3 הלם ועצירת דימומים",
+            "url": "https://drive.google.com/file/d/1vKldvsyRFTi8fgW25nocAaVI3WFMGoP4/view?usp=drivesdk",
+            "note": "לחץ ישיר כקו ראשון, packing באזורי מעבר וחסם עורקים בהתוויות מתאימות."
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "label": "הדימום נשלט בלחץ ישיר / תחבושת לחץ",
+          "target": "trauma_shock_assessment"
+        },
+        {
+          "label": "פצע מעבר - מפשעה / בית שחי / צוואר / עכוז",
+          "target": "trauma_wound_packing"
+        },
+        {
+          "label": "דימום גפה מסיבי / קטיעה / לא נשלט",
+          "target": "trauma_tourniquet_control"
+        }
+      ]
+    },
+
+    "trauma_wound_packing": {
+      "id": "trauma_wound_packing",
+      "type": "action",
+      "title": "Packing בדימום טראומטי",
+      "description": "בפצעי מעבר ממלאים את חלל הפצע, מפעילים לחץ פנימי, ואז מוסיפים לחץ ישיר מתמשך",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "השתמש ב-packing בעיקר למפשעה, בית שחי, צוואר ועכוז כשאי אפשר להניח חסם עורקים רגיל",
+          "אל תשלוף גוף זר בולט",
+          "הכנס את האגד או חומר החבישה אצבע אחרי אצבע עד למילוי הפצע",
+          "לאחר המילוי הפעל לחץ ישיר רציף והדק עם תחבושת מתאימה",
+          "אם הדימום נמשך או שהמטופל מדרדר - פינוי דחוף והזעקת סיוע מתקדם"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-3 הלם ועצירת דימומים",
+            "url": "https://drive.google.com/file/d/1vKldvsyRFTi8fgW25nocAaVI3WFMGoP4/view?usp=drivesdk",
+            "note": "Packing לאזורי מעבר, ללא שליפת גוף זר, ולאחר מכן לחץ ישיר והידוק."
+          }
+        ]
+      },
+      "next": "trauma_shock_assessment"
+    },
+
+    "trauma_tourniquet_control": {
+      "id": "trauma_tourniquet_control",
+      "type": "action",
+      "title": "חסם עורקים בדימום טראומטי",
+      "description": "בדימום גפה מסיבי או קטיעה, מניחים חסם גבוה, בודקים שהדימום נעצר, ומתעדים שעה",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "הנח חסם עורקים גבוה בראש הגפה, לא על מפרק",
+          "אם הדימום לא נעצר - הוסף חסם נוסף צמוד",
+          "ודא שהדימום נעצר ושאין דופק דיסטלי אם ניתן לבדוק במהירות",
+          "רשום שעת הנחה ב-4 ספרות במקום גלוי",
+          "צוות BLS לא מבצע המרת חסם עורקים בשטח אלא במקרים חריגים ובהנחיית מוקד רפואי"
+        ],
+        "whatToLookFor": [
+          "דימום מסיבי שלא נשלט בלחץ ישיר",
+          "קטיעה מלאה או חלקית גם ללא דימום פעיל כעת",
+          "פצוע מעורפל/חסר הכרה, בעיית A/B, ריבוי פצועים או חושך שמקשים על שליטה ידנית יעילה"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-3 הלם ועצירת דימומים",
+            "url": "https://drive.google.com/file/d/1vKldvsyRFTi8fgW25nocAaVI3WFMGoP4/view?usp=drivesdk",
+            "note": "התוויות לחסם עורקים, מיקום גבוה בראש הגפה, חסם נוסף ותיעוד שעה."
+          }
+        ]
+      },
+      "next": "trauma_shock_assessment"
+    },
+
+    "trauma_shock_assessment": {
+      "id": "trauma_shock_assessment",
+      "type": "decision",
+      "title": "טראומה - האם יש הלם מפוצה, בלתי מפוצה או דימום פנימי חשוד",
+      "description": "לחץ דם תקין לא שולל הלם. בטראומה מחפשים מוקדם טכיקרדיה, שינוי הכרה וחשד לדימום פנימי",
+      "severity": "critical",
+      "content": {
+        "checkMethod": "בדוק מגמת זילוח ולא רק לחץ דם:\n- שלב מפוצה: דופק מהיר, נשימה מהירה, חיוורון, זיעה קרה, קור, אי שקט\n- שלב בלתי מפוצה: לחץ דם מתחיל לרדת, בלבול גובר, חולשה קיצונית והחמרה מהירה\n- אם יש סימני הלם בלי דימום חיצוני ברור - חשוב על דימום פנימי עד שיוכח אחרת",
+        "whatToLookFor": [
+          "דופק מהיר וחלש",
+          "נשימה מהירה",
+          "ירידה במצב ההכרה או אי שקט",
+          "זיעה קרה, חיוורון, עור קר וצמרמורת",
+          "לחץ דם נמוך - ממצא מאוחר, לא תנאי לזיהוי הלם"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-3 הלם ועצירת דימומים",
+            "url": "https://drive.google.com/file/d/1vKldvsyRFTi8fgW25nocAaVI3WFMGoP4/view?usp=drivesdk",
+            "note": "שלבי הלם, סימני הלם וחשד לדימום פנימי גם ללא דימום חיצוני."
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "label": "יש סימני הלם אבל עדיין ללא קריסה ברורה",
+          "target": "trauma_compensated_shock"
+        },
+        {
+          "label": "יש ירידת לחץ דם / בלבול משמעותי / הידרדרות מהירה",
+          "target": "trauma_decompensated_shock"
+        },
+        {
+          "label": "אין דימום חיצוני משמעותי אבל יש חשד לדימום פנימי",
+          "target": "trauma_internal_bleeding"
+        },
+        {
+          "label": "כרגע אין סימני הלם מובהקים - המשך ל-D",
+          "target": "trauma_disability_gate"
+        }
+      ]
+    },
+
+    "trauma_compensated_shock": {
+      "id": "trauma_compensated_shock",
+      "type": "action",
+      "title": "הלם טראומטי - שלב מפוצה",
+      "description": "גם אם לחץ הדם עדיין תקין, טכיקרדיה, חיוורון והזעה קרה בטראומה הם דגל אדום שדורש פינוי דחוף",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "חזור מהר ל-X/C וחפש שוב מקור דימום שניתן לשלוט בו",
+          "תן חמצן לפי צורך, השכב אם המצב מאפשר, ושמור על חום גוף",
+          "נטר דופק, נשימה, הכרה וזילוח באופן חוזר כי מטופל מפוצה עלול להידרדר מהר",
+          "אל תתן אוכל או שתייה ואל תתעכב על בירור עמוק בשטח",
+          "פנה בדחיפות והזעק ALS אם יש כל סימן להחמרה"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-3 הלם ועצירת דימומים",
+            "url": "https://drive.google.com/file/d/1vKldvsyRFTi8fgW25nocAaVI3WFMGoP4/view?usp=drivesdk",
+            "note": "שלב מפוצה מזוהה מוקדם בעיקר לפי דופק מהיר; לחץ דם תקין אינו מרגיע."
+          }
+        ]
+      },
+      "next": "trauma_disability_gate"
+    },
+
+    "trauma_decompensated_shock": {
+      "id": "trauma_decompensated_shock",
+      "type": "action",
+      "title": "הלם טראומטי - שלב בלתי מפוצה",
+      "description": "ירידת לחץ דם, בלבול והחמרה בטראומה מעידים על קריסה מתקדמת ודורשים פינוי מיידי בלי עיכובים",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "התייחס למטופל כאל מסכן חיים מיידי וחפש שוב דימום שניתן לעצור",
+          "תן חמצן לפי צורך, שמור על חום גוף, והזעק ALS בדחיפות אם לא הוזעק כבר",
+          "קצר זמן זירה למינימום וארגן פינוי מיידי",
+          "המשך ניטור הכרה, נשימה ודופק; הכן החמרה לכשל נשימתי או דום לב",
+          "אם אין דימום חיצוני ברור - חשוב עוד יותר על דימום פנימי מאסיבי"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-3 הלם ועצירת דימומים",
+            "url": "https://drive.google.com/file/d/1vKldvsyRFTi8fgW25nocAaVI3WFMGoP4/view?usp=drivesdk",
+            "note": "שלב בלתי מפוצה: לחץ דם יורד, החמרה מהירה, פינוי דחוף וחשד לדימום מסכן חיים."
+          }
+        ]
+      },
+      "next": "trauma_disability_gate"
+    },
+
+    "trauma_internal_bleeding": {
+      "id": "trauma_internal_bleeding",
+      "type": "action",
+      "title": "טראומה - חשד לדימום פנימי",
+      "description": "כשיש סימני הלם בלי מקור חיצוני ברור, מניחים דימום פנימי עד שיוכח אחרת ומקצרים זמן זירה",
+      "severity": "critical",
+      "content": {
+        "treatment": [
+          "חשוד לדימום פנימי אם יש סימני הלם בלי דימום חיצוני מסביר",
+          "חפש מנגנון מתאים: חבלת בטן/אגן, נפילה מגובה, חזה, שבר ירך או פציעה חודרת",
+          "תן חמצן לפי צורך, שמור על חום גוף, ונטר הכרה, דופק ונשימה",
+          "אל תתן אוכל או שתייה ואל תתעכב על בירור אבחנתי בשטח",
+          "פנה בדחיפות והזעק ALS, גם אם הממצא החיצוני 'שקט'"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-3 הלם ועצירת דימומים",
+            "url": "https://drive.google.com/file/d/1vKldvsyRFTi8fgW25nocAaVI3WFMGoP4/view?usp=drivesdk",
+            "note": "סימני הלם ללא דימום חיצוני מחייבים חשד לדימום פנימי."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-6 פגיעות בטן",
+            "url": "https://drive.google.com/file/d/1kkK5LOIOLIPYcCp1XlclodHHepsl-2_M/view?usp=drivesdk",
+            "note": "בפגיעת בטן/אגן יש לחשוד בדימום פנימי ולפנות בדחיפות."
+          }
+        ]
+      },
+      "next": "trauma_disability_gate"
     },
 
     "trauma_abdomen_pelvis": {

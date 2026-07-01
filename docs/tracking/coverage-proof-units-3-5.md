@@ -28,7 +28,7 @@
 |---|---|---|---|---|---|
 | `17-intro-to-trauma` | מכוסה | `scene_assessment` | `trauma_protocol`, `abcde_trauma` | יש כניסה ברורה למסלול טראומה | אין |
 | `18-trauma-approach-and-treatment-stages` | מכוסה | `trauma_protocol` | `trauma_primary_priorities`, `trauma_*_gate` | יש רצף XABCDE מסודר | אין |
-| `19-shock-and-hemorrhage-control` | חלקי-טוב | `trauma_protocol` | `stop_bleeding`, `external_bleeding`, `shock_type`, `hypovolemic_shock` | עצירת דימום והלם היפוולמי מיוצגים | אפשר להעמיק עוד בענפי הלם טראומטי |
+| `19-shock-and-hemorrhage-control` | מכוסה | `trauma_protocol` | `stop_bleeding`, `trauma_bleeding_control`, `trauma_wound_packing`, `trauma_tourniquet_control`, `trauma_shock_assessment`, `trauma_compensated_shock`, `trauma_decompensated_shock`, `trauma_internal_bleeding` | יש כעת פיצול מפורש בין לחץ ישיר, packing, חסם עורקים, הלם מפוצה/בלתי מפוצה וחשד לדימום פנימי בטראומה | פרוטוקולי fluid resuscitation ו-ALS נשארים מחוץ ליעד ה-BLS |
 | `20-face-neck-and-head-trauma` | מכוסה | `trauma_airway_gate` | `trauma_airway`, `head_trauma` | ראש/פנים/צוואר מיוצגים בענפי A ו-D | אין |
 | `21-chest-trauma` | מכוסה | `trauma_breathing_gate` | `flail_chest`, `sucking_chest_wound`, `hemothorax`, `pneumothorax` | תתי-תרחישי חזה קיימים | אין |
 | `22-abdominal-trauma` | חלקי-טוב | `trauma_circulation_gate` | `trauma_abdomen_pelvis`, `abdominal_emergency`, `acute_abdomen`, `gi_bleed` | בטן/אגן מיוצגים היטב כענף פעיל | אפשר לפצל עוד תתי-דפוסי טראומה בטנית |
@@ -71,6 +71,7 @@
 1. לכל מודול ביחידות 3-5 יש כעת סטטוס מפורש וראיית מיפוי ברורה.
 2. `חלקי-טוב` כעת אינו "חור לא ידוע", אלא בחירה מתועדת של רמת עומק נוכחית.
 3. מודולים שסווגו כ-`משני` או `לא יעד זרימה` לא מהווים חוסר, אלא החלטת מוצר לשמור על הזרימה הראשית נקייה.
-4. אזור `שלד / קיבועים / עמ"ש` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול ייעודי לצמתי `trauma_spine_precautions`, `trauma_fracture_assessment`, `trauma_splinting` ו-`trauma_open_fracture_bleeding`.
-5. אזור `טביעה / התחשמלות` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר הוספת שער כניסה סביבתי וצמתי משנה נפרדים לטביעה, התחשמלות ומצבי חום/קור.
-6. אזור `נשיכות / הכשות / פגיעות ימיות` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול לצמתי `animal_bite_rabies`, `venomous_bite_sting`, `marine_animal_injury`, `bee_sting_reaction` ו-`bee_sting_local_management`.
+4. אזור `הלם / עצירת דימומים` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול לצמתי `trauma_bleeding_control`, `trauma_wound_packing`, `trauma_tourniquet_control`, `trauma_shock_assessment`, `trauma_compensated_shock`, `trauma_decompensated_shock` ו-`trauma_internal_bleeding`.
+5. אזור `שלד / קיבועים / עמ"ש` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול ייעודי לצמתי `trauma_spine_precautions`, `trauma_fracture_assessment`, `trauma_splinting` ו-`trauma_open_fracture_bleeding`.
+6. אזור `טביעה / התחשמלות` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר הוספת שער כניסה סביבתי וצמתי משנה נפרדים לטביעה, התחשמלות ומצבי חום/קור.
+7. אזור `נשיכות / הכשות / פגיעות ימיות` הועלה מ-`חלקי-טוב` ל-`מכוסה` לאחר פיצול לצמתי `animal_bite_rabies`, `venomous_bite_sting`, `marine_animal_injury`, `bee_sting_reaction` ו-`bee_sting_local_management`.
