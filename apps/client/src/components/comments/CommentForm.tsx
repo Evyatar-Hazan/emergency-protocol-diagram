@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { commentService } from '../../services/api';
 import { GoogleLoginButton } from '../auth/GoogleLoginButton';
@@ -26,16 +26,6 @@ export const CommentForm: React.FC<CommentFormProps> = ({
   const [selectedKind, setSelectedKind] = useState(initialKind ?? COMMENT_KIND_OPTIONS[0].label);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setContent(initialContent);
-  }, [initialContent]);
-
-  useEffect(() => {
-    if (initialKind) {
-      setSelectedKind(initialKind);
-    }
-  }, [initialKind]);
 
   if (!isAuthenticated || !user) {
     return (

@@ -102,6 +102,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({
         </div>
 
         <CommentForm
+          key={`${nodeId}:${draftKind ?? 'default'}:${draftSuggestion}`}
           nodeId={nodeId}
           onCommentAdded={() => {
             setDraftSuggestion('');
