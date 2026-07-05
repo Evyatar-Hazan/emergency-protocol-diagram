@@ -77,14 +77,14 @@ function AppContent() {
   return (
     <div className="app-shell editorial-grid font-body text-clinical-ink" dir="rtl">
       <div className="sticky top-0 z-50 border-b border-white/10 bg-clinical-header shadow-strong backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
-          <div className="flex flex-1 items-center gap-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-3 py-3 sm:gap-4 sm:px-6 sm:py-4">
+          <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
             <div className="hidden h-12 w-[1px] bg-white/12 sm:block" />
             <div className="min-w-0">
-              <span className="shimmer-line mb-2 inline-flex items-center rounded-full border border-white/12 bg-white/10 px-3 py-1 text-[11px] font-bold tracking-[0.18em] text-white/75">
+              <span className="shimmer-line mb-1 inline-flex items-center rounded-full border border-white/12 bg-white/10 px-2.5 py-1 text-[10px] font-bold tracking-[0.16em] text-white/75 sm:mb-2 sm:px-3 sm:text-[11px]">
                 פרוטוקול חירום ראשי
               </span>
-              <h1 className="truncate font-display text-lg font-extrabold text-white sm:text-2xl">
+              <h1 className="truncate font-display text-base font-extrabold leading-tight text-white sm:text-2xl">
                 Emergency Protocol Diagram
               </h1>
               <p className="mt-1 hidden max-w-2xl text-sm leading-6 text-white/72 sm:block">
@@ -118,7 +118,7 @@ function AppContent() {
 
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="mr-1 flex flex-col gap-1.5 rounded-2xl border border-white/14 bg-white/10 p-3 transition hover:bg-white/16"
+            className="mr-0.5 flex h-14 w-14 shrink-0 flex-col items-center justify-center gap-1.5 rounded-2xl border border-white/14 bg-white/10 p-0 transition hover:bg-white/16 sm:mr-1 sm:h-auto sm:w-auto sm:p-3"
             aria-label="תפריט"
             aria-expanded={isMenuOpen}
             aria-controls="main-mobile-menu"
