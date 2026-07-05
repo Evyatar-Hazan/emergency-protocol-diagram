@@ -870,65 +870,67 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
       </div>
 
       <div className="mx-auto mb-4 w-full max-w-5xl sm:mb-6">
-        <div className="surface-card clinical-panel rise-in rounded-3xl p-2.5 sm:hidden">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between gap-2">
-              <div className="min-w-0 rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-700">
+        <div className="surface-card clinical-panel rise-in rounded-[26px] p-2 sm:hidden">
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between gap-1.5">
+              <div className="min-w-0 rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-semibold text-slate-700">
                 <span className="truncate">{protocolLabel}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <div className="rounded-full bg-slate-900 px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm">
+              <div className="flex shrink-0 items-center gap-1">
+                <div className="rounded-full bg-slate-900 px-2 py-1 text-[10px] font-semibold text-white shadow-sm">
                   צעד {stepCount}
                 </div>
-                <div className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${config.border} ${config.bg} ${config.text}`}>
+                <div className={`rounded-full border px-2 py-1 text-[10px] font-semibold ${config.border} ${config.bg} ${config.text}`}>
                   {config.label}
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-1.5">
-              <button
-                onClick={restart}
-                className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-clinical-blue px-2 py-2 text-[11px] font-semibold text-white shadow-sm transition-colors hover:bg-clinical-deep"
-              >
-                <span>🔄</span>
-                <span>חדש</span>
-              </button>
-              <button
-                onClick={() => toggleBookmark(currentNodeId)}
-                className={`flex min-w-0 items-center justify-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-medium transition-all ${
-                  hasBookmark
-                    ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                }`}
-                title={hasBookmark ? 'הסר סימניה' : 'הוסף סימניה'}
-                aria-label={hasBookmark ? 'הסר את הצעד הזה מהסימניות' : 'שמור את הצעד הזה לסימניות'}
-              >
-                <span>{hasBookmark ? '⭐' : '☆'}</span>
-                <span>{hasBookmark ? 'נשמר' : 'שמור'}</span>
-              </button>
-              <button
-                onClick={goBack}
-                disabled={history.length === 0}
-                className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gray-200 px-2 py-2 text-[11px] font-medium transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <span>←</span>
-                <span>חזור</span>
-              </button>
-              <button
-                onClick={() => setIsSidebarOpen(true)}
-                className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-2 py-2 text-[11px] font-medium text-white transition-all hover:shadow-lg"
-                title="פתח כלי עזר מהירים"
-                aria-label="פתח את קפיצות הסכמות והסימניות"
-              >
-                <span>🧰</span>
-                <span>כלים</span>
-                {bookmarkedNodes.size > 0 && (
-                  <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-purple-600">
-                    {bookmarkedNodes.size}
-                  </span>
-                )}
-              </button>
+            <div className="-mx-0.5 overflow-x-auto pb-0.5">
+              <div className="flex min-w-max items-center gap-1.5 px-0.5">
+                <button
+                  onClick={restart}
+                  className="flex h-11 min-w-[88px] items-center justify-center gap-1.5 rounded-2xl bg-clinical-blue px-3 text-[11px] font-semibold text-white shadow-sm transition-colors hover:bg-clinical-deep"
+                >
+                  <span>🔄</span>
+                  <span>חדש</span>
+                </button>
+                <button
+                  onClick={() => toggleBookmark(currentNodeId)}
+                  className={`flex h-11 min-w-[88px] items-center justify-center gap-1.5 rounded-2xl px-3 text-[11px] font-medium transition-all ${
+                    hasBookmark
+                      ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  }`}
+                  title={hasBookmark ? 'הסר סימניה' : 'הוסף סימניה'}
+                  aria-label={hasBookmark ? 'הסר את הצעד הזה מהסימניות' : 'שמור את הצעד הזה לסימניות'}
+                >
+                  <span>{hasBookmark ? '⭐' : '☆'}</span>
+                  <span>{hasBookmark ? 'נשמר' : 'שמור'}</span>
+                </button>
+                <button
+                  onClick={goBack}
+                  disabled={history.length === 0}
+                  className="flex h-11 min-w-[88px] items-center justify-center gap-1.5 rounded-2xl bg-gray-200 px-3 text-[11px] font-medium transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <span>←</span>
+                  <span>חזור</span>
+                </button>
+                <button
+                  onClick={() => setIsSidebarOpen(true)}
+                  className="flex h-11 min-w-[108px] items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 text-[11px] font-medium text-white transition-all hover:shadow-lg"
+                  title="פתח כלי עזר מהירים"
+                  aria-label="פתח את קפיצות הסכמות והסימניות"
+                >
+                  <span>🧰</span>
+                  <span>כלים</span>
+                  {bookmarkedNodes.size > 0 && (
+                    <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-purple-600">
+                      {bookmarkedNodes.size}
+                    </span>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
