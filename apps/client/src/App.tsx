@@ -62,7 +62,7 @@ function AppContent() {
             <div className="h-12 w-12 animate-spin rounded-full border-[3px] border-clinical-blue/20 border-t-clinical-blue"></div>
           </div>
           <h1 className="mb-3 font-display text-3xl font-extrabold text-clinical-ink">
-            Emergency Protocol Diagram
+            תרשים פרוטוקול חירום
           </h1>
           <p className="mx-auto max-w-md text-base leading-7 text-clinical-muted">
             טוען פרוטוקול צעד-אחר-צעד לחובשים עם ניווט קשיח, שליפה מהירה של מדדים ושכבות עזר מקצועיות.
@@ -85,7 +85,7 @@ function AppContent() {
                 פרוטוקול חירום ראשי
               </span>
               <h1 className="truncate font-display text-base font-extrabold leading-tight text-white sm:text-2xl">
-                Emergency Protocol Diagram
+                תרשים פרוטוקול חירום
               </h1>
               <p className="mt-1 hidden max-w-2xl text-sm leading-6 text-white/72 sm:block">
                 פרוטוקול חירום מונחה לחובשים ולמתלמדים, עם סדר עבודה קשיח, מדדים מהירים ושכבות עזר סביב כל צומת.
