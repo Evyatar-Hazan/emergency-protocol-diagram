@@ -5118,9 +5118,9 @@
             "note": "החובש צריך לזהות גם את מצב החולה וגם את הסיכון הסביבתי; זיהום עם פגיעה מערכתית מחייב תגובה דחופה."
           },
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "חשד לספסיס עם פגיעה המודינמית מחייב פינוי דחוף."
+            "label": "איחוד הצלה - יחידה 19 הלם ועצירת דימומים",
+            "url": "https://drive.google.com/file/d/1vKldvsyRFTi8fgW25nocAaVI3WFMGoP4/view?usp=drivesdk",
+            "note": "סימני הלם כמו טכיקרדיה, ירידה בהכרה, לחץ דם נמוך ופרפוזיה ירודה מחייבים פינוי דחוף גם כשהמקור הוא זיהומי."
           }
         ]
       },
@@ -5588,14 +5588,14 @@
         ],
         "sources": [
           {
-            "label": "משרד הבריאות - זיהוי מהיר של סימני שבץ והזעקת עזרה",
-            "url": "https://www.gov.il/he/pages/cva",
-            "note": "זיהוי סימני FAST והחשיבות של זמן התחלת תסמינים."
+            "label": "איחוד הצלה - יחידה 13 מצבי חירום נוירולוגיים",
+            "url": "https://drive.google.com/file/d/11Fpr_Pm25J0f_8uqIv5XypLxrL_nG0nQ/view?usp=drivesdk",
+            "note": "זיהוי FAST, תיעוד זמן התחלת תסמינים, והבנה שגם TIA וגם CVA מחייבים פינוי דחוף."
           },
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "תמיכת שדה, שלילת היפוגליקמיה ופינוי דחוף בחשד לשבץ או TIA."
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "ב-D יש לשלב הכרה, סוכר, חסר נוירולוגי והחלטת פינוי מהירה בלי לעכב על אבחנה מלאה בשטח."
           }
         ]
       },
@@ -5835,9 +5835,14 @@
         ],
         "sources": [
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "ירידה בהכרה מחייבת הערכת ABC חוזרת, חיפוש גורמים הפיכים ופינוי דחוף."
+            "label": "איחוד הצלה - יחידה 13 מצבי חירום נוירולוגיים",
+            "url": "https://drive.google.com/file/d/11Fpr_Pm25J0f_8uqIv5XypLxrL_nG0nQ/view?usp=drivesdk",
+            "note": "ירידה בהכרה או חסר נוירולוגי מחייבים זיהוי מהיר, שלילת גורמים מחקים, ופינוי דחוף."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-4 פגיעות פנים, צוואר וראש",
+            "url": "https://drive.google.com/file/d/1zcApz8BhFJ7AJ8khzve6qCmJ8vHOswiQ/view?usp=drivesdk",
+            "note": "בפגיעת ראש יש משמעות להערכה נוירולוגית חוזרת, GCS והחמרה לאורך הזמן."
           }
         ]
       },
@@ -5889,14 +5894,14 @@
         ],
         "sources": [
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "בדיקת אישונים מסייעת בזיהוי פגיעה נוירולוגית או הרעלה, אך ניהול השדה מבוסס על תמיכת ABC ופינוי."
+            "label": "איחוד הצלה - יחידה 13 מצבי חירום נוירולוגיים",
+            "url": "https://drive.google.com/file/d/11Fpr_Pm25J0f_8uqIv5XypLxrL_nG0nQ/view?usp=drivesdk",
+            "note": "אישונים לא שווים או סטיית מבט יכולים להשתלב בחסר נוירולוגי או פגיעה מוחית ודורשים פינוי דחוף."
           },
           {
-            "label": "משרד הבריאות - נלוקסון תרופה מצילת חיים",
-            "url": "https://www.gov.il/BlobFolder/reports/naloxone/he/PDF_%D7%A0%D7%9C%D7%95%D7%A7%D7%A1%D7%95%D7%9F-%D7%AA%D7%A8%D7%95%D7%A4%D7%94%20%D7%9E%D7%A6%D7%99%D7%9C%D7%AA%20%D7%97%D7%99%D7%99%D7%9D%21.pdf",
-            "note": "נלוקסון רלוונטי רק בהרעלה מאופיואידים ואינו מחליף תמיכה נשימתית."
+            "label": "איחוד הצלה - יחידה 3-4 פגיעות פנים, צוואר וראש",
+            "url": "https://drive.google.com/file/d/1zcApz8BhFJ7AJ8khzve6qCmJ8vHOswiQ/view?usp=drivesdk",
+            "note": "בפגיעת ראש יש חשיבות לזיהוי אישונים חריגים כחלק מחשד ל-EICP או פגיעה מוחית משמעותית."
           }
         ]
       },
@@ -5967,9 +5972,9 @@
             "note": "היחידה מדגישה בדיקת סוכר מוקדמת, שגיאות מדידה נפוצות וזהירות בפרשנות התוצאה לפי מצב החולה."
           },
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "בדיקת סוכר בשינוי הכרה וטיפול שמבוסס על מצב הכרה ובטיחות בליעה."
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "בדיקת סוכר היא חלק מהערכת D בשינוי הכרה וצריכה להשתלב עם התמונה הקלינית והמדדים."
           }
         ]
       },
@@ -5983,7 +5988,24 @@
       "description": "הערכת ממצאים והחלטה על המשך טיפול",
       "severity": "critical",
       "content": {
-        "checkMethod": "סיכום ממצאים:\n- GCS?\n- אישונים תקינים?\n- סוכר תקין?\n- חולשה צדדית?\n- דיבור תקין?\n- סימני טראומה?\n- היה פרכוס?\n- היה עלפון עם חזרה מהירה?\n- יש חשד להרעלה או מינון יתר?"
+        "checkMethod": "סיכום ממצאים:\n- GCS?\n- אישונים תקינים?\n- סוכר תקין?\n- חולשה צדדית?\n- דיבור תקין?\n- סימני טראומה?\n- היה פרכוס?\n- היה עלפון עם חזרה מהירה?\n- יש חשד להרעלה או מינון יתר?",
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "לאחר הערכת D צריך לבחור את מסלול ההמשך לפי הממצא המוביל, ההכרה, הסוכר, האישונים והסיפור הקליני."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 12 מחוסר הכרה נושם: עלפון ופרכוסים",
+            "url": "https://drive.google.com/file/d/1U0wx_ZGu0JMLg-9vS0Fbl7NcQ2MrhFX0/view?usp=drivesdk",
+            "note": "ההבדלה המרכזית בשטח היא בין פרכוס, עלפון, שינוי הכרה מתמשך ומצבים נוירולוגיים מסכני חיים."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 14 מחוסר הכרה נושם: סוכרת והרעלות",
+            "url": "https://drive.google.com/file/d/1e-iuYrHsCA7rOFPlTM6UvblRAEmPd6i1/view?usp=drivesdk",
+            "note": "בדיקת סוכר, חיפוש רמזים סביבתיים והבדלה מהרעלה הם חלק מהכרעת מסלול ההמשך."
+          }
+        ]
       },
       "options": [
         {
@@ -6050,8 +6072,8 @@
         ],
         "sources": [
           {
-            "label": "איחוד הצלה - יחידה 2-2 מחוסר הכרה נושם",
-            "url": "https://drive.google.com/file/d/1U0wx_ZGu0JMLg-9vS0Fbl7NcQ2MrhFX0/view",
+            "label": "איחוד הצלה - יחידה 12 מחוסר הכרה נושם: עלפון ופרכוסים",
+            "url": "https://drive.google.com/file/d/1U0wx_ZGu0JMLg-9vS0Fbl7NcQ2MrhFX0/view?usp=drivesdk",
             "note": "גישה למחוסר הכרה נושם, תשאול עדים, מדדים, סוכר והבדלה בין עלפון לפרכוס."
           }
         ]
@@ -6191,14 +6213,9 @@
         ],
         "sources": [
           {
-            "label": "איחוד הצלה - יחידה 2-2 מחוסר הכרה נושם: עלפון ופרכוסים",
+            "label": "איחוד הצלה - יחידה 12 מחוסר הכרה נושם: עלפון ופרכוסים",
             "url": "https://drive.google.com/file/d/1U0wx_ZGu0JMLg-9vS0Fbl7NcQ2MrhFX0/view?usp=drivesdk",
             "note": "טיפול ראשוני בפרכוס: בטיחות, תזמון, חמצן, בדיקת סוכר והימנעות מהכנסת חפצים לפה."
-          },
-          {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "הגנה על המטופל, בדיקת סוכר, שמירה על נתיב אוויר ופינוי לפי חומרה."
           }
         ]
       },
@@ -6238,7 +6255,7 @@
         ],
         "sources": [
           {
-            "label": "איחוד הצלה - יחידה 2-2 מחוסר הכרה נושם: עלפון ופרכוסים",
+            "label": "איחוד הצלה - יחידה 12 מחוסר הכרה נושם: עלפון ופרכוסים",
             "url": "https://drive.google.com/file/d/1U0wx_ZGu0JMLg-9vS0Fbl7NcQ2MrhFX0/view?usp=drivesdk",
             "note": "טיפול לאחר שלב הפרכוס: נתיב אוויר, נשימה, סוכר, פציעות והחלטת פינוי."
           }
@@ -6262,7 +6279,7 @@
         ],
         "sources": [
           {
-            "label": "איחוד הצלה - יחידה 2-2 מחוסר הכרה נושם: עלפון ופרכוסים",
+            "label": "איחוד הצלה - יחידה 12 מחוסר הכרה נושם: עלפון ופרכוסים",
             "url": "https://drive.google.com/file/d/1U0wx_ZGu0JMLg-9vS0Fbl7NcQ2MrhFX0/view?usp=drivesdk",
             "note": "סטטוס אפילפטיקוס מוגדר מעל 5 דקות או התקפים חוזרים ללא התאוששות; פרכוס חום בילד מחייב הערכה ופינוי."
           }
@@ -6318,9 +6335,9 @@
         ],
         "sources": [
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "שינוי הכרה, הערכת זילוח, ניטור ופינוי לפי חומרה."
+            "label": "איחוד הצלה - יחידה 12 מחוסר הכרה נושם: עלפון ופרכוסים",
+            "url": "https://drive.google.com/file/d/1U0wx_ZGu0JMLg-9vS0Fbl7NcQ2MrhFX0/view?usp=drivesdk",
+            "note": "עלפון מתאפיין בחזרה מהירה להכרה, ובלי התאוששות מהירה צריך לחשוד במצב מורכב יותר."
           }
         ]
       },
@@ -6362,9 +6379,9 @@
         ],
         "sources": [
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "גישה לשינוי הכרה, תמיכת ABCDE וזיהוי חשד להרעלה בשטח."
+            "label": "איחוד הצלה - יחידה 14 מחוסר הכרה נושם: סוכרת והרעלות",
+            "url": "https://drive.google.com/file/d/1e-iuYrHsCA7rOFPlTM6UvblRAEmPd6i1/view?usp=drivesdk",
+            "note": "עקרונות הגישה בהרעלה כוללים בטיחות זירה, ABCDE, חיפוש גורם, זיהוי CO ותמיכה נשימתית מוקדמת."
           },
           {
             "label": "משרד הבריאות - נלוקסון תרופה מצילת חיים",
@@ -6418,11 +6435,6 @@
             "label": "איחוד הצלה - יחידה 4-4 מחלות זיהומיות",
             "url": "https://drive.google.com/file/d/1RUyOX_b4IR5PK5--ne2rKC7Zue-zYSu6/view",
             "note": "מנינגיטיס: חום, קשיון עורף, פוטופוביה ושינוי הכרה; יש להשתמש במיגון טיפות מתאים."
-          },
-          {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "שינוי הכרה עם חשד לזיהום CNS דורש תמיכת ABCDE, ניטור ופינוי דחוף."
           }
         ]
       },
@@ -6467,19 +6479,14 @@
         ],
         "sources": [
           {
-            "label": "איחוד הצלה - יחידה 2-2 מחוסר הכרה נושם: סוכרת והרעלות",
+            "label": "איחוד הצלה - יחידה 14 מחוסר הכרה נושם: סוכרת והרעלות",
             "url": "https://drive.google.com/file/d/1e-iuYrHsCA7rOFPlTM6UvblRAEmPd6i1/view?usp=drivesdk",
             "note": "הגישה מדגישה תשאול עדים, הבנת מה קדם לאירוע, חיפוש רמזים בסביבה, מדדים חיוניים ובדיקת סוכר."
           },
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "שינוי הכרה דורש גישת ABCDE, שלילת גורמים הפיכים, והזעקת סיוע לפי מצב."
-          },
-          {
-            "label": "משרד הבריאות - נלוקסון תרופה מצילת חיים",
-            "url": "https://www.gov.il/BlobFolder/reports/naloxone/he/PDF_%D7%A0%D7%9C%D7%95%D7%A7%D7%A1%D7%95%D7%9F-%D7%AA%D7%A8%D7%95%D7%A4%D7%94%20%D7%9E%D7%A6%D7%99%D7%9C%D7%AA%20%D7%97%D7%99%D7%99%D7%9D%21.pdf",
-            "note": "בהרעלת אופיואידים תמיכה נשימתית היא היסוד, ונלוקסון מותנה בפרוטוקול והרשאה."
+            "label": "איחוד הצלה - יחידה 12 מחוסר הכרה נושם: עלפון ופרכוסים",
+            "url": "https://drive.google.com/file/d/1U0wx_ZGu0JMLg-9vS0Fbl7NcQ2MrhFX0/view?usp=drivesdk",
+            "note": "שינוי הכרה לא מוסבר דורש ABCDE, תשאול עדים, בדיקת סוכר, וחיפוש כיוון לפרכוס, עלפון או מצב נוירולוגי אחר."
           }
         ]
       },
@@ -6517,14 +6524,9 @@
         ],
         "sources": [
           {
-            "label": "איחוד הצלה - יחידה 2-2 מחוסר הכרה נושם: סוכרת והרעלות",
+            "label": "איחוד הצלה - יחידה 14 מחוסר הכרה נושם: סוכרת והרעלות",
             "url": "https://drive.google.com/file/d/1e-iuYrHsCA7rOFPlTM6UvblRAEmPd6i1/view?usp=drivesdk",
             "note": "הגישה מדגישה תשאול עדים, הבנת מה קדם לאירוע, וחיפוש רמזים בסביבה."
-          },
-          {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "שינוי הכרה דורש סיפור אנמנזה מהיר וחיפוש גורמים הפיכים."
           }
         ]
       },
@@ -6541,14 +6543,14 @@
         "checkMethod": "החלט מהו הגורם הסביר ביותר כרגע, וזכור: כל AMS ללא הסבר פשוט וברור דורש פינוי, ניטור רציף וחבירה ל-ALS לפי מצב",
         "sources": [
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "המשך העבודה נקבע לפי הממצא המוביל לאחר שלילת סכנות חיים."
+            "label": "איחוד הצלה - יחידה 12 מחוסר הכרה נושם: עלפון ופרכוסים",
+            "url": "https://drive.google.com/file/d/1U0wx_ZGu0JMLg-9vS0Fbl7NcQ2MrhFX0/view?usp=drivesdk",
+            "note": "לאחר הייצוב הראשוני המסלול נקבע לפי ההבדלה בין פרכוס, עלפון, התאוששות חלקית או שינוי הכרה מתמשך."
           },
           {
-            "label": "משרד הבריאות - נלוקסון תרופה מצילת חיים",
-            "url": "https://www.gov.il/BlobFolder/reports/naloxone/he/PDF_%D7%A0%D7%9C%D7%95%D7%A7%D7%A1%D7%95%D7%9F-%D7%AA%D7%A8%D7%95%D7%A4%D7%94%20%D7%9E%D7%A6%D7%99%D7%9C%D7%AA%20%D7%97%D7%99%D7%99%D7%9D%21.pdf",
-            "note": "בהרעלת אופיואידים תמיכה נשימתית קודמת לכל, ונלוקסון מותנה בפרוטוקול והרשאה."
+            "label": "איחוד הצלה - יחידה 14 מחוסר הכרה נושם: סוכרת והרעלות",
+            "url": "https://drive.google.com/file/d/1e-iuYrHsCA7rOFPlTM6UvblRAEmPd6i1/view?usp=drivesdk",
+            "note": "שינוי הכרה לא ברור דורש חיפוש רמזים סביבתיים, סוכר, והרעלה או CO כגורמים אפשריים למסלול ההמשך."
           }
         ]
       },
