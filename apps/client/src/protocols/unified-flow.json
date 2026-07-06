@@ -6148,14 +6148,14 @@
         ],
         "sources": [
           {
-            "label": "מד\"א - פרוטוקולים והנחיות לטיפול בנפגעי טראומה ובמצבי חירום (מהדורה ציבורית 2016)",
-            "url": "https://www.mdais.org/media/1730/%D7%A4%D7%A8%D7%95%D7%98%D7%95%D7%A7%D7%95%D7%9C%D7%99%D7%9D-2016.pdf",
-            "note": "הערכת טראומה, הגנה על עמוד שדרה, ניטור ופינוי לפי חומרה."
+            "label": "איחוד הצלה - יחידה 3-4 פגיעות פנים, צוואר וראש",
+            "url": "https://drive.google.com/file/d/1zcApz8BhFJ7AJ8khzve6qCmJ8vHOswiQ/view?usp=drivesdk",
+            "note": "פגיעות ראש מחייבות עבודה לפי ABCDE, חשד ל-EICP, ניטור חוזר וזיהוי סימני בסיס גולגולת ופגיעת ראש משמעותית."
           },
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "שינוי הכרה וטראומה דורשים שמירה על ABCDE, ניטור והזעקת סיוע לפי החמרה."
+            "label": "איחוד הצלה - יחידה 3-8 פגיעות עמוד שדרה וחילוץ",
+            "url": "https://drive.google.com/file/d/1LtWCb1Qjl0MLlPkwNzdjdVczbeTRcFca/view?usp=drivesdk",
+            "note": "כל נפגע טראומה עם חשד לפגיעת ראש מחשיד גם לפגיעת עמוד שדרה, ודורש קיבוע/ייצוב לפי מנגנון וממצאים."
           }
         ]
       },
@@ -7122,14 +7122,14 @@
         ],
         "sources": [
           {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "בשלב שלאחר ABCDE משלימים אנמנזה מסודרת, מדדים ושיקולי פינוי תוך בירור קו בסיס ותלונה מובילה."
+          },
+          {
             "label": "איחוד הצלה - יחידה 4-5 החולה המיוחד",
             "url": "https://drive.google.com/file/d/1Ys6NZqLN8QqlHFVtbsjvJ630oPBrzXHn/view",
             "note": "הסקר המשני בחולה מיוחד כולל קו בסיס, תפקוד, ציוד נלווה, מלווה, היגיינה וסביבה."
-          },
-          {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "סקר משני שיטתי, שימוש ב-DCAP-BTLS ותיעוד ממצאים."
           }
         ]
       },
@@ -7198,9 +7198,14 @@
         ],
         "sources": [
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "סקר משני שיטתי מראש לרגל ושימוש ב-DCAP-BTLS."
+            "label": "איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע",
+            "url": "https://drive.google.com/file/d/1nvH--jPQlaqd0NE9Gn0eR4MY0A7vhEgE/view?usp=drivesdk",
+            "note": "הסבב השניוני בפצוע מבוצע מראש לרגל, כולל הערכה חוזרת תוך כדי פינוי וללא עיכוב של פצוע קשה."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-8 פגיעות עמוד שדרה וחילוץ",
+            "url": "https://drive.google.com/file/d/1LtWCb1Qjl0MLlPkwNzdjdVczbeTRcFca/view?usp=drivesdk",
+            "note": "בסקר שניוני טראומתי יש לבדוק גם גב, כאב/רגישות בצוואר ובעמוד השדרה, ותפקוד נוירולוגי חוזר."
           }
         ]
       },
@@ -7228,14 +7233,14 @@
         ],
         "sources": [
           {
-            "label": "איחוד הצלה - יחידה 2-1 אנמנזה וגישה לחולה",
-            "url": "https://drive.google.com/file/d/1t_jwUhm4q-rh8NyYuS8fAQ9leQ9Kt6Kt/view?usp=drivesdk",
-            "note": "איסוף סיפור, בדיקה שיטתית ותיעוד מסודר הם חלק מרצף עבודה אחד."
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "איסוף סיפור, בדיקה שיטתית, הערכה חוזרת ותיעוד מסודר הם חלק מרצף עבודה אחד."
           },
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "תיעוד ממצאים והערכה חוזרת אם יש שינוי."
+            "label": "איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע",
+            "url": "https://drive.google.com/file/d/1nvH--jPQlaqd0NE9Gn0eR4MY0A7vhEgE/view?usp=drivesdk",
+            "note": "בסיום הסבב השניוני יש לבצע הערכה חוזרת, לתעד ממצאים ולהחליט על המשך פינוי ללא עיכוב."
           }
         ]
       },
