@@ -33,9 +33,14 @@
         ],
         "sources": [
           {
-            "label": "מד\"א - רפואת חירום (מהדורה ציבורית 2024)",
-            "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf",
-            "note": "הערכת זילוח, כאב חזה, הלם ואי-ספיקת לב בשטח."
+            "label": "איחוד הצלה - יחידה 10 מתאוריה לפרקטיקה",
+            "url": "https://drive.google.com/file/d/1-0YOE_eUgYQe53sEZAU5eNE0nW5T3GCe/view",
+            "note": "דגשי דיווח יציאה, שמירה על גל מבצעי, וביטול יציאה דרך המוקד."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 5-09 נוהל הפעלה ונהיגה באמבולנס",
+            "url": "https://drive.google.com/file/d/1_FkXPvmmmnYiw0N_CiuqW6xf8s4x4tnn/view",
+            "note": "נסיעה בטוחה, דיווח למוקד, ותיאום יציאה ופינוי במסגרת חובש ונהג אמבולנס."
           }
         ]
       },
@@ -110,6 +115,11 @@
           "האם המטופל מודע למתרחש?"
         ],
         "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "רושם קליני ראשוני מהסביבה, מצב החולה, נוכחים בזירה וחפצים מחשידים."
+          },
           {
             "label": "איחוד הצלה - יחידה 5-01 אירוע רב נפגעים",
             "url": "https://drive.google.com/file/d/1cl3xxzm_j8VBH4pDL6by3HFDAO5WVWWB/view",
@@ -433,8 +443,8 @@
     "avpu_check": {
       "id": "avpu_check",
       "type": "check",
-      "title": "A - Alert | בדיקת ערנות",
-      "description": "בדיקה ראשונית - האם המטופל ערני ומגיב",
+      "title": "AVPU - Alert | ערנות ותגובה ראשונית",
+      "description": "שלב ה-A בתוך AVPU: האם המטופל ערני, מגיב ומתקשר",
       "severity": "critical",
       "content": {
         "checkMethod": "דבר למטופל בקול רגיל:\n'שלום, אני חובש, איך קוראים לך?'\n'מה קרה לך?'",
@@ -449,6 +459,18 @@
           "מה קרה?",
           "איפה אתה?",
           "איזה יום היום?"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 03 החייאת מבוגר ו-AED",
+            "url": "https://drive.google.com/file/d/1tP7hHcYxS0m4X1mP4i0j6A9JxW5M9L0r/view",
+            "note": "בסבב הראשוני בודקים בטיחות, AVPU והתרשמות נשימה לפני המשך החלטה."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע",
+            "url": "https://drive.google.com/file/d/1nvH--jPQlaqd0NE9Gn0eR4MY0A7vhEgE/view?usp=drivesdk",
+            "note": "בטראומה AVPU הוא שלב נפרד ומוקדם לפני המשך A/B/C/D/E."
+          }
         ]
       },
       "conditions": [
