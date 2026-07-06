@@ -60,6 +60,18 @@
           "מספר נפגעים",
           "מצב כללי של המקום",
           "גורמים נוספים נדרשים"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 10 מתאוריה לפרקטיקה",
+            "url": "https://drive.google.com/file/d/1-0YOE_eUgYQe53sEZAU5eNE0nW5T3GCe/view",
+            "note": "עם ההגעה מדווחים למוקד על מצב הזירה, מספר נפגעים והאם נדרשים גיבויים."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 5-09 נוהל הפעלה ונהיגה באמבולנס",
+            "url": "https://drive.google.com/file/d/1_FkXPvmmmnYiw0N_CiuqW6xf8s4x4tnn/view",
+            "note": "הדיווח המבצעי עם ההגעה הוא חלק מניהול האירוע, תיאום כוחות והחלטות פינוי."
+          }
         ]
       },
       "next": "safety"
@@ -84,6 +96,18 @@
           "האם יש סכנה מיידית?",
           "האם צריך לפנות את המטופל לפני טיפול?",
           "האם יש צורך בכוחות נוספים? (משטרה, כבאים)"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "לפני כל מגע במטופל מבצעים התרשמות זירה, סיכונים סביבתיים ובטיחות לצוות."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 5-02 חומרים מסוכנים",
+            "url": "https://drive.google.com/file/d/1LyMPlRdd0oTqk-jhDcJNnwaPBtXRBgCg/view",
+            "note": "בחומס ובזירה מזוהמת לא נכנסים לפני בידוד והזעקת גורמים מתאימים."
+          }
         ]
       },
       "next": "scene_assessment"
@@ -280,6 +304,18 @@
           "האם יש דימום פעיל?",
           "מהיכן הדימום?",
           "כמה דם נאבד?"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע",
+            "url": "https://drive.google.com/file/d/1nvH--jPQlaqd0NE9Gn0eR4MY0A7vhEgE/view?usp=drivesdk",
+            "note": "בטראומה שלב X קודם לכל המשך הערכה כשיש חשד לדימום מסכן חיים."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 19 הלם ועצירת דימומים",
+            "url": "https://drive.google.com/file/d/1vKldvsyRFTi8fgW25nocAaVI3WFMGoP4/view?usp=drivesdk",
+            "note": "דימום פורץ מזוהה בסריקה מהירה ודורש עצירה מיידית כדי למנוע הידרדרות להלם."
+          }
         ]
       },
       "conditions": [
@@ -423,6 +459,18 @@
           "האם הדימום בגפה (ניתן לטורניקט)?",
           "האם הדימום נעצר עם לחץ ישיר?",
           "מה הזמן שעבר מתחילת הדימום?"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 19 הלם ועצירת דימומים",
+            "url": "https://drive.google.com/file/d/1vKldvsyRFTi8fgW25nocAaVI3WFMGoP4/view?usp=drivesdk",
+            "note": "עצירת דימום מסכן חיים מבוססת על לחץ ישיר, חבישה לוחצת, חסם עורקים ופקינג לפי מיקום הפציעה."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע",
+            "url": "https://drive.google.com/file/d/1nvH--jPQlaqd0NE9Gn0eR4MY0A7vhEgE/view?usp=drivesdk",
+            "note": "בפצוע קשה טיפול מציל חיים כמו עצירת דימום קודם לכל עיכוב אחר בזירה."
+          }
         ]
       },
       "next": "trauma_avpu_check"
@@ -435,7 +483,19 @@
       "description": "המשך להערכת הכרה ראשונית לפני בחירת מסלול",
       "severity": "urgent",
       "content": {
-        "treatment": "אין כרגע דימום טראומטי מסכן חיים שמכריח X מיידי, לכן ממשיכים קודם ל-AVPU והערכת נשימה/תגובה"
+        "treatment": "אין כרגע דימום טראומטי מסכן חיים שמכריח X מיידי, לכן ממשיכים קודם ל-AVPU והערכת נשימה/תגובה",
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "כשאין איום מיידי של דימום מסיבי ממשיכים להערכת הכרה, נשימה והמצב הכללי."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 03 החייאת מבוגר ו-AED",
+            "url": "https://drive.google.com/file/d/1tP7hHcYxS0m4X1mP4i0j6A9JxW5M9L0r/view",
+            "note": "במחוסר הכרה או בתגובה ירודה מתקדמים ל-AVPU ולבדיקת נשימה מוקדמת."
+          }
+        ]
       },
       "next": "avpu_check"
     },
@@ -498,6 +558,18 @@
           "מזיז יד/רגל",
           "משנה הבעת פנים",
           "מנסה לדבר"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 03 החייאת מבוגר ו-AED",
+            "url": "https://drive.google.com/file/d/1tP7hHcYxS0m4X1mP4i0j6A9JxW5M9L0r/view",
+            "note": "בסבב AVPU בודקים מעבר מערנות לתגובה לקול לפני מעבר לכאב ולבדיקת נשימה."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "תגובה לקול מסייעת לאמוד הכרה, שיתוף פעולה וסיכון מיידי לנתיב אוויר."
+          }
         ]
       },
       "conditions": [
@@ -525,6 +597,18 @@
           "מושך את הגוף/יד",
           "הבעת פנים של כאב",
           "נאנח/מוציא קול"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 03 החייאת מבוגר ו-AED",
+            "url": "https://drive.google.com/file/d/1tP7hHcYxS0m4X1mP4i0j6A9JxW5M9L0r/view",
+            "note": "ב-AVPU עוברים לגירוי כאב רק אם אין תגובה לקול, כדי לקבוע אם המטופל P או U."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "ירידה בהכרה מחייבת תיעוד תגובה לגירוי ובחינה מהירה של המשך ה-ABCDE."
+          }
         ]
       },
       "conditions": [
@@ -546,7 +630,19 @@
       "description": "המטופל חסר הכרה לחלוטין - מעבר לבדיקת נשימה",
       "severity": "critical",
       "content": {
-        "treatment": "המטופל לא מגיב לשום גירוי - יש לבדוק נשימה ודופק"
+        "treatment": "המטופל לא מגיב לשום גירוי - יש לבדוק נשימה ודופק",
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 03 החייאת מבוגר ו-AED",
+            "url": "https://drive.google.com/file/d/1tP7hHcYxS0m4X1mP4i0j6A9JxW5M9L0r/view",
+            "note": "מטופל U ב-AVPU מחייב מעבר מיידי לבדיקת נשימה ודופק בתוך שניות."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "חוסר תגובה מלא מציב את המטופל בסיכון לנתיב אוויר ואי יציבות מיידית."
+          }
+        ]
       },
       "next": "breathing_check"
     },
@@ -617,6 +713,18 @@
           "ניטור רציף של נשימה",
           "בדוק דופק"
         ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 12 מחוסר הכרה נושם: עלפון ופרכוסים",
+            "url": "https://drive.google.com/file/d/1U0wx_ZGu0JMLg-9vS0Fbl7NcQ2MrhFX0/view?usp=drivesdk",
+            "note": "במחוסר הכרה נושם שומרים על נתיב אוויר, מנח התאוששות כשאפשר, ניטור וסוכר."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע",
+            "url": "https://drive.google.com/file/d/1nvH--jPQlaqd0NE9Gn0eR4MY0A7vhEgE/view?usp=drivesdk",
+            "note": "כאשר קיים חשד לטראומה שומרים על עמוד שדרה צווארי ולא מזיזים שלא לצורך."
+          }
+        ],
         "equipment": ["חמצן", "מסכת חמצן", "סקשיין", "צווארון (אם טראומה)"]
       },
       "next": "abcde_assessment"
@@ -644,7 +752,19 @@
           "",
           "⚠️ בילדים ותינוקות: דופק מתחת ל-60 + סימני זילוח לקוי = החייאה מיידית!"
         ],
-        "equipment": ["שעון"]
+        "equipment": ["שעון"],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 03 החייאת מבוגר ו-AED",
+            "url": "https://drive.google.com/file/d/1tP7hHcYxS0m4X1mP4i0j6A9JxW5M9L0r/view",
+            "note": "בדופק מרכזי בודקים תוך 5-10 שניות בלבד, ובאי-ודאות מתחילים החייאה."
+          },
+          {
+            "label": "איחוד הצלה - החייאת ילדים ותינוקות",
+            "url": "https://1221.org.il/%D7%94%D7%97%D7%99%D7%99%D7%90%D7%AA-%D7%99%D7%9C%D7%93%D7%99%D7%9D-%D7%95%D7%AA%D7%99%D7%A0%D7%95%D7%A7%D7%95%D7%AA/",
+            "note": "בילדים ותינוקות סוג הדופק תלוי גיל, ודופק מתחת ל-60 עם פרפוזיה ירודה מחייב החייאה."
+          }
+        ]
       },
       "conditions": [
         {
@@ -1257,7 +1377,14 @@
       "description": "אירוע רפואי - התחלת הערכה שיטתית",
       "severity": "urgent",
       "content": {
-        "treatment": "מתחילים בדיקה שיטתית רפואית: A → B → C → D → E"
+        "treatment": "מתחילים בדיקה שיטתית רפואית: A → B → C → D → E",
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "במקרה רפואי אחרי התרשמות והכרה ממשיכים ל-ABCDE בלי לדלג על שלבים."
+          }
+        ]
       },
       "next": "special_patient_primary_modifiers_medical"
     },
@@ -1269,7 +1396,19 @@
       "description": "בטראומה עובדים במסלול קשיח: S -> X -> AVPU -> A -> B -> C -> D -> E",
       "severity": "critical",
       "content": {
-        "treatment": "בטראומה לא מדלגים שלבים:\n1. S - בטיחות זירה ומנגנון פציעה\n2. X - דימום מסיבי\n3. AVPU - מצב הכרה מהיר\n4. A - נתיב אוויר + C-spine\n5. B - נשימה וחזה\n6. C - פרפוזיה, הלם, בטן/אגן\n7. D - נוירולוגיה\n8. E - חשיפה, חימום, סקר שניוני ופינוי"
+        "treatment": "בטראומה לא מדלגים שלבים:\n1. S - בטיחות זירה ומנגנון פציעה\n2. X - דימום מסיבי\n3. AVPU - מצב הכרה מהיר\n4. A - נתיב אוויר + C-spine\n5. B - נשימה וחזה\n6. C - פרפוזיה, הלם, בטן/אגן\n7. D - נוירולוגיה\n8. E - חשיפה, חימום, סקר שניוני ופינוי",
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע",
+            "url": "https://drive.google.com/file/d/1nvH--jPQlaqd0NE9Gn0eR4MY0A7vhEgE/view?usp=drivesdk",
+            "note": "בטראומה עובדים במסלול קשיח של XABCDE ולא מדלגים על שלבים."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-1 מבוא לטראומה",
+            "url": "https://drive.google.com/file/d/1qVrELB2-4J7WTNL21x16z3IYWP9uX0Kr/view?usp=drivesdk",
+            "note": "מנגנון פגיעה וקינמטיקה מכוונים לדחיפות הפינוי ולחשד לפציעות מסכנות חיים."
+          }
+        ]
       },
       "next": "trauma_primary_priorities"
     },
@@ -2775,6 +2914,18 @@
           "סוג החסימה (גוף זר/הפרשות/נפיחות)",
           "יכולת שמירה עצמית על נתיב אוויר",
           "רמת הכרה - A/V שומרים, P/U בסיכון"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "ב-A מבדילים בין נתיב אוויר פתוח, חסימה חלקית וחסימה מלאה לפי דיבור, קולות וזרימת אוויר."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 15 מצבי חירום נשימתיים",
+            "url": "https://drive.google.com/file/d/1eiQ_9aZ9FP_MXrN50n-3d3mtx9kvkqhb/view",
+            "note": "החמרה נשימתית יכולה לנבוע מאנפילקסיס, בצקת או גוף זר ודורשת מיון מהיר של הבעיה."
+          }
         ]
       },
       "conditions": [
@@ -2796,7 +2947,14 @@
       "description": "נתיב האוויר תקין - מעבר לבדיקת נשימה",
       "severity": "stable",
       "content": {
-        "treatment": "נתיב אוויר פתוח וחופשי - ממשיכים ל-B (Breathing)"
+        "treatment": "נתיב אוויר פתוח וחופשי - ממשיכים ל-B (Breathing)",
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "אחרי שנקבע שנתיב האוויר פתוח ממשיכים מייד לשלב B בלי לעכב את הרצף."
+          }
+        ]
       },
       "next": "airway_complete"
     },
@@ -2817,6 +2975,18 @@
           "נפיחות חיצונית",
           "רמת הכרה",
           "קולות נשימה חריגים"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "ב-A בודקים אם האיום הוא גוף זר, הפרשות, נפיחות או ירידה בהכרה שגורמת לצניחת לשון."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 15 מצבי חירום נשימתיים",
+            "url": "https://drive.google.com/file/d/1eiQ_9aZ9FP_MXrN50n-3d3mtx9kvkqhb/view",
+            "note": "אנפילקסיס ובצקת נתיב אוויר הם חלק מהאבחנות שדורשות זיהוי מהיר ותמיכה נשימתית."
+          }
         ]
       },
       "conditions": [
@@ -3305,7 +3475,14 @@
       "description": "נתיב אוויר מאובטח - מעבר לבדיקת נשימה",
       "severity": "stable",
       "content": {
-        "treatment": "נתיב אוויר פתוח ומאובטח ← ממשיכים ל-B (Breathing)"
+        "treatment": "נתיב אוויר פתוח ומאובטח ← ממשיכים ל-B (Breathing)",
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "סיום שלב A מוגדר כאשר נתיב האוויר פתוח, מטופל ומוכן למעבר לשלב B."
+          }
+        ]
       },
       "next": "breathing_assessment"
     },
@@ -3385,6 +3562,18 @@
           "יש סימני מצוקה?",
           "צבע תקין?",
           "רוויון תקין?"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "ב-B מכריעים אם הנשימה מספקת לפי קצב, עומק, סדירות, סטורציה ומאמץ נשימתי."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 15 מצבי חירום נשימתיים",
+            "url": "https://drive.google.com/file/d/1eiQ_9aZ9FP_MXrN50n-3d3mtx9kvkqhb/view",
+            "note": "נשימה לקויה דורשת חמצן, זיהוי הגורם והזעקת סיוע מתקדם לפי חומרה."
+          }
         ]
       },
       "conditions": [
@@ -3406,7 +3595,14 @@
       "description": "נשימה תקינה ומספקת - מעבר למחזור דם",
       "severity": "stable",
       "content": {
-        "treatment": "נשימה תקינה ← ממשיכים ל-C (Circulation)"
+        "treatment": "נשימה תקינה ← ממשיכים ל-C (Circulation)",
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "כאשר B תקין ממשיכים ישירות ל-C וממשיכים ניטור תוך כדי."
+          }
+        ]
       },
       "next": "circulation_assessment"
     },
@@ -3426,6 +3622,18 @@
           "היפרוונטילציה: נשימת יתר, עקצוצים, SpO2 תקין",
           "דלקת ריאות: חום, שיעול פרודוקטיבי, כאב בחזה בנשימה",
           "PE: קוצר נשימה פתאומי, כאב פלאוריטי, טכיקרדיה, היפוקסיה וגורמי סיכון כמו טיסה, ניתוח או DVT"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 15 מצבי חירום נשימתיים",
+            "url": "https://drive.google.com/file/d/1eiQ_9aZ9FP_MXrN50n-3d3mtx9kvkqhb/view",
+            "note": "היחידה מרכזת את האבחנות העיקריות לקוצר נשימה חריף והגישה המעשית להבדלה ביניהן."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "הכרעת ענף המשך נשימתי מבוססת על סיפור, ממצאים, מדדים ורושם קליני."
+          }
         ]
       },
       "conditions": [
@@ -3597,6 +3805,18 @@
         "questions": [
           "יש פצע יציאה? (כדור עבר?)",
           "הסימפטומים מחמירים? (הסר חבישה)"
+        ],
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 3-5 פגיעות בית חזה",
+            "url": "https://drive.google.com/file/d/1Umun5rMEtOQb54e0cZsg36LhpfnI-BJ3/view?usp=drivesdk",
+            "note": "בפצע יונק בחזה מניחים חבישת חזה אטומה, עוקבים להחמרה ומפנים בדחיפות."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע",
+            "url": "https://drive.google.com/file/d/1nvH--jPQlaqd0NE9Gn0eR4MY0A7vhEgE/view?usp=drivesdk",
+            "note": "פגיעות חזה נכללות בשלב B בטראומה ודורשות חמצן, ניטור ופינוי מהיר."
+          }
         ]
       },
       "next": "breathing_complete"
@@ -6101,7 +6321,19 @@
       "description": "מצב נוירולוגי תקין - מעבר לחשיפה",
       "severity": "stable",
       "content": {
-        "treatment": "תפקוד נוירולוגי תקין ← ממשיכים ל-E (Exposure)"
+        "treatment": "תפקוד נוירולוגי תקין ← ממשיכים ל-E (Exposure)",
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "כאשר D אינו מעלה בעיה מיידית ממשיכים לחשיפה ולסקר המשני בלי לעצור את הרצף."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 13 מצבי חירום נוירולוגיים",
+            "url": "https://drive.google.com/file/d/11Fpr_Pm25J0f_8uqIv5XypLxrL_nG0nQ/view?usp=drivesdk",
+            "note": "מצב נוירולוגי תקין נקבע רק אחרי הערכת הכרה, חסר מוקדי, אישונים וסוכר לפי הצורך."
+          }
+        ]
       },
       "next": "exposure_assessment"
     },
@@ -6753,7 +6985,19 @@
       "description": "הערכת ABCDE הושלמה במלואה",
       "severity": "stable",
       "content": {
-        "treatment": "הערכה מלאה הושלמה!\n\nמעבר ל:\n- המשך ניטור קליני רציף\n- פינוי או המשך טיפול לפי הממצאים\n- תיעוד מלא\n- דיווח לצוות הקולט"
+        "treatment": "הערכה מלאה הושלמה!\n\nמעבר ל:\n- המשך ניטור קליני רציף\n- פינוי או המשך טיפול לפי הממצאים\n- תיעוד מלא\n- דיווח לצוות הקולט",
+        "sources": [
+          {
+            "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+            "url": "https://drive.google.com/file/d/1zYd8xYQnAqkIgfGdGm0vXrFFQ0oYlE9K/view",
+            "note": "אחרי השלמת ABCDE ממשיכים לניטור, פינוי, תיעוד ומסירת מידע מסודרת."
+          },
+          {
+            "label": "איחוד הצלה - יחידה 10 מתאוריה לפרקטיקה",
+            "url": "https://drive.google.com/file/d/1-0YOE_eUgYQe53sEZAU5eNE0nW5T3GCe/view",
+            "note": "תיעוד ודיווח מסודר לצוות הקולט הם חלק מהשלמת הטיפול ולא תוספת חיצונית."
+          }
+        ]
       },
       "next": "abcde_assessment"
     },
