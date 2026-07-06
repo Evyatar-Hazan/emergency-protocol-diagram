@@ -698,25 +698,63 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
     });
   }
 
+  const renderPrimaryActionCards = (mode: 'default' | 'compact' = 'default') => {
+    if (primaryActionCards.length === 0) {
+      return null;
+    }
+
+    if (mode === 'compact') {
+      return (
+        <div className="grid grid-cols-3 gap-2.5">
+          {primaryActionCards.map((card) => (
+            <div key={card.label} className="rounded-2xl border border-white/70 bg-white/80 px-3 py-2.5 shadow-sm">
+              <p className="mb-1 text-[0.65rem] font-bold tracking-[0.16em] text-slate-500">
+                {card.label}
+              </p>
+              <p className="line-clamp-2 whitespace-pre-line text-xs leading-5 text-slate-700">
+                {card.preview}
+              </p>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid gap-3 md:grid-cols-3">
+        {primaryActionCards.map((card) => (
+          <div key={card.label} className="hover-lift rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm">
+            <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+              {card.label}
+            </p>
+            <p className="line-clamp-4 whitespace-pre-line text-sm leading-6 text-slate-700">
+              {card.preview}
+            </p>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const renderAccordionSection = (section: SectionDefinition) => (
     <div key={section.key} className={`hover-lift overflow-hidden rounded-3xl border ${section.borderTone} ${section.tone}`}>
       <button
         onClick={() => toggleSection(section.key)}
-        className="flex w-full items-center justify-between gap-3 p-5 text-right transition-colors hover:bg-white/40"
+        className="flex w-full items-center justify-between gap-3 p-4 text-right transition-colors hover:bg-white/40 sm:p-5"
       >
-        <h3 className="flex min-w-0 items-center gap-3 text-lg font-bold text-slate-900 sm:text-xl">
+        <h3 className="flex min-w-0 items-center gap-2.5 text-base font-bold text-slate-900 sm:gap-3 sm:text-xl">
           <span>{section.icon}</span>
           <span>{section.title}</span>
         </h3>
         <span
-          className="text-xl transition-transform"
+          className="text-lg transition-transform sm:text-xl"
           style={{ transform: collapsedSections.has(section.key) ? 'rotate(-90deg)' : 'rotate(0deg)' }}
         >
           ▼
         </span>
       </button>
       {!collapsedSections.has(section.key) && (
-        <div className="border-t border-black/5 bg-white/70 px-5 py-5">{section.content}</div>
+        <div className="border-t border-black/5 bg-white/70 px-4 py-4 sm:px-5 sm:py-5">{section.content}</div>
       )}
     </div>
   );
@@ -1008,22 +1046,22 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
 
       <div className="mx-auto w-full max-w-5xl">
         <div className={`surface-card-strong clinical-panel rise-in-delay-1 overflow-hidden rounded-[28px] border-[3px] ${config.border}`}>
-          <div className={`${config.bg} border-b-[3px] ${config.border} p-5 sm:p-6 lg:p-8`}>
-            <div className="space-y-4">
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/70 bg-white/80 text-3xl shadow-sm sm:h-16 sm:w-16 sm:text-4xl">
+          <div className={`${config.bg} border-b-[3px] ${config.border} p-4 sm:p-6 lg:p-8`}>
+            <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/70 bg-white/80 text-2xl shadow-sm sm:h-16 sm:w-16 sm:text-4xl">
                     {config.icon}
                   </div>
                   <div className="flex-1">
-                    <p className="mb-2 text-sm font-semibold tracking-[0.2em] text-slate-500">
+                    <p className="mb-1 text-[0.7rem] font-semibold tracking-[0.16em] text-slate-500 sm:mb-2 sm:text-sm sm:tracking-[0.2em]">
                       שלב בפרוטוקול הראשי
                     </p>
-                    <h1 className={`mb-2 font-display text-2xl font-extrabold sm:text-3xl md:text-4xl ${config.text}`}>
+                    <h1 className={`mb-1 font-display text-xl font-extrabold leading-tight sm:mb-2 sm:text-3xl md:text-4xl ${config.text}`}>
                       {currentNode.title}
                     </h1>
                     {nodeDescription && (
-                      <p className={`max-w-3xl text-base leading-7 sm:text-lg ${config.text} opacity-80`}>
+                      <p className={`max-w-3xl text-sm leading-6 sm:text-lg sm:leading-7 ${config.text} opacity-80`}>
                         {nodeDescription}
                       </p>
                     )}
@@ -1031,35 +1069,25 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                 </div>
 
                 {primaryActionCards.length > 0 && (
-                  <div className="grid gap-3 md:grid-cols-3">
-                    {primaryActionCards.map((card) => (
-                      <div key={card.label} className="hover-lift rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm">
-                        <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                          {card.label}
-                        </p>
-                        <p className="line-clamp-4 whitespace-pre-line text-sm leading-6 text-slate-700">
-                          {card.preview}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+                  <div className="hidden sm:block">{renderPrimaryActionCards()}</div>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="space-y-8 p-4 sm:p-6 lg:p-8">
+          <div className="space-y-6 p-4 sm:space-y-8 sm:p-6 lg:p-8">
             {immediateSections.length > 0 && (
-              <section className="space-y-4">
+              <section className="space-y-3 sm:space-y-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-xs font-bold tracking-[0.18em] text-slate-500">פעולה מיידית</p>
-                    <h2 className="font-display text-2xl font-bold text-slate-900">מה עושים עכשיו</h2>
+                    <h2 className="font-display text-xl font-bold text-slate-900 sm:text-2xl">מה עושים עכשיו</h2>
                   </div>
-                  <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
+                  <div className="rounded-full bg-slate-100 px-2.5 py-1 text-[0.7rem] font-semibold text-slate-500 sm:px-3 sm:text-xs">
                     צעד קצר וממוקד
                   </div>
                 </div>
+                {primaryActionCards.length > 0 && <div className="sm:hidden">{renderPrimaryActionCards('compact')}</div>}
                 <div className="grid gap-4 xl:grid-cols-2">{immediateSections.map(renderAccordionSection)}</div>
               </section>
             )}
