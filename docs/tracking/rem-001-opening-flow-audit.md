@@ -40,3 +40,12 @@
 
 `breathing_check -> abcde_assessment -> airway_assessment -> breathing_assessment`
 
+## Verification
+
+- `2026-07-06` - `npm run build` עבר.
+- `2026-07-06` - `npm test -- --runInBand` עבר.
+- `2026-07-06` - `Validate` ב-GitHub Actions לריצה `28780100135` עבר בהצלחה.
+- `2026-07-06` - אימות פרודקשן חי הראה שהבאנדל `assets/index-DIzbuSxR.js` כבר כולל:
+  - `AVPU - Alert | ערנות ותגובה ראשונית`
+  - `איחוד הצלה - יחידה 10 מתאוריה לפרקטיקה`
+  - `איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה`

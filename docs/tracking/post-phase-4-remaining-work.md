@@ -59,3 +59,4 @@
 ## Update Log
 
 - `2026-07-06` - `REM-001` הועבר ל-`in_progress`. הושלם סבב audit ראשון לפתיחת הזרימה (`report_departure -> scene_assessment -> avpu_check`), שלושה ממצאים נקודתיים תוקנו מיד, ונוצר מסמך ליווי [rem-001-opening-flow-audit.md](/Users/evyatarhazan/Desktop/project/emergency-protocol-diagram/docs/tracking/rem-001-opening-flow-audit.md).
+- `2026-07-06` - סבב הפתיחה של `REM-001` אומת גם בפרודקשן: ריצת `Validate` `28780100135` עברה, והבאנדל החי הכיל את ניסוח ה-`AVPU` והמקורות החדשים לפתיחת הזרימה.
