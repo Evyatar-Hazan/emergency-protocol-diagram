@@ -46,6 +46,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
     return new Set();
   });
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
+  const [communityPanelNodeId, setCommunityPanelNodeId] = useState<string | null>(null);
 
   const saveBookmarks = (bookmarks: Set<string>) => {
     localStorage.setItem('protocol-bookmarks', JSON.stringify(Array.from(bookmarks)));
@@ -159,6 +160,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   const protocolLabel = currentProtocol.name || parsed?.protocolId || 'פרוטוקול ראשי';
   const nodeDescription = currentNode.description?.trim();
   const hasBookmark = bookmarkedNodes.has(currentNodeId);
+  const isCommunityPanelOpen = communityPanelNodeId === currentNodeId;
   const nodeGuidance = nodeLearningGuidance[currentNodeId];
 
   const getNextOptions = (): Array<{ label: string; target: string }> => {
@@ -1087,7 +1089,43 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                 <p className="text-xs font-bold tracking-[0.18em] text-slate-500">שכבת קהילה והבהרות</p>
                 <h2 className="font-display text-2xl font-bold text-slate-900">דיון מקצועי משני לפרוטוקול</h2>
               </div>
-              <div className="hover-lift rounded-[28px] border border-slate-200 bg-slate-50/80 p-3 sm:p-4">
+
+              <div className="sm:hidden">
+                <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-slate-50/80">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setCommunityPanelNodeId((prev) => (prev === currentNodeId ? null : currentNodeId))
+                    }
+                    className="flex w-full items-center justify-between gap-3 px-4 py-4 text-right transition-colors hover:bg-white/50"
+                    aria-expanded={isCommunityPanelOpen}
+                    aria-controls="mobile-community-panel"
+                  >
+                    <div>
+                      <div className="text-sm font-bold text-slate-900">פתח דיון, שאלות והבהרות</div>
+                      <p className="mt-1 text-xs leading-5 text-slate-500">
+                        שכבה משנית ללמידה ולחידוד מקצועי. נפתחת רק לפי צורך כדי לא לדחוף את הזרימה הראשית מטה.
+                      </p>
+                    </div>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-lg text-slate-600 shadow-sm">
+                      <span
+                        className="transition-transform"
+                        style={{ transform: isCommunityPanelOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                      >
+                        ▼
+                      </span>
+                    </div>
+                  </button>
+
+                  {isCommunityPanelOpen && (
+                    <div id="mobile-community-panel" className="border-t border-slate-200 p-3">
+                      <CommentsThread nodeId={currentNodeId} title="דיון והערות על הצומת" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="hidden hover-lift rounded-[28px] border border-slate-200 bg-slate-50/80 p-3 sm:block sm:p-4">
                 <CommentsThread nodeId={currentNodeId} title="דיון והערות על הצומת" />
               </div>
             </section>
