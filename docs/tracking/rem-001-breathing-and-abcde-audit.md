@@ -38,3 +38,14 @@
 המשך audit ל:
 
 `circulation_assessment -> disability_assessment -> exposure_assessment`
+
+## Verification
+
+- `npm run build` עבר בהצלחה ב-`2026-07-06`.
+- `npm test -- --runInBand` עבר בהצלחה ב-`2026-07-06`.
+- ריצת GitHub Actions `Validate` מספר `28780864595` עברה בהצלחה אחרי הדחיפה ל-`main`.
+- בפרודקשן החי `https://bls-protocol.evyatarhazan.com/` אומת שהבאנדל `assets/index-B50dnTNv.js` מכיל את ארבעת המקורות החדשים:
+  - `איחוד הצלה - יחידה 03 החייאת מבוגר ו-AED`
+  - `איחוד הצלה - יחידה 15 מצבי חירום נשימתיים`
+  - `איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה`
+  - `איחוד הצלה - יחידה 3-2 שלבי גישה וטיפול בפצוע`
