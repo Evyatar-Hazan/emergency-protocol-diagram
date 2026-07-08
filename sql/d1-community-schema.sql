@@ -37,3 +37,15 @@ CREATE TABLE IF NOT EXISTS comment_likes (
 
 CREATE INDEX IF NOT EXISTS idx_comment_likes_comment_id ON comment_likes(comment_id);
 CREATE INDEX IF NOT EXISTS idx_comment_likes_user_id ON comment_likes(user_id);
+
+CREATE TABLE IF NOT EXISTS comment_views (
+  id TEXT PRIMARY KEY,
+  comment_id TEXT NOT NULL,
+  viewer_key TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
+  UNIQUE(comment_id, viewer_key)
+);
+
+CREATE INDEX IF NOT EXISTS idx_comment_views_comment_id ON comment_views(comment_id);
+CREATE INDEX IF NOT EXISTS idx_comment_views_viewer_key ON comment_views(viewer_key);

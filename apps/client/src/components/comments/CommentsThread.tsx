@@ -21,6 +21,7 @@ interface Comment {
   createdAt: string;
   updatedAt?: string;
   likesCount?: number;
+  viewsCount?: number;
   viewerHasLiked?: boolean;
   replies?: Comment[];
 }

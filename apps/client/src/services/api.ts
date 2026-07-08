@@ -36,8 +36,22 @@ interface ApiComment {
   createdAt: string;
   updatedAt?: string;
   likesCount?: number;
+  viewsCount?: number;
   viewerHasLiked?: boolean;
   replies?: ApiComment[];
+}
+
+function getViewerKey() {
+  const storageKey = 'commentViewerKey';
+  const existing = localStorage.getItem(storageKey);
+
+  if (existing) {
+    return existing;
+  }
+
+  const generated = `viewer:${crypto.randomUUID()}`;
+  localStorage.setItem(storageKey, generated);
+  return generated;
 }
 
 // Add auth token to every request
@@ -108,5 +122,14 @@ export const commentService = {
   toggleLike: async (commentId: string) => {
     const response = await apiClient.post(`/comments/${commentId}/like`);
     return unwrapApiData<{ liked: boolean; likesCount: number }>(response.data);
+  },
+
+  trackView: async (commentId: string) => {
+    const response = await apiClient.post(`/comments/${commentId}/view`, null, {
+      headers: {
+        'X-Viewer-Key': getViewerKey(),
+      },
+    });
+    return unwrapApiData<{ viewsCount: number }>(response.data);
   },
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { commentService } from '../../services/api';
 import { CommentForm } from './CommentForm';
@@ -18,6 +18,7 @@ interface CommentItemProps {
   createdAt: string;
   updatedAt?: string;
   likesCount?: number;
+  viewsCount?: number;
   viewerHasLiked?: boolean;
   replies?: CommentItemProps[];
   onCommentDeleted?: () => void;
@@ -33,6 +34,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   createdAt,
   updatedAt,
   likesCount = 0,
+  viewsCount = 0,
   viewerHasLiked = false,
   replies = [],
   onCommentDeleted,
@@ -44,6 +46,8 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasTrackedView, setHasTrackedView] = useState(false);
+  const articleRef = useRef<HTMLElement | null>(null);
 
   const canDelete = Boolean(user && (user.id === author.id || user.isAdmin));
   const depthClass = level === 0 ? '' : level === 1 ? 'sm:mr-6' : 'sm:mr-12';
@@ -96,9 +100,40 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     return `לפני ${Math.floor(seconds / 86400)} ימים`;
   };
 
+  useEffect(() => {
+    const element = articleRef.current;
+
+    if (!element || hasTrackedView) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+
+        if (!entry?.isIntersecting) {
+          return;
+        }
+
+        setHasTrackedView(true);
+        observer.disconnect();
+        void commentService.trackView(id).then(() => {
+          onCommentUpdated?.();
+        }).catch((err) => {
+          console.error('Failed to track comment view:', err);
+        });
+      },
+      { threshold: 0.6 }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [hasTrackedView, id, onCommentUpdated]);
+
   return (
     <div className={depthClass}>
-      <article className="rounded-[26px] border border-slate-200 bg-white p-4 shadow-soft sm:p-5">
+      <article ref={articleRef} className="rounded-[26px] border border-slate-200 bg-white p-4 shadow-soft sm:p-5">
         <div className="flex items-start gap-3">
           {author.picture ? (
             <img
@@ -171,6 +206,12 @@ export const CommentItem: React.FC<CommentItemProps> = ({
             </div>
 
             <p className="mt-3 whitespace-pre-line text-sm leading-7 text-slate-700">{parsedContent.body}</p>
+
+            <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] font-medium text-slate-400">
+              <span>{formatRelativeTime(createdAt)}</span>
+              <span>לייקים {likesCount}</span>
+              <span>צפיות {viewsCount}</span>
+            </div>
 
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
 

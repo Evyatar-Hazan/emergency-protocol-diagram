@@ -13,6 +13,7 @@ interface CommentRow {
   author_picture: string | null;
   author_is_admin: number;
   likes_count: number;
+  views_count: number;
   viewer_has_liked: number;
 }
 
@@ -32,6 +33,7 @@ interface CommentRecord {
     isAdmin: boolean;
   };
   likesCount: number;
+  viewsCount: number;
   viewerHasLiked: boolean;
   replies: CommentRecord[];
 }
@@ -53,6 +55,7 @@ function toComment(row: CommentRow): CommentRecord {
       isAdmin: Boolean(row.author_is_admin),
     },
     likesCount: Number(row.likes_count || 0),
+    viewsCount: Number(row.views_count || 0),
     viewerHasLiked: Boolean(row.viewer_has_liked),
     replies: [],
   };
@@ -82,6 +85,11 @@ export async function getCommentsByNodeId(
           FROM comment_likes cl
           WHERE cl.comment_id = c.id
         ) AS likes_count,
+        (
+          SELECT COUNT(*)
+          FROM comment_views cv
+          WHERE cv.comment_id = c.id
+        ) AS views_count,
         ${
           viewerId
             ? `

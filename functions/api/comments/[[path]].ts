@@ -135,6 +135,41 @@ async function toggleCommentLike(context: Context, commentId: string): Promise<R
   });
 }
 
+async function trackCommentView(context: Context, commentId: string): Promise<Response> {
+  const viewerKey = context.request.headers.get('x-viewer-key')?.trim();
+
+  if (!viewerKey || viewerKey.length < 8) {
+    return json({ message: 'Viewer key required' }, { status: 400 });
+  }
+
+  const existing = await context.env.DB.prepare('SELECT id FROM comments WHERE id = ?1')
+    .bind(commentId)
+    .first<{ id: string }>();
+
+  if (!existing) {
+    return json({ message: 'Comment not found' }, { status: 404 });
+  }
+
+  await context.env.DB.prepare(
+    `
+      INSERT OR IGNORE INTO comment_views (id, comment_id, viewer_key, created_at)
+      VALUES (?1, ?2, ?3, datetime('now'))
+    `
+  )
+    .bind(crypto.randomUUID(), commentId, viewerKey)
+    .run();
+
+  const viewAggregate = await context.env.DB.prepare(
+    'SELECT COUNT(*) AS viewsCount FROM comment_views WHERE comment_id = ?1'
+  )
+    .bind(commentId)
+    .first<{ viewsCount: number }>();
+
+  return json({
+    viewsCount: Number(viewAggregate?.viewsCount || 0),
+  });
+}
+
 async function deleteComment(context: Context, commentId: string): Promise<Response> {
   const authResult = await authenticate(context.request, context.env);
   if (authResult instanceof Response) {
@@ -182,6 +217,10 @@ export async function onRequestPost(context: Context): Promise<Response> {
 
   if (segments.length === 2 && segments[1] === 'like') {
     return toggleCommentLike(context, segments[0]);
+  }
+
+  if (segments.length === 2 && segments[1] === 'view') {
+    return trackCommentView(context, segments[0]);
   }
 
   return createComment(context);
