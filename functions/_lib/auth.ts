@@ -36,6 +36,38 @@ export async function authenticate(request: Request, env: Env): Promise<SessionU
   return user;
 }
 
+export async function authenticateOptional(request: Request, env: Env): Promise<SessionUser | null> {
+  const authHeader = request.headers.get('authorization');
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+
+  if (!token) {
+    return null;
+  }
+
+  return verifyJwt(token, getJwtSecret(env));
+}
+
+export async function authenticateGoogleUser(
+  request: Request,
+  env: Env
+): Promise<SessionUser | Response> {
+  const authResult = await authenticate(request, env);
+
+  if (authResult instanceof Response) {
+    return authResult;
+  }
+
+  const actor = await env.DB.prepare('SELECT google_id AS googleId FROM users WHERE id = ?1')
+    .bind(authResult.id)
+    .first<{ googleId: string | null }>();
+
+  if (!actor?.googleId || actor.googleId.startsWith('guest:')) {
+    return json({ message: 'Google login required' }, { status: 403 });
+  }
+
+  return authResult;
+}
+
 export async function verifyGoogleIdToken(idToken: string, env: Env): Promise<GoogleTokenPayload | null> {
   const response = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`);
 

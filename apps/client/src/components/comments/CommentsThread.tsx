@@ -20,6 +20,8 @@ interface Comment {
   parentCommentId: string | null;
   createdAt: string;
   updatedAt?: string;
+  likesCount?: number;
+  viewerHasLiked?: boolean;
   replies?: Comment[];
 }
 

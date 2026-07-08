@@ -12,6 +12,8 @@ interface CommentRow {
   author_name: string | null;
   author_picture: string | null;
   author_is_admin: number;
+  likes_count: number;
+  viewer_has_liked: number;
 }
 
 interface CommentRecord {
@@ -29,6 +31,8 @@ interface CommentRecord {
     picture?: string | null;
     isAdmin: boolean;
   };
+  likesCount: number;
+  viewerHasLiked: boolean;
   replies: CommentRecord[];
 }
 
@@ -48,11 +52,17 @@ function toComment(row: CommentRow): CommentRecord {
       picture: row.author_picture,
       isAdmin: Boolean(row.author_is_admin),
     },
+    likesCount: Number(row.likes_count || 0),
+    viewerHasLiked: Boolean(row.viewer_has_liked),
     replies: [],
   };
 }
 
-export async function getCommentsByNodeId(env: Env, nodeId: string): Promise<CommentRecord[]> {
+export async function getCommentsByNodeId(
+  env: Env,
+  nodeId: string,
+  viewerId?: string | null
+): Promise<CommentRecord[]> {
   const { results } = await env.DB.prepare(
     `
       SELECT
@@ -66,14 +76,30 @@ export async function getCommentsByNodeId(env: Env, nodeId: string): Promise<Com
         u.email AS author_email,
         u.name AS author_name,
         u.picture AS author_picture,
-        u.is_admin AS author_is_admin
+        u.is_admin AS author_is_admin,
+        (
+          SELECT COUNT(*)
+          FROM comment_likes cl
+          WHERE cl.comment_id = c.id
+        ) AS likes_count,
+        ${
+          viewerId
+            ? `
+        EXISTS(
+          SELECT 1
+          FROM comment_likes clv
+          WHERE clv.comment_id = c.id AND clv.user_id = ?2
+        ) AS viewer_has_liked
+        `
+            : '0 AS viewer_has_liked'
+        }
       FROM comments c
       INNER JOIN users u ON u.id = c.author_id
       WHERE c.node_id = ?1
       ORDER BY c.created_at DESC
     `
   )
-    .bind(nodeId)
+    .bind(...(viewerId ? [nodeId, viewerId] : [nodeId]))
     .all<CommentRow>();
 
   const map = new Map<string, CommentRecord>();

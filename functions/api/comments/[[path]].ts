@@ -1,4 +1,4 @@
-import { authenticate } from '../../_lib/auth';
+import { authenticate, authenticateGoogleUser, authenticateOptional } from '../../_lib/auth';
 import { getCommentsByNodeId } from '../../_lib/comments';
 import { empty, json } from '../../_lib/json';
 import type { Env } from '../../_lib/types';
@@ -9,7 +9,7 @@ type Context = {
 };
 
 async function createComment(context: Context): Promise<Response> {
-  const authResult = await authenticate(context.request, context.env);
+  const authResult = await authenticateGoogleUser(context.request, context.env);
   if (authResult instanceof Response) {
     return authResult;
   }
@@ -85,64 +85,54 @@ async function createComment(context: Context): Promise<Response> {
   );
 }
 
-async function updateComment(context: Context, commentId: string): Promise<Response> {
-  const authResult = await authenticate(context.request, context.env);
+async function toggleCommentLike(context: Context, commentId: string): Promise<Response> {
+  const authResult = await authenticateGoogleUser(context.request, context.env);
   if (authResult instanceof Response) {
     return authResult;
   }
 
-  const body = (await context.request.json().catch(() => null)) as { content?: string } | null;
-  const content = body?.content?.trim();
-
-  if (!content) {
-    return json({ message: 'Content is required' }, { status: 400 });
-  }
-
   const existing = await context.env.DB.prepare(
-    'SELECT author_id AS authorId FROM comments WHERE id = ?1'
+    'SELECT id FROM comments WHERE id = ?1'
   )
     .bind(commentId)
-    .first<{ authorId: string }>();
+    .first<{ id: string }>();
 
   if (!existing) {
     return json({ message: 'Comment not found' }, { status: 404 });
   }
 
-  if (existing.authorId !== authResult.id && !authResult.isAdmin) {
-    return json({ message: 'You can only edit your own comments' }, { status: 403 });
+  const existingLike = await context.env.DB.prepare(
+    'SELECT id FROM comment_likes WHERE comment_id = ?1 AND user_id = ?2'
+  )
+    .bind(commentId, authResult.id)
+    .first<{ id: string }>();
+
+  let liked = false;
+
+  if (existingLike) {
+    await context.env.DB.prepare('DELETE FROM comment_likes WHERE id = ?1').bind(existingLike.id).run();
+  } else {
+    await context.env.DB.prepare(
+      `
+        INSERT INTO comment_likes (id, comment_id, user_id, created_at)
+        VALUES (?1, ?2, ?3, datetime('now'))
+      `
+    )
+      .bind(crypto.randomUUID(), commentId, authResult.id)
+      .run();
+    liked = true;
   }
 
-  await context.env.DB.prepare(
-    'UPDATE comments SET content = ?1, updated_at = datetime(\'now\') WHERE id = ?2'
+  const likeAggregate = await context.env.DB.prepare(
+    'SELECT COUNT(*) AS likesCount FROM comment_likes WHERE comment_id = ?1'
   )
-    .bind(content, commentId)
-    .run();
+    .bind(commentId)
+    .first<{ likesCount: number }>();
 
-  const comments = await getCommentsByNodeId(
-    context.env,
-    (
-      await context.env.DB.prepare('SELECT node_id AS nodeId FROM comments WHERE id = ?1')
-        .bind(commentId)
-        .first<{ nodeId: string }>()
-    )?.nodeId || ''
-  );
-
-  const findComment = (items: typeof comments): (typeof comments)[number] | null => {
-    for (const item of items) {
-      if (item.id === commentId) {
-        return item;
-      }
-
-      const nested = findComment(item.replies);
-      if (nested) {
-        return nested;
-      }
-    }
-
-    return null;
-  };
-
-  return json({ comment: findComment(comments) });
+  return json({
+    liked,
+    likesCount: Number(likeAggregate?.likesCount || 0),
+  });
 }
 
 async function deleteComment(context: Context, commentId: string): Promise<Response> {
@@ -181,28 +171,26 @@ export async function onRequestGet(context: Context): Promise<Response> {
     return json({ message: 'Node ID required' }, { status: 400 });
   }
 
-  const comments = await getCommentsByNodeId(context.env, nodeId);
+  const viewer = await authenticateOptional(context.request, context.env);
+  const comments = await getCommentsByNodeId(context.env, nodeId, viewer?.id);
   return json({ comments });
 }
 
 export async function onRequestPost(context: Context): Promise<Response> {
-  return createComment(context);
-}
-
-export async function onRequestPut(context: Context): Promise<Response> {
   const pathname = new URL(context.request.url).pathname;
-  const commentId = decodeURIComponent(pathname.replace(/^\/api\/comments\//, '')).trim();
+  const segments = pathname.replace(/^\/api\/comments\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
 
-  if (!commentId) {
-    return json({ message: 'Comment ID required' }, { status: 400 });
+  if (segments.length === 2 && segments[1] === 'like') {
+    return toggleCommentLike(context, segments[0]);
   }
 
-  return updateComment(context, commentId);
+  return createComment(context);
 }
 
 export async function onRequestDelete(context: Context): Promise<Response> {
   const pathname = new URL(context.request.url).pathname;
-  const commentId = decodeURIComponent(pathname.replace(/^\/api\/comments\//, '')).trim();
+  const segments = pathname.replace(/^\/api\/comments\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
+  const commentId = segments[0]?.trim();
 
   if (!commentId) {
     return json({ message: 'Comment ID required' }, { status: 400 });

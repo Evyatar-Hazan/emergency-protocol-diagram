@@ -17,6 +17,8 @@ interface CommentItemProps {
   };
   createdAt: string;
   updatedAt?: string;
+  likesCount?: number;
+  viewerHasLiked?: boolean;
   replies?: CommentItemProps[];
   onCommentDeleted?: () => void;
   onCommentUpdated?: () => void;
@@ -30,14 +32,17 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   author,
   createdAt,
   updatedAt,
+  likesCount = 0,
+  viewerHasLiked = false,
   replies = [],
   onCommentDeleted,
   onCommentUpdated,
   level = 0,
 }) => {
-  const { user } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const canDelete = Boolean(user && (user.id === author.id || user.isAdmin));
@@ -57,6 +62,25 @@ export const CommentItem: React.FC<CommentItemProps> = ({
       console.error('Failed to delete comment:', err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleLike = async () => {
+    if (!isAuthenticated || !user) {
+      setError('צריך להתחבר עם Google כדי לעשות לייק.');
+      return;
+    }
+
+    try {
+      setIsLikeLoading(true);
+      setError(null);
+      await commentService.toggleLike(id);
+      onCommentUpdated?.();
+    } catch (err) {
+      setError('לא הצלחנו לעדכן את הלייק. אפשר לנסות שוב.');
+      console.error('Failed to toggle like:', err);
+    } finally {
+      setIsLikeLoading(false);
     }
   };
 
@@ -117,6 +141,15 @@ export const CommentItem: React.FC<CommentItemProps> = ({
               </div>
 
               <div className="flex flex-wrap items-center gap-3 text-xs font-semibold">
+                <button
+                  onClick={handleLike}
+                  disabled={isLikeLoading}
+                  className={`transition disabled:text-slate-300 ${
+                    viewerHasLiked ? 'text-amber-700 hover:text-amber-800' : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  {isLikeLoading ? 'מעדכן...' : `לייק${likesCount > 0 ? ` (${likesCount})` : ''}`}
+                </button>
                 {level < 2 && (
                   <button
                     onClick={() => setShowReplyForm(!showReplyForm)}

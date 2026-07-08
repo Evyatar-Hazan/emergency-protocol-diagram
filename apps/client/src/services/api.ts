@@ -35,6 +35,8 @@ interface ApiComment {
   parentCommentId: string | null;
   createdAt: string;
   updatedAt?: string;
+  likesCount?: number;
+  viewerHasLiked?: boolean;
   replies?: ApiComment[];
 }
 
@@ -101,5 +103,10 @@ export const commentService = {
 
   deleteComment: async (commentId: string) => {
     await apiClient.delete(`/comments/${commentId}`);
+  },
+
+  toggleLike: async (commentId: string) => {
+    const response = await apiClient.post(`/comments/${commentId}/like`);
+    return unwrapApiData<{ liked: boolean; likesCount: number }>(response.data);
   },
 };
