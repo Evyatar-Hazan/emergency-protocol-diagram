@@ -32,7 +32,6 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   content,
   author,
   createdAt,
-  updatedAt,
   likesCount = 0,
   viewsCount = 0,
   viewerHasLiked = false,
@@ -133,7 +132,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
 
   return (
     <div className={depthClass}>
-      <article ref={articleRef} className="rounded-[26px] border border-slate-200 bg-white p-4 shadow-soft sm:p-5">
+      <article ref={articleRef} className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-soft sm:p-5">
         <div className="flex items-start gap-3">
           {author.picture ? (
             <img
@@ -148,56 +147,48 @@ export const CommentItem: React.FC<CommentItemProps> = ({
           )}
 
           <div className="min-w-0 flex-1">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-bold text-slate-900">
                     {author.name || author.email.split('@')[0]}
                   </span>
-                  <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
-                    author.isAdmin
-                      ? 'bg-clinical-blue/10 text-clinical-blue'
-                      : 'bg-slate-100 text-slate-600'
-                  }`}>
-                    {author.isAdmin ? 'מנהל/ת מערכת' : 'לומד/ת'}
-                  </span>
-                  {updatedAt && updatedAt !== createdAt && (
-                    <span className="rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-medium text-amber-700">
-                      נערך
-                    </span>
-                  )}
-                  {parsedContent.kindLabel && (
-                    <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700">
-                      {parsedContent.kindLabel}
+                  {author.isAdmin && (
+                    <span className="rounded-full bg-clinical-blue/10 px-2.5 py-1 text-[11px] font-bold text-clinical-blue">
+                      מנהל/ת מערכת
                     </span>
                   )}
                 </div>
-                <p className="mt-1 text-xs text-slate-500">{formatRelativeTime(createdAt)}</p>
               </div>
 
               <div className="flex flex-wrap items-center gap-3 text-xs font-semibold">
                 <button
+                  type="button"
                   onClick={handleLike}
                   disabled={isLikeLoading}
-                  className={`transition disabled:text-slate-300 ${
-                    viewerHasLiked ? 'text-amber-700 hover:text-amber-800' : 'text-slate-500 hover:text-slate-800'
+                  className={`rounded-full px-2 py-1 transition disabled:text-slate-300 ${
+                    viewerHasLiked
+                      ? 'bg-amber-50 text-amber-700 hover:bg-amber-100 hover:text-amber-800'
+                      : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
                   }`}
                 >
-                  {isLikeLoading ? 'מעדכן...' : `לייק${likesCount > 0 ? ` (${likesCount})` : ''}`}
+                  {isLikeLoading ? 'מעדכן...' : 'לייק'}
                 </button>
                 {level < 2 && (
                   <button
+                    type="button"
                     onClick={() => setShowReplyForm(!showReplyForm)}
-                    className="text-clinical-blue transition hover:text-clinical-deep"
+                    className="rounded-full px-2 py-1 text-clinical-blue transition hover:bg-clinical-blue/10 hover:text-clinical-deep"
                   >
                     {showReplyForm ? 'סגור תגובה' : 'השב'}
                   </button>
                 )}
                 {canDelete && (
                   <button
+                    type="button"
                     onClick={handleDelete}
                     disabled={isLoading}
-                    className="text-red-600 transition hover:text-red-800 disabled:text-slate-300"
+                    className="rounded-full px-2 py-1 text-red-600 transition hover:bg-red-50 hover:text-red-800 disabled:text-slate-300"
                   >
                     מחק
                   </button>
@@ -211,6 +202,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
               <span>{formatRelativeTime(createdAt)}</span>
               <span>לייקים {likesCount}</span>
               <span>צפיות {viewsCount}</span>
+              {viewerHasLiked && <span>אהבת</span>}
             </div>
 
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
