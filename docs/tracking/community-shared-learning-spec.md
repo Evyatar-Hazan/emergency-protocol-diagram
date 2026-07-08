@@ -1,5 +1,11 @@
 # Community And Shared Learning Spec
 
+## סטטוס מסמך
+
+- סטטוס: `legacy-partial`
+- הערה: המסמך הזה עדיין רלוונטי לשכבת `shared learning`, אבל אינו מסמך האמת החדש עבור מודל התגובות.
+- מסמך התגובות הפעיל כעת: [comments-layer-redesign-spec.md](/Users/evyatarhazan/Desktop/project/emergency-protocol-diagram/docs/tracking/comments-layer-redesign-spec.md)
+
 ## מטרה
 
 האתר אינו רק תרשים זרימה סגור. הוא צריך לאפשר שכבת למידה משותפת שמשרתת את הזרימה הראשית בלי לשבור אותה.
