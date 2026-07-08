@@ -2,7 +2,6 @@ import React from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import type { CredentialResponse } from '@react-oauth/google';
 import { useAuthStore } from '../../store/authStore';
-import { GuestLoginCard } from './GuestLoginCard';
 
 interface GoogleLoginButtonProps {
   onSuccess?: () => void;
@@ -41,8 +40,11 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
 
   if (!googleClientId || googleClientId.includes('your_google_client_id_here')) {
     return (
-      <div className={className}>
-        <GuestLoginCard onSuccess={onSuccess} onError={onError} compact />
+      <div className={`${className} rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-right`}>
+        <p className="text-sm font-semibold text-amber-900">התחברות Google לא זמינה כרגע</p>
+        <p className="mt-1 text-xs leading-6 text-amber-800">
+          כדי להגיב, להשיב או לעשות לייק צריך התחברות Google פעילה. כרגע אפשר רק לקרוא את הדיון.
+        </p>
       </div>
     );
   }

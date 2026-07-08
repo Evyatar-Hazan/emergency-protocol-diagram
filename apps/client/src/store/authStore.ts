@@ -19,7 +19,6 @@ interface AuthStore {
   setLoading: (loading: boolean) => void;
   logout: () => void;
   loginWithGoogle: (idToken: string) => Promise<void>;
-  loginAsGuest: (name: string) => Promise<void>;
   checkAuth: () => void;
 }
 
@@ -82,24 +81,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
       });
     } catch (error) {
       console.error('Login failed:', error);
-      set({ isLoading: false });
-      throw error;
-    }
-  },
-
-  loginAsGuest: async (name) => {
-    try {
-      set({ isLoading: true });
-      const { authService } = await import('../services/api');
-      const { token, user } = await authService.loginAsGuest(name);
-      set({
-        token,
-        user,
-        isAuthenticated: true,
-        isLoading: false,
-      });
-    } catch (error) {
-      console.error('Guest login failed:', error);
       set({ isLoading: false });
       throw error;
     }

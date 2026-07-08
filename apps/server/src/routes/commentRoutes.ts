@@ -17,13 +17,6 @@ router.post(
   commentController.createComment
 );
 
-router.put(
-  '/:commentId',
-  authenticateToken,
-  [body('content').trim().notEmpty().withMessage('Content is required')],
-  commentController.updateComment
-);
-
 router.delete('/:commentId', authenticateToken, commentController.deleteComment);
 
 export default router;

@@ -65,18 +65,6 @@ describe('Comment Routes', () => {
     });
   });
 
-  describe('PUT /api/comments/:commentId', () => {
-    it('should return 401 if not authenticated', async () => {
-      const response = await request(app)
-        .put('/api/comments/comment-1')
-        .send({
-          content: 'Updated content',
-        });
-
-      expect(response.status).toBe(401);
-    });
-  });
-
   describe('DELETE /api/comments/:commentId', () => {
     it('should return 401 if not authenticated', async () => {
       const response = await request(app).delete('/api/comments/comment-1');

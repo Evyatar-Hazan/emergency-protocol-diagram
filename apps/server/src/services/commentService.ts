@@ -49,18 +49,6 @@ export const createComment = async (
   });
 };
 
-export const updateComment = async (commentId: string, content: string) => {
-  return prisma.comment.update({
-    where: { id: commentId },
-    data: { content },
-    include: {
-      author: {
-        select: { id: true, email: true, name: true, picture: true, isAdmin: true },
-      },
-    },
-  });
-};
-
 export const deleteComment = async (commentId: string) => {
   return prisma.comment.delete({
     where: { id: commentId },

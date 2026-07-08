@@ -36,35 +36,13 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   level = 0,
 }) => {
   const { user } = useAuthStore();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(content);
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const canEdit = Boolean(user && (user.id === author.id || user.isAdmin));
+  const canDelete = Boolean(user && (user.id === author.id || user.isAdmin));
   const depthClass = level === 0 ? '' : level === 1 ? 'sm:mr-6' : 'sm:mr-12';
   const parsedContent = parseCommentContent(content);
-
-  const handleEdit = async () => {
-    if (!editContent.trim() || editContent === content) {
-      setIsEditing(false);
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      setError(null);
-      await commentService.updateComment(id, editContent);
-      setIsEditing(false);
-      onCommentUpdated?.();
-    } catch (err) {
-      setError('לא הצלחנו לעדכן את התגובה. אפשר לנסות שוב.');
-      console.error('Failed to update comment:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleDelete = async () => {
     if (!window.confirm('למחוק את התגובה הזו?')) return;
@@ -147,56 +125,19 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                     {showReplyForm ? 'סגור תגובה' : 'השב'}
                   </button>
                 )}
-                {canEdit && (
-                  <>
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="text-slate-600 transition hover:text-slate-900"
-                    >
-                      ערוך
-                    </button>
-                    <button
-                      onClick={handleDelete}
-                      disabled={isLoading}
-                      className="text-red-600 transition hover:text-red-800 disabled:text-slate-300"
-                    >
-                      מחק
-                    </button>
-                  </>
+                {canDelete && (
+                  <button
+                    onClick={handleDelete}
+                    disabled={isLoading}
+                    className="text-red-600 transition hover:text-red-800 disabled:text-slate-300"
+                  >
+                    מחק
+                  </button>
                 )}
               </div>
             </div>
 
-            {isEditing ? (
-              <div className="mt-3 space-y-3">
-                <textarea
-                  value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                  rows={3}
-                  className="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-800 outline-none transition focus:border-clinical-blue focus:ring-2 focus:ring-clinical-blue/15"
-                />
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={handleEdit}
-                    disabled={isLoading}
-                    className="rounded-2xl bg-clinical-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-clinical-deep disabled:bg-slate-300"
-                  >
-                    {isLoading ? 'שומר...' : 'שמור שינוי'}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsEditing(false);
-                      setEditContent(content);
-                    }}
-                    className="rounded-2xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200"
-                  >
-                    ביטול
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <p className="mt-3 whitespace-pre-line text-sm leading-7 text-slate-700">{parsedContent.body}</p>
-            )}
+            <p className="mt-3 whitespace-pre-line text-sm leading-7 text-slate-700">{parsedContent.body}</p>
 
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
 

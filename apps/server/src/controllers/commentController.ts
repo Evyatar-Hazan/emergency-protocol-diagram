@@ -50,37 +50,6 @@ export const createComment = async (req: AuthRequest, res: Response): Promise<vo
   }
 };
 
-export const updateComment = async (req: AuthRequest, res: Response): Promise<void> => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
-      return;
-    }
-
-    const { commentId } = req.params;
-    const { content } = req.body;
-    const userId = req.user?.id;
-
-    const comment = await commentService.getCommentById(commentId);
-    if (!comment) {
-      res.status(404).json({ message: 'Comment not found' });
-      return;
-    }
-
-    if (comment.authorId !== userId && !req.user?.isAdmin) {
-      res.status(403).json({ message: 'You can only edit your own comments' });
-      return;
-    }
-
-    const updatedComment = await commentService.updateComment(commentId, content);
-    res.json({ comment: updatedComment });
-  } catch (error) {
-    console.error('Update comment error:', error);
-    res.status(500).json({ message: 'Failed to update comment' });
-  }
-};
-
 export const deleteComment = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { commentId } = req.params;
