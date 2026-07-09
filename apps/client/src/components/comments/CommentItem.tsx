@@ -46,11 +46,17 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasTrackedView, setHasTrackedView] = useState(false);
+  const [likeOverride, setLikeOverride] = useState<number | null>(null);
+  const [viewOverride, setViewOverride] = useState<number | null>(null);
+  const [likedOverride, setLikedOverride] = useState<boolean | null>(null);
   const articleRef = useRef<HTMLElement | null>(null);
 
   const canDelete = Boolean(user && (user.id === author.id || user.isAdmin));
   const depthClass = level === 0 ? '' : level === 1 ? 'sm:mr-6' : 'sm:mr-12';
   const parsedContent = parseCommentContent(content);
+  const displayLikesCount = likeOverride ?? likesCount;
+  const displayViewsCount = viewOverride ?? viewsCount;
+  const displayViewerHasLiked = likedOverride ?? viewerHasLiked;
 
   const handleDelete = async () => {
     if (!window.confirm('למחוק את התגובה הזו?')) return;
@@ -77,8 +83,9 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     try {
       setIsLikeLoading(true);
       setError(null);
-      await commentService.toggleLike(id);
-      onCommentUpdated?.();
+      const result = await commentService.toggleLike(id);
+      setLikeOverride(result.likesCount);
+      setLikedOverride(result.liked);
     } catch (err) {
       setError('לא הצלחנו לעדכן את הלייק. אפשר לנסות שוב.');
       console.error('Failed to toggle like:', err);
@@ -116,11 +123,14 @@ export const CommentItem: React.FC<CommentItemProps> = ({
 
         setHasTrackedView(true);
         observer.disconnect();
-        void commentService.trackView(id).then(() => {
-          onCommentUpdated?.();
-        }).catch((err) => {
-          console.error('Failed to track comment view:', err);
-        });
+        void commentService
+          .trackView(id)
+          .then((result) => {
+            setViewOverride(result.viewsCount);
+          })
+          .catch((err) => {
+            console.error('Failed to track comment view:', err);
+          });
       },
       { threshold: 0.6 }
     );
@@ -167,7 +177,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                   onClick={handleLike}
                   disabled={isLikeLoading}
                   className={`rounded-full px-2 py-1 transition disabled:text-slate-300 ${
-                    viewerHasLiked
+                    displayViewerHasLiked
                       ? 'bg-amber-50 text-amber-700 hover:bg-amber-100 hover:text-amber-800'
                       : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'
                   }`}
@@ -200,9 +210,9 @@ export const CommentItem: React.FC<CommentItemProps> = ({
 
             <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] font-medium text-slate-400">
               <span>{formatRelativeTime(createdAt)}</span>
-              <span>לייקים {likesCount}</span>
-              <span>צפיות {viewsCount}</span>
-              {viewerHasLiked && <span>אהבת</span>}
+              <span>לייקים {displayLikesCount}</span>
+              <span>צפיות {displayViewsCount}</span>
+              {displayViewerHasLiked && <span>אהבת</span>}
             </div>
 
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
