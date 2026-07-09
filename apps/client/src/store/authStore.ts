@@ -19,7 +19,7 @@ interface AuthStore {
   setLoading: (loading: boolean) => void;
   logout: () => void;
   loginWithGoogle: (idToken: string) => Promise<void>;
-  checkAuth: () => void;
+  checkAuth: () => Promise<void>;
 }
 
 function readStoredUser(): User | null {
@@ -86,7 +86,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
   },
 
-  checkAuth: () => {
+  checkAuth: async () => {
     // Check if we have a token and user in localStorage
     const token = localStorage.getItem('authToken');
     const user = readStoredUser();
@@ -97,6 +97,29 @@ export const useAuthStore = create<AuthStore>((set) => ({
         user,
         isAuthenticated: true,
       });
+
+      try {
+        const { authService } = await import('../services/api');
+        const response = await authService.getCurrentUser();
+        const verifiedUser = response.user;
+
+        localStorage.setItem('user', JSON.stringify(verifiedUser));
+        set({
+          token,
+          user: verifiedUser,
+          isAuthenticated: true,
+        });
+      } catch (error) {
+        console.warn('Stored auth is no longer valid, logging out:', error);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        set({
+          token: null,
+          user: null,
+          isAuthenticated: false,
+        });
+      }
+
       return;
     }
 
