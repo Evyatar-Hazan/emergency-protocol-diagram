@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { authService } from '../services/api';
 
 interface User {
   id: string;
@@ -60,18 +61,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
   setLoading: (loading) => set({ isLoading: loading }),
 
   logout: () => {
-    // Lazy import to avoid circular dependency
-    import('../services/api').then(({ authService }) => {
-      authService.logout();
-    });
+    authService.logout();
     set({ user: null, token: null, isAuthenticated: false });
   },
 
   loginWithGoogle: async (idToken) => {
     try {
       set({ isLoading: true });
-      // Lazy import to avoid circular dependency
-      const { authService } = await import('../services/api');
       const { token, user } = await authService.loginWithGoogle(idToken);
       set({
         token,
@@ -99,7 +95,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
       });
 
       try {
-        const { authService } = await import('../services/api');
         const response = await authService.getCurrentUser();
         const verifiedUser = response.user;
 

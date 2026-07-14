@@ -1,6 +1,11 @@
 import { create } from 'zustand';
 import type { Protocol, Node, FlowData } from '../types/protocol';
-import { protocolsData } from '../protocols';
+
+const emptyFlowData: FlowData = {
+  version: '0.0.0',
+  language: 'he',
+  protocols: {},
+};
 
 interface FlowState {
   // נתוני הפרוטוקולים
@@ -27,7 +32,7 @@ interface FlowState {
 
 export const useFlowStore = create<FlowState>((set, get) => ({
   // Initial state
-  flowData: protocolsData,
+  flowData: emptyFlowData,
   activeProtocol: null,
   activeProtocolId: null,
   currentNode: null,

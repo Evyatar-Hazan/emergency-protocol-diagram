@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useFlowStore } from './store/flowStore';
 import { useAuthStore } from './store/authStore';
 import { initializeFlowData } from './utils/bootstrap';
-import { FullFlowDiagram } from './components/flow/FullFlowDiagram';
 import { StepByStepView } from './components/StepByStep/StepByStepView';
 import { VitalSignsView } from './components/VitalSigns/VitalSignsView';
 import { UserMenu } from './components/auth/UserMenu';
@@ -15,6 +14,12 @@ type SecondaryTool = 'none' | 'diagram';
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 const hasGoogleClientId =
   Boolean(googleClientId) && !googleClientId.includes('your_google_client_id_here');
+
+const FullFlowDiagram = lazy(() =>
+  import('./components/flow/FullFlowDiagram').then((module) => ({
+    default: module.FullFlowDiagram,
+  }))
+);
 
 function AppContent() {
   const { flowData, activeProtocol, loadData, setActiveProtocol } = useFlowStore();
@@ -242,7 +247,20 @@ function AppContent() {
               </button>
             </div>
           </div>
-          <FullFlowDiagram protocols={flowData.protocols} />
+          <Suspense
+            fallback={
+              <div className="surface-card flex min-h-[420px] items-center justify-center rounded-3xl p-6 text-center">
+                <div>
+                  <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-[3px] border-clinical-blue/20 border-t-clinical-blue" />
+                  <p className="text-sm font-semibold text-clinical-muted">
+                    טוען את מבט המערכת...
+                  </p>
+                </div>
+              </div>
+            }
+          >
+            <FullFlowDiagram protocols={flowData.protocols} />
+          </Suspense>
         </div>
       ) : viewMode === 'step-by-step' ? (
         <StepByStepView protocols={flowData.protocols} />

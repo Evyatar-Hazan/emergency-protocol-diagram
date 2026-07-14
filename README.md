@@ -18,7 +18,7 @@ npm run dev:client
 npm run dev:server
 ```
 
-The client runs on `http://localhost:5173` and the server defaults to `http://localhost:5000`.
+The client runs on `http://localhost:5173` and the server defaults to `http://localhost:5050`.
 
 ## Environment
 
@@ -41,13 +41,18 @@ npm audit
 ```
 
 GitHub Actions runs install, build, lint, and server tests on every push and pull request.
+Use `npm audit --omit=dev` when checking production dependency exposure separately from development tooling.
 
 ## Production Build
 
-Cloudflare Pages can build this repository from the repo root using:
+Cloudflare Pages is the production deployment target for the current checkout. It builds this repository from the repo root using:
 
 ```bash
 npm run build
 ```
 
-The root build compiles both workspaces and then mirrors the client output to `/dist`, so legacy Pages projects that publish `dist` from the repository root continue to work after the monorepo migration.
+The root build compiles both workspaces and then mirrors the client output to `/dist`, which matches `wrangler.toml` and the Cloudflare Pages publish path.
+
+Production API routes are served by Cloudflare Pages Functions under `/functions`, with D1 bound as `DB` for health checks, comments, likes, and view tracking. The Express + Prisma server remains the local API workspace and shares the same domain model, but Cloudflare Functions + D1 are the live production path.
+
+`apps/client/netlify.toml` is retained only as a legacy Netlify configuration and is aligned to Node 20 for parity with the root `engines` field and GitHub Actions. A local Netlify project link is not required for the Cloudflare Pages deployment path.

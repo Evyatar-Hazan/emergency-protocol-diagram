@@ -1,5 +1,4 @@
 import type { FlowData } from '../types/protocol';
-import { protocolsData } from '../protocols';
 
 /**
  * Bootstrap Logic - טעינת נתונים ראשוניים
@@ -54,6 +53,7 @@ export async function initializeFlowData(): Promise<FlowData> {
   console.log('[Bootstrap] Initializing flow data...');
 
   // 1. התחל עם הדאטא המובנה
+  const { protocolsData } = await import('../protocols');
   let flowData: FlowData = protocolsData;
 
   // 2. בדוק אם יש window.__INITIAL_FLOW_DATA__
