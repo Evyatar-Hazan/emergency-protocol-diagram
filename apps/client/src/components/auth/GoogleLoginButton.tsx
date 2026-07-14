@@ -7,7 +7,7 @@ interface GoogleLoginButtonProps {
   onSuccess?: () => void;
   onError?: (error: Error) => void;
   className?: string;
-  variant?: 'default' | 'white' | 'outline';
+  variant?: 'default' | 'white' | 'outline' | 'icon';
 }
 
 export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
@@ -53,7 +53,8 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   const containerClasses = {
     'default': 'w-full',
     'white': 'w-full',
-    'outline': 'w-full'
+    'outline': 'w-full',
+    'icon': 'w-auto'
   };
 
   return (
@@ -65,7 +66,45 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
           align-items: center;
         }
         
-        ${variant === 'white' ? `
+        ${variant === 'icon' ? `
+          .google-login-container > div {
+            width: 40px !important;
+            min-width: 40px !important;
+            max-width: 40px !important;
+            overflow: hidden !important;
+            border-radius: 9999px !important;
+          }
+          .google-login-container button {
+            width: 40px !important;
+            height: 40px !important;
+            min-width: 40px !important;
+            max-width: 40px !important;
+            padding: 0 !important;
+            border-radius: 9999px !important;
+            border: 1px solid #e2e8f0 !important;
+            background-color: white !important;
+            box-shadow: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.2s ease !important;
+            overflow: hidden !important;
+          }
+          .google-login-container button:hover {
+            background-color: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+          }
+          .google-login-container button > div {
+            margin: 0 !important;
+          }
+          .google-login-container iframe {
+            width: 40px !important;
+            min-width: 40px !important;
+            max-width: 40px !important;
+            border-radius: 9999px !important;
+            overflow: hidden !important;
+          }
+        ` : variant === 'white' ? `
           .google-login-container > div {
             width: 100% !important;
           }

@@ -1151,13 +1151,11 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                 </button>
               </div>
             )}
-
-            <section className="mt-6 border-t border-white/60 pt-6">
-              <div className="rounded-[28px] border border-slate-200 bg-slate-50/70 p-3 sm:p-4">
-                <CommentsThread nodeId={currentNodeId} title="תגובות על הצומת" />
-              </div>
-            </section>
           </div>
+        </div>
+
+        <div className="-mt-[3px]">
+          <CommentsThread nodeId={currentNodeId} />
         </div>
       </div>
     </div>
