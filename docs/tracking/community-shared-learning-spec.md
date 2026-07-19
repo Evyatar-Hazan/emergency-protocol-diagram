@@ -73,6 +73,11 @@
 - `trauma_shock_assessment`
 - `imminent_delivery`
 - `obstetric_emergency`
+- `pulmonary_embolism`
+- `bowel_obstruction`
+- `pelvic_gynecologic_emergency`
+- `diving_emergency_overview`
+- `bloodborne_exposure_response`
 
 ## Definition of Done לשכבת Community / Shared Learning
 
