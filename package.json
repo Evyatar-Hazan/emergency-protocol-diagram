@@ -17,8 +17,8 @@
     "lint": "npm run lint --workspaces",
     "lint:client": "npm run lint --workspace @emergency-protocol-diagram/client",
     "lint:server": "npm run lint --workspace @emergency-protocol-diagram/server",
-    "test": "npm run test --workspace @emergency-protocol-diagram/server -- --runInBand",
-    "test:server": "npm run test --workspace @emergency-protocol-diagram/server -- --runInBand"
+    "test": "npm run test --workspace @emergency-protocol-diagram/server",
+    "test:server": "npm run test --workspace @emergency-protocol-diagram/server"
   },
   "engines": {
     "node": ">=20"

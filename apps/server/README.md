@@ -10,7 +10,7 @@ A Node.js/Express backend server for the Emergency Protocol Diagram application 
 - **Admin Dashboard**: Admin users can manage all comments
 - **Role-Based Access**: Separate admin and regular user permissions
 - **Type-Safe**: Built with TypeScript
-- **Well-Tested**: Jest unit and integration tests
+- **Well-Tested**: Vitest unit and integration tests
 - **Code Quality**: ESLint, Prettier, and TypeScript strict mode
 
 ## Tech Stack
@@ -20,13 +20,13 @@ A Node.js/Express backend server for the Emergency Protocol Diagram application 
 - **Language**: TypeScript
 - **Database**: PostgreSQL with Prisma ORM
 - **Authentication**: Google OAuth 2.0
-- **Testing**: Jest & Supertest
+- **Testing**: Vitest & Supertest
 - **Linting**: ESLint
 - **Formatting**: Prettier
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - PostgreSQL 12+
 - Google OAuth 2.0 credentials
 

@@ -1,8 +1,9 @@
+import { describe, expect, it, vi, type Mock } from 'vitest';
 import request from 'supertest';
 import app from '../../index';
 import * as commentService from '../../services/commentService';
 
-jest.mock('../../services/commentService');
+vi.mock('../../services/commentService');
 
 describe('Comment Routes', () => {
   describe('GET /api/comments/:nodeId', () => {
@@ -27,7 +28,7 @@ describe('Comment Routes', () => {
         },
       ];
 
-      (commentService.getCommentsByNodeId as jest.Mock).mockResolvedValue(mockComments);
+      (commentService.getCommentsByNodeId as Mock).mockResolvedValue(mockComments);
 
       const response = await request(app).get('/api/comments/asthma_attack');
 

@@ -126,7 +126,7 @@
 
 ### 4.2 להוסיף ולתקן tests בצד השרת
 
-- סטטוס: `todo`
+- סטטוס: `done`
 - מה לעשות:
   - להוסיף integration tests ל-auth rules.
   - להוסיף integration tests ל-like.
@@ -136,6 +136,10 @@
 - זמן משוער: `2-4 שעות`
 - Definition of Done:
   - test suite מכסה את כל חוקי ההרשאה החדשים.
+- הושלם בפועל:
+  - `2026-07-28`: שכבת הבדיקות הועברה מ-`Jest` ל-`Vitest` כדי לנקות dependency audit בלי לשבור את השרת.
+  - נוספו בדיקות `Pages Functions` למסלולי guest read, Google create, reply, guest create rejection, view tracking, like, unlike, self-delete, foreign-delete rejection ו-admin delete.
+  - `npm test` עבר עם `4` קבצי בדיקה ו-`26` בדיקות.
 
 ## 5. Client UX
 
@@ -218,7 +222,7 @@
 
 ### 7.1 sanity checks פונקציונליים
 
-- סטטוס: `todo`
+- סטטוס: `done`
 - מה לעשות:
   - אורח רואה תגובות.
   - אורח לא יכול להגיב.
@@ -231,10 +235,20 @@
 - זמן משוער: `1-2 שעות`
 - Definition of Done:
   - כל תרחיש מסומן `pass` עם הוכחה.
+- הוכחה:
+  - `guest read`: מכוסה בבדיקת `lets a guest read comments without authentication`.
+  - `guest cannot create`: מכוסה בבדיקת `blocks unauthenticated comment creation before writing to D1`.
+  - `Google user create`: מכוסה בבדיקת `allows a Google user to create a comment and returns the inserted row`.
+  - `reply`: מכוסה בבדיקת `allows a Google user to create a reply`.
+  - `like`: מכוסה בבדיקת `allows a Google user to like a comment`.
+  - `unlike/dedupe`: מכוסה בבדיקת `toggles off an existing like for the same Google user`.
+  - `view count`: מכוסה בבדיקת `tracks a comment view when the viewer key is stable`.
+  - `self-delete`: מכוסה בבדיקת `allows a regular user to delete their own comment`.
+  - `admin-delete`: מכוסה בבדיקת `allows an admin to delete another author comment`.
 
 ### 7.2 sanity checks רגרסיה
 
-- סטטוס: `todo`
+- סטטוס: `done`
 - מה לעשות:
   - לבדוק שה-flow הראשי לא נשבר.
   - לבדוק mobile layout.
@@ -245,6 +259,13 @@
 - זמן משוער: `1-2 שעות`
 - Definition of Done:
   - אין regression בזרימת הפרוטוקול.
+- הוכחה:
+  - `2026-07-28`: `npm run build` עבר.
+  - `2026-07-28`: `npm run lint` עבר.
+  - `2026-07-28`: `npm test` עבר עם `26` בדיקות.
+  - `2026-07-28`: `npm audit` ו-`npm audit --omit=dev` החזירו `found 0 vulnerabilities`.
+  - `2026-07-28`: `vite preview` מקומי על `http://127.0.0.1:4173/` החזיר HTML ו-assets תקינים מה-`dist`.
+  - `2026-07-28`: בוצע smoke ויזואלי עם Playwright Chromium ב-viewport מובייל `390x844` ובדסקטופ `1440x1000`; שני המסכים נטענו למסך הפרוטוקול הראשי ללא blank state אחרי השהיה.
 
 ## 8. Deployment And Production Proof
 
@@ -267,7 +288,7 @@
 
 ### 9.1 ליישר tracker + vault
 
-- סטטוס: `todo`
+- סטטוס: `in_progress`
 - מה לעשות:
   - לעדכן את מסמכי ה-tracking בריפו.
   - לעדכן `current.md` ו-`tasks.md` בכספת.
@@ -276,3 +297,6 @@
 - זמן משוער: `15-30 דקות`
 - Definition of Done:
   - אין פער בין מצב הקוד למצב התיעוד.
+- התקדמות:
+  - `2026-07-28`: מסמך tracker זה עודכן בעקבות הרחבת הבדיקות, ניקוי dependency audit, והוספת `.nvmrc`.
+  - נדרש עדיין עדכון כספת ושמירה לענן אחרי commit/push.

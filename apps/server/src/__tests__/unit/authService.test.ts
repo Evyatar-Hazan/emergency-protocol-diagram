@@ -1,18 +1,32 @@
-import { verifyGoogleToken } from '../../services/authService';
-import { PrismaClient } from '@prisma/client';
+import { describe, expect, it, vi } from 'vitest';
+import { loginOrCreateUser, verifyGoogleToken } from '../../services/authService';
 
-jest.mock('google-auth-library', () => ({
-  OAuth2Client: jest.fn().mockImplementation(() => ({
-    verifyIdToken: jest.fn().mockRejectedValue(new Error('invalid token')),
-  })),
+const prismaMock = vi.hoisted(() => ({
+  user: {
+    findUnique: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+  },
 }));
 
-jest.mock('@prisma/client');
+vi.mock('google-auth-library', () => ({
+  OAuth2Client: vi.fn(function OAuth2Client() {
+    return {
+    verifyIdToken: vi.fn().mockRejectedValue(new Error('invalid token')),
+    };
+  }),
+}));
+
+vi.mock('@prisma/client', () => ({
+  PrismaClient: vi.fn(function PrismaClient() {
+    return prismaMock;
+  }),
+}));
 
 describe('Auth Service', () => {
   describe('verifyGoogleToken', () => {
     it('should return null for invalid token', async () => {
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
       const result = await verifyGoogleToken('invalid-token');
 
       expect(result).toBeNull();
@@ -47,15 +61,22 @@ describe('Auth Service', () => {
         updatedAt: new Date(),
       };
 
-      (PrismaClient as any).mockImplementation(() => ({
-        user: {
-          findUnique: jest.fn().mockResolvedValue(null),
-          create: jest.fn().mockResolvedValue(mockUser),
-        },
-      }));
+      prismaMock.user.findUnique.mockResolvedValue(null);
+      prismaMock.user.create.mockResolvedValue(mockUser);
 
-      // Note: This test would work better with proper Prisma Client setup
-      expect(payload.email).toBe('newuser@example.com');
+      const result = await loginOrCreateUser(payload);
+
+      expect(prismaMock.user.create).toHaveBeenCalledWith({
+        data: {
+          email: 'newuser@example.com',
+          googleId: 'google-id',
+          name: 'New User',
+          picture: 'https://example.com/pic.jpg',
+          isAdmin: false,
+        },
+      });
+      expect(result.user.email).toBe('newuser@example.com');
+      expect(result.token).toEqual(expect.any(String));
     });
   });
 });

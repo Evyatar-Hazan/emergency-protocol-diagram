@@ -1,8 +1,9 @@
+import { describe, expect, it, vi, type Mock } from 'vitest';
 import request from 'supertest';
 import app from '../../index';
 import * as authService from '../../services/authService';
 
-jest.mock('../../services/authService');
+vi.mock('../../services/authService');
 
 describe('Auth Routes', () => {
   describe('POST /api/auth/google-login', () => {
@@ -17,14 +18,14 @@ describe('Auth Routes', () => {
 
       const mockToken = 'mock-jwt-token';
 
-      (authService.verifyGoogleToken as jest.Mock).mockResolvedValue({
+      (authService.verifyGoogleToken as Mock).mockResolvedValue({
         sub: 'google-id',
         email: 'test@example.com',
         name: 'Test User',
         picture: 'https://example.com/pic.jpg',
       });
 
-      (authService.loginOrCreateUser as jest.Mock).mockResolvedValue({
+      (authService.loginOrCreateUser as Mock).mockResolvedValue({
         user: mockUser,
         token: mockToken,
       });
@@ -46,7 +47,7 @@ describe('Auth Routes', () => {
     });
 
     it('should return 401 if token is invalid', async () => {
-      (authService.verifyGoogleToken as jest.Mock).mockResolvedValue(null);
+      (authService.verifyGoogleToken as Mock).mockResolvedValue(null);
 
       const response = await request(app).post('/api/auth/google-login').send({
         idToken: 'invalid-token',
