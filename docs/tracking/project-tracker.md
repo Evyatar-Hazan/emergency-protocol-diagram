@@ -24,19 +24,21 @@
 
 ## תמונת מצב מאומתת
 
-נכון ל-`2026-08-14`:
+נכון ל-`2026-08-14`, עבור בסיס האפליקציה האחרון שאומת לפני איחוד מסמכי המעקב:
 
 - branch: `main`
-- commit: `1bce7b2`
-- Git: נקי ומסונכרן ל-`origin/main`
+- application baseline: `1bce7b2`
+- Git: נקי ומסונכרן ל-`origin/main`; את HEAD הנוכחי קוראים מ-Git בזמן אמת ולא משכפלים במסמך
 - validation תחת Node `20.20.2`: `build`, `lint`, ו-`26/26` בדיקות עברו
-- GitHub Actions: ריצת `Validate` מספר `30363425364` עברה על `1bce7b2`
-- Cloudflare Pages: deployment `87302ab4` משרת את `1bce7b2`
+- GitHub Actions: ריצת `Validate` מספר `30363425364` עברה על בסיס האפליקציה `1bce7b2`
+- Cloudflare Pages: deployment פונקציונלי `87302ab4` אימת את בסיס האפליקציה `1bce7b2`
 - Production: `https://bls-protocol.evyatarhazan.com/` מחזיר `200`
 - D1 health: `/api/health` מחזיר `{"status":"ok","database":"ready"}`
 - Comments read path: `/api/comments/pulse_check` מחזיר `{"comments":[]}`
 - `npm audit`: שתי חולשות `high`
 - `npm audit --omit=dev`: חולשת `high` אחת ב-`nanoid 3.3.16`
+
+commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנות את האפליקציה. לכן ה-HEAD, ריצת ה-CI וה-deployment האחרונים נבדקים בזמן אמת ואינם נשמרים כאן כערכים “אחרונים” קבועים.
 
 ## Backlog פעיל
 
