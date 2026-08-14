@@ -30,6 +30,13 @@ interface FlowState {
   loadData: (data: FlowData) => void;
 }
 
+const toHistoryEntry = (protocolId: string, nodeId: string) => `${protocolId}:${nodeId}`;
+
+const fromHistoryEntry = (entry: string): [protocolId: string, nodeId: string] => {
+  const separatorIndex = entry.indexOf(':');
+  return [entry.slice(0, separatorIndex), entry.slice(separatorIndex + 1)];
+};
+
 export const useFlowStore = create<FlowState>((set, get) => ({
   // Initial state
   flowData: emptyFlowData,
@@ -67,13 +74,13 @@ export const useFlowStore = create<FlowState>((set, get) => ({
       activeProtocolId: protocolId,
       currentNode: startNode,
       currentNodeId: protocol.startNode,
-      navigationHistory: [protocol.startNode],
+      navigationHistory: [toHistoryEntry(protocolId, protocol.startNode)],
     });
   },
 
   // ניווט לצומת ספציפי
   navigateToNode: (nodeId: string) => {
-    const { activeProtocol, navigationHistory, flowData } = get();
+    const { activeProtocol, activeProtocolId, navigationHistory, flowData } = get();
     
     // בדיקה אם זה קישור בין-פרוטוקולי (פורמט: "protocol:node")
     if (nodeId.includes(':')) {
@@ -98,7 +105,7 @@ export const useFlowStore = create<FlowState>((set, get) => ({
         activeProtocolId: targetProtocolId,
         currentNode: targetNode,
         currentNodeId: targetNodeId,
-        navigationHistory: [...navigationHistory, `${targetProtocolId}:${targetNodeId}`],
+        navigationHistory: [...navigationHistory, toHistoryEntry(targetProtocolId, targetNodeId)],
       });
       
       // גלול למעלה
@@ -107,7 +114,7 @@ export const useFlowStore = create<FlowState>((set, get) => ({
     }
     
     // ניווט רגיל בתוך אותו פרוטוקול
-    if (!activeProtocol) {
+    if (!activeProtocol || !activeProtocolId) {
       console.error('No active protocol');
       return;
     }
@@ -121,7 +128,7 @@ export const useFlowStore = create<FlowState>((set, get) => ({
     set({
       currentNode: node,
       currentNodeId: nodeId,
-      navigationHistory: [...navigationHistory, nodeId],
+      navigationHistory: [...navigationHistory, toHistoryEntry(activeProtocolId, nodeId)],
     });
     
     // גלול למעלה
@@ -130,15 +137,23 @@ export const useFlowStore = create<FlowState>((set, get) => ({
 
   // חזרה לצומת קודם
   goBack: () => {
-    const { navigationHistory, activeProtocol } = get();
-    if (navigationHistory.length <= 1 || !activeProtocol) return;
+    const { navigationHistory, flowData } = get();
+    if (navigationHistory.length <= 1) return;
 
     const newHistory = [...navigationHistory];
     newHistory.pop(); // הסר את הצומת הנוכחי
-    const previousNodeId = newHistory[newHistory.length - 1];
-    const previousNode = activeProtocol.nodes[previousNodeId];
+    const [previousProtocolId, previousNodeId] = fromHistoryEntry(newHistory[newHistory.length - 1]);
+    const previousProtocol = flowData.protocols[previousProtocolId];
+    const previousNode = previousProtocol?.nodes[previousNodeId];
+
+    if (!previousProtocol || !previousNode) {
+      console.error(`History target ${previousProtocolId}:${previousNodeId} not found`);
+      return;
+    }
 
     set({
+      activeProtocol: previousProtocol,
+      activeProtocolId: previousProtocolId,
       currentNode: previousNode,
       currentNodeId: previousNodeId,
       navigationHistory: newHistory,

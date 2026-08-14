@@ -70,7 +70,10 @@ export function FlowNavigation({
           </span>
           <div className="flex items-center gap-2">
             {navigationHistory.map((nodeId, index) => {
-              const node = protocol.nodes[nodeId];
+              const separatorIndex = nodeId.indexOf(':');
+              const historyProtocolId = nodeId.slice(0, separatorIndex);
+              const historyNodeId = nodeId.slice(separatorIndex + 1);
+              const node = historyProtocolId === protocol.id ? protocol.nodes[historyNodeId] : null;
               const isLast = index === navigationHistory.length - 1;
               
               return (
@@ -81,9 +84,9 @@ export function FlowNavigation({
                         ? 'bg-blue-600 text-white font-bold'
                         : 'bg-gray-200 text-gray-700'
                     }`}
-                    title={node?.title || nodeId}
+                    title={node?.title || historyNodeId}
                   >
-                    {node?.title || nodeId}
+                    {node?.title || historyNodeId}
                   </span>
                   {!isLast && <span className="text-gray-400">◀</span>}
                 </div>

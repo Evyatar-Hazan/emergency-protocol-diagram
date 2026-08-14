@@ -1,14 +1,24 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
+const repositoryRoot = fileURLToPath(new URL('../..', import.meta.url));
+
 export default defineConfig({
+  root: repositoryRoot,
   test: {
     environment: 'node',
-    include: ['src/**/*.test.ts', '../../functions/**/*.test.ts'],
+    include: ['apps/server/src/**/*.test.ts'],
     exclude: ['node_modules', 'dist'],
-    setupFiles: ['src/__tests__/setup.ts'],
+    setupFiles: ['apps/server/src/__tests__/setup.ts'],
     coverage: {
-      include: ['src/**/*.ts'],
-      exclude: ['src/**/*.d.ts', 'src/**/index.ts', 'src/**/__tests__/**'],
+      include: ['functions/**/*.ts'],
+      exclude: ['functions/**/*.d.ts', 'functions/_lib/types.ts'],
+      thresholds: {
+        statements: 80,
+        branches: 70,
+        functions: 80,
+        lines: 80,
+      },
     },
   },
 });

@@ -5,6 +5,10 @@ import {
   onRequestPost as handleCommentPost,
   onRequestDelete as handleCommentDelete,
 } from '../../../../../functions/api/comments/[[path]]';
+import {
+  onRequestGet as handleAuthGet,
+  onRequestPost as handleAuthPost,
+} from '../../../../../functions/api/auth/[[path]]';
 import { signJwt } from '../../../../../functions/_lib/jwt';
 import type { Env } from '../../../../../functions/_lib/types';
 
@@ -61,6 +65,91 @@ describe('Cloudflare Pages Functions', () => {
     await expect(response.json()).resolves.toEqual({
       status: 'ok',
       database: 'ready',
+    });
+    expect(response.status).toBe(200);
+  });
+
+  it('rejects a Google login request without an ID token', async () => {
+    const response = await handleAuthPost({
+      env: createEnv(),
+      request: new Request('https://example.com/api/auth/google-login', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({}),
+      }),
+    });
+
+    await expect(response.json()).resolves.toEqual({ message: 'ID token required' });
+    expect(response.status).toBe(400);
+  });
+
+  it('rejects an ID token that Google does not validate', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(null, { status: 401 })
+    );
+
+    const response = await handleAuthPost({
+      env: createEnv(),
+      request: new Request('https://example.com/api/auth/google-login', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ idToken: 'invalid-token' }),
+      }),
+    });
+
+    await expect(response.json()).resolves.toEqual({ message: 'Invalid token' });
+    expect(response.status).toBe(401);
+    expect(fetchMock).toHaveBeenCalledOnce();
+    fetchMock.mockRestore();
+  });
+
+  it('creates a production session for a verified Google user', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      Response.json({
+        aud: 'client-id',
+        email: 'Admin@Example.com',
+        email_verified: true,
+        name: 'Admin User',
+        picture: 'https://example.com/admin.jpg',
+        sub: 'google-admin-1',
+      })
+    );
+    const env = createEnv({ first: null }, {});
+    env.GOOGLE_CLIENT_ID = 'client-id';
+    env.ADMIN_EMAIL = 'admin@example.com';
+
+    const response = await handleAuthPost({
+      env,
+      request: new Request('https://example.com/api/auth/google-login', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ idToken: 'verified-token' }),
+      }),
+    });
+
+    await expect(response.json()).resolves.toMatchObject({
+      token: expect.any(String),
+      user: {
+        email: 'admin@example.com',
+        isAdmin: true,
+        name: 'Admin User',
+      },
+    });
+    expect(response.status).toBe(200);
+    expect(env.DB.prepare).toHaveBeenCalledTimes(2);
+    fetchMock.mockRestore();
+  });
+
+  it('returns the current user from a valid production session', async () => {
+    const response = await handleAuthGet({
+      env: createEnv(),
+      request: new Request('https://example.com/api/auth/me', {
+        headers: { authorization: await createAuthHeader({ id: 'user-1' }) },
+      }),
+    });
+
+    await expect(response.json()).resolves.toMatchObject({
+      user: { id: 'user-1', email: 'user-1@example.com', isAdmin: false },
     });
     expect(response.status).toBe(200);
   });
