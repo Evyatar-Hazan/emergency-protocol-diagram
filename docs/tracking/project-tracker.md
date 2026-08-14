@@ -27,17 +27,19 @@
 נכון ל-`2026-08-14`, עבור בסיס האפליקציה והאבטחה האחרון שאומת:
 
 - branch: `main`
-- application baseline: `3deeb9d`
+- application baseline: `c7275a5`
 - Git: נקי ומסונכרן ל-`origin/main`; את HEAD הנוכחי קוראים מ-Git בזמן אמת ולא משכפלים במסמך
 - סביבת shell מקומית: `fnm 1.39.0` מגדיר את Node `20.20.2` כברירת מחדל ומכבד את `.nvmrc`
-- validation תחת Node `20.20.2`: `build`, `lint`, ו-`26/26` בדיקות עברו
-- GitHub Actions: ריצת `Validate` מספר `31793152326` עברה, כולל production dependency audit
-- Cloudflare Pages: deployment פונקציונלי `595fd14e` נוצר מ-`3deeb9d`
+- validation תחת Node `20.20.2`: `build`, `lint`, ו-`42/42` בדיקות עברו
+- GitHub Actions: ריצת `Validate` מספר `31800392473` עברה, כולל production dependency audit ושני coverage gates
+- Cloudflare Pages: deployment פונקציונלי `91fe60b6` נוצר מ-`c7275a5`
 - Production: `https://bls-protocol.evyatarhazan.com/` מחזיר `200`
 - D1 health: `/api/health` מחזיר `{"status":"ok","database":"ready"}`
 - Comments read path: `/api/comments/pulse_check` מחזיר `{"comments":[]}`
 - `npm audit`: ‏0 חולשות
 - `npm audit --omit=dev`: ‏0 חולשות
+- Production API coverage: ‏83.85% statements, ‏71.21% branches, ‏83.33% functions, ‏84.65% lines
+- Client critical-logic coverage: ‏96.62% statements, ‏92.10% branches, ‏100% functions, ‏97.64% lines
 
 commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנות את האפליקציה. לכן ה-HEAD, ריצת ה-CI וה-deployment האחרונים נבדקים בזמן אמת ואינם נשמרים כאן כערכים “אחרונים” קבועים.
 
@@ -49,16 +51,18 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 
 | ID | נסגר | תוצאה | הוכחה |
 |---|---|---|---|
+| `QA-004` | `2026-08-14` | נוסף client test harness עם 12 בדיקות ו-gate ממוקד ללוגיקה קריטית | [QA Coverage Gate Audit](./qa-coverage-gate-audit.md), CI `31800392473` |
+| `QA-003` | `2026-08-14` | back navigation משחזר protocol ו-node לאחר מעבר חוצה-פרוטוקולים | unit regression + forward/back בדפדפן המקומי |
+| `QA-002` | `2026-08-14` | נוספו ארבע בדיקות ל-Cloudflare Auth production handlers | 30 בדיקות server עברו; production API coverage כולל auth |
+| `QA-001` | `2026-08-14` | coverage הועבר מ-Express legacy ל-Cloudflare Production API ונוסף gate ל-CI | thresholds ‏80/70/80/80; CI `31800392473` עבר |
 | `ENV-001` | `2026-08-14` | `fnm 1.39.0` הוגדר עם Node `20.20.2` כברירת מחדל ומעבר אוטומטי לפי `.nvmrc` | shell חדש: `node -v` = `v20.20.2`; `npm ci`, `build`, `lint`, `26/26` בדיקות ושני האודיטים עברו |
 | `SEC-001` | `2026-08-14` | `nanoid` עודכן מ-`3.3.16` ל-`3.3.18`; production audit נקי | commit `3deeb9d`, `npm audit --omit=dev` = 0 |
 | `SEC-002` | `2026-08-14` | `brace-expansion` עודכן מ-`5.0.8` ל-`5.0.9`; audit מלא נקי | commit `3deeb9d`, `npm audit` = 0 |
 | `CI-001` | `2026-08-14` | נוסף gate של `npm audit --omit=dev --audit-level=high` | GitHub Actions `31793152326` עבר |
 
-## מועמד שאינו backlog פעיל
+## מועמדים שאינם backlog פעיל
 
-| ID | סטטוס | נושא | תנאי לפתיחה |
-|---|---|---|---|
-| `QA-CANDIDATE-001` | candidate | להפוך coverage ל-gate מחייב | לפתוח רק לאחר audit שמגדיר baseline, יעד coverage וסיכון ל-false confidence |
+אין כרגע מועמדים פתוחים. `QA-CANDIDATE-001` עבר audit, פוצל ל-`QA-001` עד `QA-004` ונסגר.
 
 ## כללי Validation קבועים
 
@@ -67,6 +71,7 @@ npm ci
 npm run build
 npm run lint
 npm test
+npm run test:coverage
 npm audit
 npm audit --omit=dev
 ```
@@ -93,6 +98,7 @@ npm audit --omit=dev
 - [REM-003 Audit Gate](./rem-003-audit-gate.md)
 - [Reference scenarios E2E](./reference-scenarios-e2e.md)
 - [Coverage proof units 3–5](./coverage-proof-units-3-5.md)
+- [QA Coverage Gate Audit](./qa-coverage-gate-audit.md)
 - [REM-002 sync verification](./rem-002-sync-verification.md)
 
 ## סגירת פער מקורות האמת
