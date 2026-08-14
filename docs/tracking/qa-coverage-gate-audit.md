@@ -79,7 +79,7 @@
 
 ## הגנות נגד False Confidence
 
-1. שם שלב ה-CI הוא `Enforce production API coverage`; הוא אינו טוען ל-coverage מלא של המוצר.
+1. שם שלב ה-CI הוא `Enforce scoped coverage gates`; הוא מפעיל שני scopes מפורשים ואינו טוען ל-coverage מלא של המוצר.
 2. client coverage מוגבל לשלושה מודולי לוגיקה מפורשים; אין טענה שרכיבי React מכוסים.
 3. build, lint, tests, dependency audits, reference scenarios ו-Production smoke נשארים gates נפרדים.
 4. אחוזים אינם מחליפים בדיקות הרשאה, בדיקות שליליות או בדיקת UI מרונדרת.

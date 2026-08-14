@@ -38,5 +38,5 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Enforce production API coverage
+      - name: Enforce scoped coverage gates
         run: npm run test:coverage
