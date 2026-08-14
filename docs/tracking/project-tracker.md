@@ -29,6 +29,7 @@
 - branch: `main`
 - application baseline: `3deeb9d`
 - Git: נקי ומסונכרן ל-`origin/main`; את HEAD הנוכחי קוראים מ-Git בזמן אמת ולא משכפלים במסמך
+- סביבת shell מקומית: `fnm 1.39.0` מגדיר את Node `20.20.2` כברירת מחדל ומכבד את `.nvmrc`
 - validation תחת Node `20.20.2`: `build`, `lint`, ו-`26/26` בדיקות עברו
 - GitHub Actions: ריצת `Validate` מספר `31793152326` עברה, כולל production dependency audit
 - Cloudflare Pages: deployment פונקציונלי `595fd14e` נוצר מ-`3deeb9d`
@@ -42,14 +43,13 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 
 ## Backlog פעיל
 
-| ID | עדיפות | סטטוס | משימה | סיבה | Definition of Done | אימות |
-|---|---|---|---|---|---|---|
-| `ENV-001` | P2 | open | ליישר את סביבת ה-validation המקומית ל-Node 20 כברירת מחדל | ה-shell המקומי הוא Node `22.23.2`, בעוד CI ו-`.nvmrc` הם Node 20 | `node -v` מחזיר Node 20 לפני ריצת validation רגילה | `node -v`, `npm ci`, `build`, `lint`, `test` |
+אין כרגע משימות פתוחות מאושרות.
 
 ## הושלם לאחרונה
 
 | ID | נסגר | תוצאה | הוכחה |
 |---|---|---|---|
+| `ENV-001` | `2026-08-14` | `fnm 1.39.0` הוגדר עם Node `20.20.2` כברירת מחדל ומעבר אוטומטי לפי `.nvmrc` | shell חדש: `node -v` = `v20.20.2`; `npm ci`, `build`, `lint`, `26/26` בדיקות ושני האודיטים עברו |
 | `SEC-001` | `2026-08-14` | `nanoid` עודכן מ-`3.3.16` ל-`3.3.18`; production audit נקי | commit `3deeb9d`, `npm audit --omit=dev` = 0 |
 | `SEC-002` | `2026-08-14` | `brace-expansion` עודכן מ-`5.0.8` ל-`5.0.9`; audit מלא נקי | commit `3deeb9d`, `npm audit` = 0 |
 | `CI-001` | `2026-08-14` | נוסף gate של `npm audit --omit=dev --audit-level=high` | GitHub Actions `31793152326` עבר |
