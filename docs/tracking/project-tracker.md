@@ -24,19 +24,19 @@
 
 ## תמונת מצב מאומתת
 
-נכון ל-`2026-08-14`, עבור בסיס האפליקציה האחרון שאומת לפני איחוד מסמכי המעקב:
+נכון ל-`2026-08-14`, עבור בסיס האפליקציה והאבטחה האחרון שאומת:
 
 - branch: `main`
-- application baseline: `1bce7b2`
+- application baseline: `3deeb9d`
 - Git: נקי ומסונכרן ל-`origin/main`; את HEAD הנוכחי קוראים מ-Git בזמן אמת ולא משכפלים במסמך
 - validation תחת Node `20.20.2`: `build`, `lint`, ו-`26/26` בדיקות עברו
-- GitHub Actions: ריצת `Validate` מספר `30363425364` עברה על בסיס האפליקציה `1bce7b2`
-- Cloudflare Pages: deployment פונקציונלי `87302ab4` אימת את בסיס האפליקציה `1bce7b2`
+- GitHub Actions: ריצת `Validate` מספר `31793152326` עברה, כולל production dependency audit
+- Cloudflare Pages: deployment פונקציונלי `595fd14e` נוצר מ-`3deeb9d`
 - Production: `https://bls-protocol.evyatarhazan.com/` מחזיר `200`
 - D1 health: `/api/health` מחזיר `{"status":"ok","database":"ready"}`
 - Comments read path: `/api/comments/pulse_check` מחזיר `{"comments":[]}`
-- `npm audit`: שתי חולשות `high`
-- `npm audit --omit=dev`: חולשת `high` אחת ב-`nanoid 3.3.16`
+- `npm audit`: ‏0 חולשות
+- `npm audit --omit=dev`: ‏0 חולשות
 
 commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנות את האפליקציה. לכן ה-HEAD, ריצת ה-CI וה-deployment האחרונים נבדקים בזמן אמת ואינם נשמרים כאן כערכים “אחרונים” קבועים.
 
@@ -44,10 +44,15 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 
 | ID | עדיפות | סטטוס | משימה | סיבה | Definition of Done | אימות |
 |---|---|---|---|---|---|---|
-| `SEC-001` | P1 | open | לתקן את `nanoid 3.3.16` במסלול `postcss` | החולשה מופיעה גם ב-`npm audit --omit=dev` | `nanoid >=3.3.18` נפתר דרך עדכון lockfile/שרשרת התלויות ללא regression | `npm audit --omit=dev`, `build`, `lint`, `test` |
-| `SEC-002` | P2 | open | לתקן את `brace-expansion 5.0.8` במסלול ESLint/typescript-eslint | חולשת tooling מסוג `high` ב-audit המלא | `npm audit` מחזיר 0 חולשות ללא `--force` | `npm audit`, `lint`, `build`, `test` |
-| `CI-001` | P1 | open | להוסיף `npm audit --omit=dev` ל-CI כ-gate נפרד | CI ירוק כיום אינו מוכיח ש-production dependencies נקיות | workflow נכשל על production advisory ועובר כשה-audit נקי | בדיקת workflow ב-PR או push מבוקר |
 | `ENV-001` | P2 | open | ליישר את סביבת ה-validation המקומית ל-Node 20 כברירת מחדל | ה-shell המקומי הוא Node `22.23.2`, בעוד CI ו-`.nvmrc` הם Node 20 | `node -v` מחזיר Node 20 לפני ריצת validation רגילה | `node -v`, `npm ci`, `build`, `lint`, `test` |
+
+## הושלם לאחרונה
+
+| ID | נסגר | תוצאה | הוכחה |
+|---|---|---|---|
+| `SEC-001` | `2026-08-14` | `nanoid` עודכן מ-`3.3.16` ל-`3.3.18`; production audit נקי | commit `3deeb9d`, `npm audit --omit=dev` = 0 |
+| `SEC-002` | `2026-08-14` | `brace-expansion` עודכן מ-`5.0.8` ל-`5.0.9`; audit מלא נקי | commit `3deeb9d`, `npm audit` = 0 |
+| `CI-001` | `2026-08-14` | נוסף gate של `npm audit --omit=dev --audit-level=high` | GitHub Actions `31793152326` עבר |
 
 ## מועמד שאינו backlog פעיל
 
