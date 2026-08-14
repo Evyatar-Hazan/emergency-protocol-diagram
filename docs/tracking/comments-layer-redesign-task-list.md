@@ -2,9 +2,13 @@
 
 ## סטטוס מסמך
 
-- תאריך: `2026-07-08`
-- סטטוס: `active-backlog`
+- תאריך פתיחה: `2026-07-08`
+- תאריך סגירה: `2026-08-14`
+- סטטוס: `closed-history`
 - מסמך אפיון קשור: [comments-layer-redesign-spec.md](/Users/evyatarhazan/Desktop/project/emergency-protocol-diagram/docs/tracking/comments-layer-redesign-spec.md)
+- tracker קנוני נוכחי: [project-tracker.md](./project-tracker.md)
+
+כל סעיפי המימוש והאימות במסמך הזה הושלמו. המסמך נשמר כהיסטוריית ביצוע ואינו backlog פעיל.
 
 ## עקרון ניהול
 
@@ -288,7 +292,7 @@
 
 ### 9.1 ליישר tracker + vault
 
-- סטטוס: `in_progress`
+- סטטוס: `done`
 - מה לעשות:
   - לעדכן את מסמכי ה-tracking בריפו.
   - לעדכן `current.md` ו-`tasks.md` בכספת.
@@ -299,4 +303,4 @@
   - אין פער בין מצב הקוד למצב התיעוד.
 - התקדמות:
   - `2026-07-28`: מסמך tracker זה עודכן בעקבות הרחבת הבדיקות, ניקוי dependency audit, והוספת `.nvmrc`.
-  - נדרש עדיין עדכון כספת ושמירה לענן אחרי commit/push.
+  - `2026-08-14`: נוצר [project-tracker.md](./project-tracker.md) כמקור האמת המורחב; הכספת צומצמה לתקציר ומפנה אליו.

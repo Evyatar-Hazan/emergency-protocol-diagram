@@ -43,6 +43,12 @@ npm audit
 GitHub Actions runs install, build, lint, and server tests on every push and pull request.
 Use `npm audit --omit=dev` when checking production dependency exposure separately from development tooling.
 
+## Project Tracking
+
+The canonical expanded status and backlog live in [`docs/tracking/project-tracker.md`](docs/tracking/project-tracker.md).
+Phase, redesign, and audit documents are supporting history and evidence; they must not be treated as competing open-task lists.
+The AI Memory OS vault stores only a concise project summary and links back to the repository tracker.
+
 ## Production Build
 
 Cloudflare Pages is the production deployment target for the current checkout. It builds this repository from the repo root using:
