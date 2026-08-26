@@ -65,6 +65,16 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 - Production API: `/api/comments/pulse_check` החזיר `{"comments":[]}` מהדומיין החי ומכתובת ה-deployment; הבאנדל החי `assets/index-BisDekXL.js` הכיל מחרוזות צפויות מהזרימה ושכבת הקהילה.
 - Backlog: לא נסגרו משימות חדשות מאז snapshot `2026-08-14`; 21 המשימות המאושרות נשארות פתוחות לפי התיעדוף הקיים.
 
+## Weekly audit snapshot — 2026-08-26
+
+- קוד מקומי: `npm ci --dry-run`, ‏`build`, ‏`lint`, ‏`test`, ‏`test:coverage`, ‏`npm audit --audit-level=high` ו-`npm audit --omit=dev --audit-level=high` עברו תחת Node `20.20.2`.
+- בדיקות: `12/12` בדיקות client ו-`30/30` בדיקות server עברו; סיכום coverage נשאר Production API ‏83.85/71.21/83.33/84.65 ו-client critical logic ‏96.62/92.10/100/97.64.
+- מצב התקנה: `npm ls --depth=0` חזר בקוד `0`, אך עדיין מציג packages `extraneous`; `npm ci --dry-run` מראה שהיה מסיר aliases/חבילות extraneous ומוסיף optional platform packages. `ENV-003` נשאר פתוח.
+- Git ו-CI: `main` נקי ומסונכרן ל-`origin/main` על `83dc257`; GitHub Actions `Validate` run `32105913062` עבר על אותו commit.
+- Cloudflare Pages: Production deployment `e4f39ec1` נוצר מ-`83dc257`; הדומיין החי וה-deployment URL החזירו `200`, ו-`/api/health` החזיר `{"status":"ok","database":"ready"}`.
+- Production API: `/api/comments/pulse_check` החזיר `{"comments":[]}` מהדומיין החי ומכתובת ה-deployment; הבאנדל החי `assets/index-BisDekXL.js` הכיל מחרוזות צפויות מהזרימה ושכבת הקהילה.
+- Backlog: לא נסגרו משימות חדשות מאז snapshot `2026-08-18`; `ENV-003` תועד כשורת P3 מלאה כי הוא כבר הופיע בתקציר הכספת וב-snapshot הקודם.
+
 ## Backlog פעיל
 
 כל המשימות להלן נפתחו על בסיס ה-audit העובדתי מ-`2026-08-14` ועומדות ב-[REM-003 Audit Gate](./rem-003-audit-gate.md).
@@ -103,6 +113,7 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 | `CONFIG-001` | Open | `flow-config.json` מצהיר `startNode: safety` ו-continuous-scroll, בעוד הזרימה בפועל מתחילה ב-`report_departure` ופועלת step-by-step. | לאמת שימוש, להסיר קונפיגורציה מתה או ליישר אותה למימוש ולמקור האמת. | אין config סותר/לא בשימוש ללא הסבר; start node ומצב התצוגה מוגדרים במקום קנוני אחד. | חיפוש references + tests לגרסת config + smoke התחלה. |
 | `SEC-003` | Open | בפרודקשן לא נצפו CSP, HSTS, X-Frame-Options או Permissions-Policy. | להגדיר מדיניות headers תואמת Cloudflare ו-Google OAuth, תחילה ב-report-only כאשר מתאים. | headers מאושרים מופיעים בתגובות בלי לשבור OAuth, assets, navigation או API. | `curl -I` + CSP report review + login/smoke + security headers scan. |
 | `ENV-002` | Open | validation תחת Node 20 עבר, אך shell אוטומטי לא-login הציג בתחילת ה-audit Node 22.23.2 בניגוד ל-`.nvmrc`. | ליישר או לתעד במפורש את טעינת Node עבור CI, automation ו-shell לא-interactive. | פקודות הפרויקט משתמשות ב-Node 20.20.2 בכל נתיב נתמך, או נכשלות מוקדם עם הודעה ברורה. | `node -v` ב-login/non-login/CI + full validation. |
+| `ENV-003` | Open | `npm ci` ו-`npm install --ignore-scripts` נתקעו מקומית ב-2026-08-18; ב-2026-08-26 `npm ci --dry-run` עבר אך עדיין זיהה aliases/packages `extraneous`, ו-`npm ls --depth=0` חזר `0` עם packages `extraneous`. | לבדוק למה npm משאיר/מייצר packages `extraneous`, לנקות install state מקומי בלי לפגוע ב-lockfile, ולתעד פקודת התקנה אמינה. | `npm ci` מלא מסתיים בזמן סביר; `npm ls --depth=0` ללא `extraneous`; validation מלא נשאר ירוק. | `npm ci` מסביבה נקייה + `npm ls --depth=0` + build/lint/test/coverage/audit. |
 | `DOC-001` | Open | בכספת קיים קובץ לא-קנוני `tasks 3.md` לצד `tasks.md`, עם תוכן ישן וסיכון לסתירה. | לבדוק אם יש בו מידע ייחודי, למזג רק מידע תקף ואז לארכב/להסיר את כפילות הסנכרון באישור מתאים. | קיים קובץ tasks קנוני אחד בלבד ואין אובדן מידע תקף. | השוואת diff + חיפוש קישורים + בדיקת Git/Obsidian לאחר הטיפול. |
 
 ## הושלם לאחרונה
