@@ -2,16 +2,16 @@
 
 Task 29 intentionally does not edit `package.json` or `package-lock.json` while the dependency-upgrade task owns those files.
 
-For a reproducible clean checkout, merge this dependency through that owner and regenerate the lockfile with the repository's pinned Node/npm toolchain:
+No Wrangler dependency is integrated yet. The original `4.102.0` proposal requires Node `>=22.0.0`, while this repository and CI remain on Node 20. The Node-20-compatible `4.86.0` release was also rejected because the current npm audit reports High-severity vulnerabilities through its Miniflare dependency tree. npm's patched Wrangler recommendation is `4.146.0`, which likewise requires Node `>=22.0.0`.
 
 ```json
 {
   "devDependencies": {
-    "wrangler": "4.102.0"
+    "wrangler": "4.146.0"
   }
 }
 ```
 
-Wrangler `4.102.0` declares Node `>=22.0.0`. The repository currently pins Node 20 in `.nvmrc`, and the server workspace pins `@types/node@20.10.6`, below Vite 8's `^20.19.0 || >=22.12.0` peer range. A direct `npm install wrangler@4.102.0` therefore fails with `ERESOLVE`. Integrate Wrangler together with task31's Node and `@types/node` alignment; do not use `--force` or `--legacy-peer-deps`.
+Adding the patched pin therefore requires explicit approval to move the project-scoped runtime and GitHub Actions to Node 22 and to align the server's `@types/node` with Vite 8. Do not use `--force`, `--legacy-peer-deps`, dependency overrides, or an older vulnerable Wrangler release.
 
 The local launcher uses only `node_modules/.bin/wrangler`. It does not fall back to a globally installed CLI and does not allow `npx` to download an unpinned version at runtime.
