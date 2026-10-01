@@ -10,19 +10,43 @@ apps/
   server/  Express + TypeScript + Prisma API for auth and comments
 ```
 
-## Local Development
+## Local Pages + D1 Development
+
+The production-parity workflow serves the compiled client and Pages Functions together, applies the checked-in community schema to a local-only D1 database, and keeps that database under the ignored `.wrangler/` directory.
+
+After the Wrangler dependency in [`docs/development/dev-001-dependency-delta.md`](docs/development/dev-001-dependency-delta.md) is merged, a clean checkout can start the full local stack with:
 
 ```bash
-npm install
-npm run dev:client
-npm run dev:server
+npm ci
+node scripts/dev-pages-local.mjs
 ```
 
-The client runs on `http://localhost:5173` and the server defaults to `http://localhost:5050`.
+The app runs on `http://127.0.0.1:8788`. The launcher forces `VITE_API_URL=/api`, builds the app, applies `sql/d1-community-schema.sql` with `wrangler d1 execute --local`, and starts `wrangler pages dev` against the same persisted local state. It never uses remote bindings.
+
+With the local Pages process running, verify both the binding and schema from a second terminal:
+
+```bash
+node scripts/verify-pages-local.mjs
+```
+
+The smoke check requires JSON `200` responses from `/api/health` and `/api/comments/dev-001-smoke`. Finally, load the app and confirm the browser console has no Axios `Network Error` or `Failed to load comments` entry; the comments request should return JSON `200` in the Network panel.
+
+### Vite + Express workspace development
+
+The separate Express + PostgreSQL workspace is retained for server development, but it is not production parity. Copy the example environment files, configure a local PostgreSQL database, and run both processes:
+
+```bash
+cp apps/client/.env.example apps/client/.env
+cp apps/server/.env.example apps/server/.env
+npm run dev:server
+npm run dev:client
+```
+
+Vite runs on `http://localhost:5173`, proxies same-origin `/api` requests to the Express server, and Express defaults to `http://localhost:5050`.
 
 ## Environment
 
-Copy the example files before running locally:
+Copy the example files only for the Vite + Express workflow:
 
 ```bash
 cp apps/client/.env.example apps/client/.env
