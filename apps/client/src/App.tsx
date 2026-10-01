@@ -6,6 +6,7 @@ import { initializeFlowData } from './utils/bootstrap';
 import { StepByStepView } from './components/StepByStep/StepByStepView';
 import { VitalSignsView } from './components/VitalSigns/VitalSignsView';
 import { UserMenu } from './components/auth/UserMenu';
+import { GoogleIdentityManagerProvider } from './components/auth/GoogleIdentityManagerProvider';
 import './App.css';
 
 type ViewMode = 'step-by-step' | 'vital-signs';
@@ -275,7 +276,9 @@ export default function App() {
   return (
     hasGoogleClientId ? (
       <GoogleOAuthProvider clientId={googleClientId}>
-        <AppContent />
+        <GoogleIdentityManagerProvider>
+          <AppContent />
+        </GoogleIdentityManagerProvider>
       </GoogleOAuthProvider>
     ) : (
       <AppContent />
