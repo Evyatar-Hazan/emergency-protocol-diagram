@@ -3026,7 +3026,7 @@
         ],
         "sources": [
           {
-            "label": "מד\"א - חנק / אספיקסיה",
+            "label": "מד\"א - כיצד לטפל בחנק מגוף זר",
             "url": "https://www.mdais.org/101/asphyxia",
             "note": "הבדלה בין חסימה חלקית לחסימה מלאה."
           }
@@ -3075,7 +3075,7 @@
         ],
         "sources": [
           {
-            "label": "מד\"א - חנק / אספיקסיה",
+            "label": "מד\"א - כיצד לטפל בחנק מגוף זר",
             "url": "https://www.mdais.org/101/asphyxia",
             "note": "בחסימה חלקית מעודדים שיעול כל עוד יש זרימת אוויר."
           }
@@ -3103,7 +3103,7 @@
         "checkMethod": "בחר פרוטוקול לפי:\n• גיל המטופל\n• מצב פיזיולוגי מיוחד\n• יכולת ביצוע תמרונים",
         "sources": [
           {
-            "label": "מד\"א - חנק / אספיקסיה",
+            "label": "מד\"א - כיצד לטפל בחנק מגוף זר",
             "url": "https://www.mdais.org/101/asphyxia",
             "note": "התמרון נקבע לפי גיל ומצב מיוחד כמו הריון."
           }
@@ -3147,7 +3147,7 @@
         "equipment": ["אמבו (אם זמין)"],
         "sources": [
           {
-            "label": "מד\"א - חנק / אספיקסיה",
+            "label": "מד\"א - כיצד לטפל בחנק מגוף זר",
             "url": "https://www.mdais.org/101/asphyxia",
             "note": "לחיצות בטן במבוגר/ילד מעל גיל שנה."
           }
@@ -3232,7 +3232,7 @@
         ],
         "sources": [
           {
-            "label": "מד\"א - חנק / אספיקסיה",
+            "label": "מד\"א - כיצד לטפל בחנק מגוף זר",
             "url": "https://www.mdais.org/101/asphyxia",
             "note": "בהריון מתקדם או כשלא ניתן לבצע היימליך עוברים ללחיצות חזה."
           }
@@ -3399,7 +3399,7 @@
           },
           {
             "label": "משרד הבריאות - אנפילקסיס לאחר מתן חיסונים",
-            "url": "https://www.gov.il/BlobFolder/policy/anaphylaxi/he/files_publications_units_epidemiology_vaccine_guidelines_190_anaphylaxis.pdf",
+            "url": "https://www.gov.il/he/pages/anaphylaxi",
             "note": "אפינפרין IM, ניטור והיערכות להחמרה."
           }
         ]
@@ -4091,7 +4091,7 @@
           },
           {
             "label": "משרד הבריאות - אנפילקסיס לאחר מתן חיסונים",
-            "url": "https://www.gov.il/BlobFolder/policy/anaphylaxi/he/files_publications_units_epidemiology_vaccine_guidelines_190_anaphylaxis.pdf",
+            "url": "https://www.gov.il/he/pages/anaphylaxi",
             "note": "עקרונות חירום של אנפילקסיס עם אפינפרין IM ומעקב."
           }
         ]
@@ -5383,7 +5383,7 @@
           },
           {
             "label": "משרד הבריאות - אנפילקסיס לאחר מתן חיסונים",
-            "url": "https://www.gov.il/BlobFolder/policy/anaphylaxi/he/files_publications_units_epidemiology_vaccine_guidelines_190_anaphylaxis.pdf",
+            "url": "https://www.gov.il/he/pages/anaphylaxi",
             "note": "עקרונות חירום של אנפילקסיס עם פגיעה מחזורית."
           }
         ]
@@ -6625,8 +6625,8 @@
             "note": "עקרונות הגישה בהרעלה כוללים בטיחות זירה, ABCDE, חיפוש גורם, זיהוי CO ותמיכה נשימתית מוקדמת."
           },
           {
-            "label": "משרד הבריאות - נלוקסון תרופה מצילת חיים",
-            "url": "https://www.gov.il/BlobFolder/reports/naloxone/he/PDF_%D7%A0%D7%9C%D7%95%D7%A7%D7%A1%D7%95%D7%9F-%D7%AA%D7%A8%D7%95%D7%A4%D7%94%20%D7%9E%D7%A6%D7%99%D7%9C%D7%AA%20%D7%97%D7%99%D7%99%D7%9D%21.pdf",
+            "label": "הרשות הלאומית לביטחון קהילתי - נלוקסון: תרופה לטיפול במנת יתר של אופיואידים",
+            "url": "https://www.gov.il/he/pages/naloxone",
             "note": "בהרעלת אופיואידים תמיכה נשימתית היא היסוד; נלוקסון אינו תחליף לאוורור."
           }
         ]
@@ -7177,8 +7177,8 @@
         ],
         "sources": [
           {
-            "label": "משרד הבריאות - התגוננות ממכת חום",
-            "url": "https://www.gov.il/he/pages/heat_stroke",
+            "label": "משרד הבריאות - המלצות להתמודדות עם מזג אוויר חם",
+            "url": "https://www.gov.il/he/pages/heat_injuries",
             "note": "זיהוי עומס חום, מכת חום, וקירור מהיר."
           },
           {
@@ -7622,8 +7622,8 @@
             "note": "חשיפה לדם או נוזלי גוף מחייבת דיווח, איסוף פרטי מטופל, עדכון חדר מיון ופניה רפואית."
           },
           {
-            "label": "משרד הבריאות - מניעת איידס / HIV",
-            "url": "https://www.gov.il/he/departments/topics/aids/govil-landing-page",
+            "label": "משרד הבריאות - מניעת הדבקה ב-HIV לאחר חשיפה (חוזר 04/2023)",
+            "url": "https://www.gov.il/he/pages/bz04-2023",
             "note": "שקילת PEP והפניה רפואית דחופה לאחר חשיפה משמעותית."
           }
         ]
