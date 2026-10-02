@@ -96,3 +96,37 @@ export interface SourceProvenanceManifest {
   nodes: Record<string, NodeSourceProvenance>;
   review_records: ReviewRecordReference[];
 }
+
+export type RuntimeSourceProvenance = Omit<SourceProvenance, 'label' | 'url' | 'note'>;
+
+export interface RuntimeNodeSourceProvenance {
+  node_content_hash: string;
+  sources: RuntimeSourceProvenance[];
+}
+
+export interface RuntimeSourceCatalogEntry {
+  label: string;
+  url: string;
+}
+
+export interface RuntimeSourceProvenanceManifest {
+  schema_version: '1.0.0';
+  protocol_id: string;
+  protocol_version: string;
+  generated_from: string;
+  base_sha: string;
+  node_count: number;
+  source_count: number;
+  source_catalog: Record<string, RuntimeSourceCatalogEntry>;
+  nodes: Record<string, RuntimeNodeSourceProvenance>;
+  review_records: ReviewRecordReference[];
+}
+
+export type SourceProvenanceLoadStatus = 'loading' | 'ready' | 'error' | 'stale';
+
+export interface SourceProvenanceLoadState {
+  status: SourceProvenanceLoadStatus;
+  manifest: RuntimeSourceProvenanceManifest | null;
+  loadedAt: number | null;
+  error: string | null;
+}

@@ -3,9 +3,10 @@ import type { Protocol, Node } from '../../types/protocol';
 import { CommentsThread } from '../comments/CommentsThread';
 import { nodeLearningGuidance } from './nodeLearningGuidance';
 import {
-  getSourceProvenance,
   getSourceProvenancePresentation,
 } from '../../protocols/sourceProvenance';
+import { resolveSourceProvenance } from '../../protocols/sourceProvenanceRuntime';
+import { useSourceProvenanceRuntime } from '../../protocols/useSourceProvenanceRuntime';
 
 interface StepByStepViewProps {
   protocols: Record<string, Protocol>;
@@ -34,6 +35,7 @@ type SchemaShortcutGroup = {
 };
 
 export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
+  const sourceProvenanceState = useSourceProvenanceRuntime();
   const [currentNodeId, setCurrentNodeId] = useState<string>('unified_flow:report_departure');
   const [history, setHistory] = useState<string[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
@@ -737,8 +739,18 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
           {currentNode.content.sources.map((source, idx) => (
             <li key={`${source.url}-${idx}`} className="rounded-2xl border border-slate-200 bg-white p-4">
               {(() => {
-                const provenance = getSourceProvenance(parsed!.protocolId, currentNode.id, source, idx);
-                const presentation = getSourceProvenancePresentation(provenance);
+                const provenance = resolveSourceProvenance(
+                  sourceProvenanceState,
+                  parsed!.protocolId,
+                  currentNode.id,
+                  source,
+                  idx,
+                );
+                const presentation = getSourceProvenancePresentation(
+                  provenance,
+                  sourceProvenanceState.manifest?.review_records ?? [],
+                  sourceProvenanceState.status,
+                );
 
                 return (
                   <>

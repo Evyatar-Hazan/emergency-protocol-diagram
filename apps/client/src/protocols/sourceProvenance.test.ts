@@ -1,12 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import unifiedFlow from './unified-flow.json';
+import manifestData from './source-provenance.json';
 import {
-  getSourceProvenance,
   getSourceProvenancePresentation,
   isApprovedForDisplay,
-  sourceProvenanceManifest,
 } from './sourceProvenance';
-import type { ReviewRecordReference, SourceProvenance } from '../types/sourceProvenance';
+import type {
+  ReviewRecordReference,
+  SourceProvenance,
+  SourceProvenanceManifest,
+} from '../types/sourceProvenance';
+
+const sourceProvenanceManifest = manifestData as SourceProvenanceManifest;
 
 describe('source provenance manifest', () => {
   it('covers every unified-flow node and every declared source without changing source content', () => {
@@ -25,7 +30,7 @@ describe('source provenance manifest', () => {
       expect(mappedNode?.node_content_hash).toMatch(/^[0-9a-f]{64}$/);
       expect(mappedSources).toHaveLength(sources.length);
       sources.forEach((source, sourceIndex) => {
-        expect(getSourceProvenance('unified_flow', nodeId, source, sourceIndex)).toMatchObject({
+        expect(mappedSources[sourceIndex]).toMatchObject({
           label: source.label,
           url: source.url,
           source_index: sourceIndex,

@@ -26,7 +26,8 @@
     "test:server": "npm run test --workspace @emergency-protocol-diagram/server",
     "baseline:local": "node scripts/run-local-baseline.mjs",
     "baseline:check": "node scripts/check-local-baseline.mjs",
-    "generate:source-provenance": "node scripts/generate-source-provenance.mjs"
+    "generate:source-provenance": "node scripts/generate-source-provenance.mjs",
+    "generate:source-provenance-runtime": "node scripts/generate-source-provenance-runtime.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
