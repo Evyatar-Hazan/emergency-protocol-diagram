@@ -7,6 +7,7 @@ import { StepByStepView } from './components/StepByStep/StepByStepView';
 import { VitalSignsView } from './components/VitalSigns/VitalSignsView';
 import { UserMenu } from './components/auth/UserMenu';
 import { GoogleIdentityManagerProvider } from './components/auth/GoogleIdentityManagerProvider';
+import { SafetyScopeNotice } from './components/safety/SafetyScopeNotice';
 import './App.css';
 
 type ViewMode = 'step-by-step' | 'vital-signs';
@@ -62,7 +63,7 @@ function AppContent() {
       <div className="app-shell flex min-h-screen items-center justify-center px-4" dir="rtl">
         <div className="surface-card-strong clinical-panel rise-in w-full max-w-xl rounded-4xl px-8 py-12 text-center">
           <span className="clinical-kicker mb-6">
-            פרוטוקול חירום מונחה
+            סביבת למידה מונחית
           </span>
           <div className="pulse-glow mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full border border-clinical-blue/10 bg-white/70">
             <div className="h-12 w-12 animate-spin rounded-full border-[3px] border-clinical-blue/20 border-t-clinical-blue"></div>
@@ -71,8 +72,9 @@ function AppContent() {
             תרשים פרוטוקול חירום
           </h1>
           <p className="mx-auto max-w-md text-base leading-7 text-clinical-muted">
-            טוען פרוטוקול צעד-אחר-צעד לחובשים עם ניווט קשיח, שליפה מהירה של מדדים ושכבות עזר מקצועיות.
+            טוען מסלול למידה צעד־אחר־צעד ל־BLS, עם שליפה מהירה של מדדים ושכבות עזר מקצועיות.
           </p>
+          <SafetyScopeNotice compact className="mt-6" id="loading-safety-scope" />
         </div>
       </div>
     );
@@ -88,13 +90,13 @@ function AppContent() {
             <div className="hidden h-12 w-[1px] bg-white/12 sm:block" />
             <div className="min-w-0">
               <span className="shimmer-line mb-1 inline-flex items-center rounded-full border border-white/12 bg-white/10 px-2.5 py-1 text-[10px] font-bold tracking-[0.16em] text-white/75 sm:mb-2 sm:px-3 sm:text-[11px]">
-                פרוטוקול חירום ראשי
+                מסלול למידה ראשי
               </span>
               <h1 className="truncate font-display text-base font-extrabold leading-tight text-white sm:text-2xl">
                 תרשים פרוטוקול חירום
               </h1>
               <p className="mt-1 hidden max-w-2xl text-sm leading-6 text-white/72 sm:block">
-                פרוטוקול חירום מונחה לחובשים ולמתלמדים, עם סדר עבודה קשיח, מדדים מהירים ושכבות עזר סביב כל צומת.
+                למידה ורענון ל־BLS במסלול מדורג, עם מדדים מהירים ושכבות עזר סביב כל צומת.
               </p>
             </div>
           </div>
@@ -148,7 +150,7 @@ function AppContent() {
                   נתיבי המוצר הראשיים
                 </span>
                 <p className="text-sm leading-6 text-slate-600">
-                  הניווט הראשי מחולק לפרוטוקול חובה צעד-אחר-צעד ולשליפה מהירה של מדדים. תרשים המערכת המלא נשאר כלי עזר משני בלבד.
+                  הניווט הראשי מחולק למסלול למידה צעד־אחר־צעד ולשליפה מהירה של מדדים. תרשים המערכת המלא נשאר כלי עזר משני בלבד.
                 </p>
               </div>
               <button
@@ -165,7 +167,7 @@ function AppContent() {
               >
                 <span className="flex items-center justify-center gap-3">
                   <span className="text-lg">◎</span>
-                  <span>פרוטוקול ראשי צעד-אחר-צעד</span>
+                  <span>מסלול למידה צעד־אחר־צעד</span>
                 </span>
               </button>
               <button
@@ -227,6 +229,10 @@ function AppContent() {
         </div>
       </div>
 
+      <div className="mx-auto w-full max-w-7xl px-3 pt-3 sm:px-6 sm:pt-4">
+        <SafetyScopeNotice id="global-safety-scope" />
+      </div>
+
       {secondaryTool === 'diagram' ? (
         <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6">
           <div className="surface-card mb-4 rounded-3xl p-4 sm:p-5">
@@ -244,7 +250,7 @@ function AppContent() {
                 onClick={() => setSecondaryTool('none')}
                 className="rounded-2xl bg-clinical-blue px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-clinical-deep"
               >
-                חזרה לפרוטוקול הראשי
+                חזרה למסלול הלמידה
               </button>
             </div>
           </div>

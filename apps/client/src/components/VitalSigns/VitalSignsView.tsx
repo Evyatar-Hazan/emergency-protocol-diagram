@@ -396,15 +396,15 @@ export function VitalSignsView() {
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start">
             <div>
               <div className="text-xs font-bold tracking-[0.18em] text-clinical-muted">שימוש נכון במסך</div>
-              <h2 className="mt-2 font-display text-2xl font-extrabold text-clinical-ink">שליפה מהירה, לא תחליף לשיקול קליני</h2>
+              <h2 className="mt-2 font-display text-2xl font-extrabold text-clinical-ink">שליפה ללמידה, לא להחלטות בזמן אירוע</h2>
               <p className="mt-3 text-sm leading-7 text-clinical-muted sm:text-base">
-                הערכים כאן נועדו לעזור בחזרה, השוואה והבנת טווחים. תמיד צריך לקרוא אותם יחד עם מצב המטופל, ההקשר בזירה, גיל, תרופות ומחלות רקע.
+                הערכים כאן נועדו לחזרה, להשוואה ולהבנת טווחים במסגרת למידה ורענון ל־BLS. הם אינם מיועדים להערכת מטופל או לקבלת החלטה בזמן אירוע חי.
               </p>
             </div>
             <div className="rounded-[28px] border border-amber-200 bg-amber-50 p-4">
               <div className="text-xs font-bold tracking-[0.18em] text-amber-700">הערת בטיחות</div>
               <p className="mt-2 text-sm leading-6 text-amber-900">
-                בספק, בחר בגישה המחמירה יותר ופעל לפי הפרוטוקול המלא או התייעצות רפואית מוסמכת.
+                בזמן אירוע יש לפעול לפי ההכשרה, הפרוטוקול הארגוני העדכני והנחיות הגורם המוסמך.
               </p>
             </div>
           </div>
