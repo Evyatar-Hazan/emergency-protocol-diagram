@@ -1,8 +1,16 @@
 import { useMemo, useState } from 'react';
 import vitalSignsData from '../../data/vital-signs.json';
+import type { SourceProvenance } from '../../types/sourceProvenance';
+import {
+  filterVitalSignCards,
+  getVitalSignProvenance,
+  getVitalSignProvenancePresentation,
+  type VitalSignsAgeGroup,
+  type VitalSignsCategoryKey,
+} from './vitalSignsRetrieval';
 
-type AgeGroup = 'adult' | 'child';
-type CategoryKey = 'all' | 'airway' | 'breathing' | 'circulation' | 'disability' | 'exposure';
+type AgeGroup = VitalSignsAgeGroup;
+type CategoryKey = 'all' | VitalSignsCategoryKey;
 type VitalSignParameter = Record<string, string>;
 type FavoriteKey = `${string}:${string}`;
 
@@ -18,13 +26,67 @@ const categoryMeta: Array<{
   { key: 'exposure', shortLabel: 'E', accent: 'from-amber-500 to-orange-500' },
 ];
 
+function SourceTraceability({
+  source,
+  compact = false,
+}: {
+  source: SourceProvenance | null;
+  compact?: boolean;
+}) {
+  const presentation = getVitalSignProvenancePresentation(source);
+
+  return (
+    <aside
+      className={`rounded-2xl border border-amber-200 bg-amber-50/80 ${compact ? 'mt-3 p-3' : 'mt-4 p-4'}`}
+      aria-label="עקיבות מקור וסטטוס סקירה"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="text-[11px] font-extrabold tracking-[0.14em] text-amber-800">מקור וגרסת תוכן</span>
+        <span className="rounded-full border border-amber-300 bg-white px-2.5 py-1 text-[11px] font-bold text-amber-900">
+          {presentation.reviewLabel}
+        </span>
+      </div>
+
+      {source ? (
+        <a
+          href={source.url}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-2 block text-sm font-semibold leading-6 text-clinical-blue underline decoration-clinical-blue/30 underline-offset-4 hover:decoration-clinical-blue"
+        >
+          {source.label}
+        </a>
+      ) : (
+        <p className="mt-2 text-sm font-semibold text-amber-950">לא נמצא מקור ממופה</p>
+      )}
+
+      <dl className={`mt-3 grid gap-2 text-xs text-amber-950 ${compact ? 'grid-cols-1' : 'sm:grid-cols-2'}`}>
+        <div>
+          <dt className="font-bold text-amber-700">גרסה</dt>
+          <dd className="mt-0.5">{presentation.versionLabel}</dd>
+        </div>
+        <div>
+          <dt className="font-bold text-amber-700">נבדק לאחרונה</dt>
+          <dd className="mt-0.5">{presentation.reviewedAtLabel}</dd>
+        </div>
+      </dl>
+
+      <p className="mt-3 border-t border-amber-200 pt-2 text-[11px] leading-5 text-amber-800">
+        הקישור מוצג לצורכי עקיבות בלבד ואינו מהווה אישור לערכים בכרטיס.
+      </p>
+    </aside>
+  );
+}
+
 export function VitalSignsView() {
   const [ageGroup, setAgeGroup] = useState<AgeGroup>('adult');
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all');
   const [query, setQuery] = useState('');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [favorites, setFavorites] = useState<Set<FavoriteKey>>(() => {
-    const saved = localStorage.getItem('vital-sign-favorites');
+    const saved = typeof localStorage === 'undefined'
+      ? null
+      : localStorage.getItem('vital-sign-favorites');
     if (!saved) {
       return new Set();
     }
@@ -38,7 +100,9 @@ export function VitalSignsView() {
   });
 
   const saveFavorites = (nextFavorites: Set<FavoriteKey>) => {
-    localStorage.setItem('vital-sign-favorites', JSON.stringify(Array.from(nextFavorites)));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('vital-sign-favorites', JSON.stringify(Array.from(nextFavorites)));
+    }
   };
 
   const toggleFavorite = (id: FavoriteKey) => {
@@ -125,6 +189,7 @@ export function VitalSignsView() {
       const ageData = categoryData[ageGroup] as Record<string, VitalSignParameter>;
 
       return Object.entries(ageData).map(([parameterKey, parameter]) => {
+        const provenance = getVitalSignProvenance(category.key, parameterKey, ageGroup);
         const entries = Object.entries(parameter)
           .filter(([entryKey]) => entryKey !== 'parameter')
           .map(([entryKey, value]) => {
@@ -145,37 +210,20 @@ export function VitalSignsView() {
           parameterKey,
           parameterName: parameter.parameter,
           entries,
+          provenance,
+          sourceLabel: provenance?.label,
+          sourceVersion: provenance?.version_or_date,
         };
       });
     });
   }, [ageGroup]);
 
   const filteredCards = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase();
-
-    return allCards.filter((card) => {
-      if (activeCategory !== 'all' && card.categoryKey !== activeCategory) {
-        return false;
-      }
-
-      if (showFavoritesOnly && !favorites.has(card.id)) {
-        return false;
-      }
-
-      if (!normalizedQuery) {
-        return true;
-      }
-
-      const haystack = [
-        card.categoryTitle,
-        card.parameterName,
-        card.parameterKey,
-        ...card.entries.flatMap((entry) => [entry.label, entry.value, entry.key]),
-      ]
-        .join(' ')
-        .toLowerCase();
-
-      return haystack.includes(normalizedQuery);
+    return filterVitalSignCards(allCards, {
+      activeCategory,
+      favorites,
+      query,
+      showFavoritesOnly,
     });
   }, [activeCategory, allCards, favorites, query, showFavoritesOnly]);
 
@@ -223,7 +271,7 @@ export function VitalSignsView() {
                   <input
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
-                    placeholder="חפש מדד, טווח, סטטוס או מונח קליני"
+                    placeholder="חפש דופק, סטורציה, SpO2, ערך או יחידה"
                     aria-label="חיפוש מדדים וערכים"
                     className="w-full bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400 sm:text-base"
                   />
@@ -239,6 +287,10 @@ export function VitalSignsView() {
                   {showFavoritesOnly ? 'מציג שמורים בלבד' : 'סנן לשמורים'}
                 </button>
               </div>
+
+              <p className="px-1 text-xs text-clinical-muted" aria-live="polite">
+                נמצאו {filteredCards.length} מתוך {allCards.length} מדדים עבור {ageGroup === 'adult' ? 'מבוגר' : 'ילד'}
+              </p>
 
               <div className="flex flex-wrap gap-2">
                 <button
@@ -329,6 +381,7 @@ export function VitalSignsView() {
                     <div className="text-sm text-slate-500">אין נתון זמין</div>
                   )}
                 </div>
+                <SourceTraceability source={card.provenance} compact />
               </div>
             ))}
           </section>
@@ -386,6 +439,8 @@ export function VitalSignsView() {
                       </div>
                     ))}
                   </div>
+
+                  <SourceTraceability source={card.provenance} />
                 </article>
               );
             })}
