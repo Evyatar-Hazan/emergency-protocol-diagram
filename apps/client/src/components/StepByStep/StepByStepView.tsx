@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { Protocol, Node } from '../../types/protocol';
 import { CommentsThread } from '../comments/CommentsThread';
 import { nodeLearningGuidance } from './nodeLearningGuidance';
@@ -7,7 +7,12 @@ import {
 } from '../../protocols/sourceProvenance';
 import { resolveSourceProvenance } from '../../protocols/sourceProvenanceRuntime';
 import { useSourceProvenanceRuntime } from '../../protocols/useSourceProvenanceRuntime';
-import { ReviewQueuePanel } from '../ReviewQueue/ReviewQueuePanel';
+
+const ReviewQueuePanel = lazy(() =>
+  import('../ReviewQueue/ReviewQueuePanel').then((module) => ({
+    default: module.ReviewQueuePanel,
+  })),
+);
 
 interface StepByStepViewProps {
   protocols: Record<string, Protocol>;
@@ -905,13 +910,21 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
           </div>
 
           <div className="flex-1 overflow-y-auto">
-            <ReviewQueuePanel
-              key={bookmarkedNodeIds.join('|')}
-              protocols={protocols}
-              bookmarkedNodeIds={bookmarkedNodeIds}
-              onOpenNode={jumpToNode}
-              onRemoveBookmark={toggleBookmark}
-            />
+            <Suspense
+              fallback={(
+                <div className="border-b border-slate-200 bg-[#fffaf3] p-5 text-sm text-slate-600" role="status">
+                  טוען את תור החזרות המקומי…
+                </div>
+              )}
+            >
+              <ReviewQueuePanel
+                key={bookmarkedNodeIds.join('|')}
+                protocols={protocols}
+                bookmarkedNodeIds={bookmarkedNodeIds}
+                onOpenNode={jumpToNode}
+                onRemoveBookmark={toggleBookmark}
+              />
+            </Suspense>
 
             {availableSchemaShortcutGroups.length > 0 && (
               <div className="border-b border-slate-200 bg-slate-50/80 p-4 sm:p-5">
