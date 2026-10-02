@@ -16,6 +16,7 @@
 
 ## מקור
 
+- דרגת מקור: `S1 / S1_DERIVED / S2_CANDIDATE / S3_SUPPLEMENTARY / RUNTIME / COMMUNITY / unknown`
 - מפרסם:
 - שם המסמך:
 - גרסה/תאריך:
@@ -23,6 +24,19 @@
 - עמוד/סעיף/anchor:
 - תאריך גישה:
 - סטטוס ארגוני: `public / organization_approved / unknown`
+- מצב עדכניות: `as_received / current_verified / superseded / conflicting / unknown`
+
+## פערים
+
+לכל פער יש לתעד:
+
+- domain: `source / content_alignment / ui_design / none / unknown`
+- type:
+- status: `open / pending / resolved / accepted / unknown`
+- evidence paths:
+- owner role:
+
+פער `source` אינו פער עיצוב. פער `ui_design` אינו מאפשר להשלים עובדה רפואית חסרה.
 
 ## diff
 

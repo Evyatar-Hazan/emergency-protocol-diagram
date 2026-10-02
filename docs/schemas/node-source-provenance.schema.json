@@ -112,6 +112,7 @@
         "review_status",
         "authority_status",
         "source_status",
+        "gaps",
         "source",
         "affected_paths",
         "affected_node_ids",
@@ -144,6 +145,10 @@
         "review_status": { "$ref": "#/$defs/reviewStatus" },
         "authority_status": { "$ref": "#/$defs/authorityStatus" },
         "source_status": { "$ref": "#/$defs/sourceStatus" },
+        "gaps": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reviewGap" }
+        },
         "source": {
           "oneOf": [
             { "type": "null" },
@@ -172,15 +177,28 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "source_tier",
         "publisher",
         "title",
         "version_or_date",
         "stable_url_or_repo_path",
         "page_section_anchor",
         "accessed_at",
-        "organizational_status"
+        "organizational_status",
+        "version_currency"
       ],
       "properties": {
+        "source_tier": {
+          "enum": [
+            "S1",
+            "S1_DERIVED",
+            "S2_CANDIDATE",
+            "S3_SUPPLEMENTARY",
+            "RUNTIME",
+            "COMMUNITY",
+            "unknown"
+          ]
+        },
         "publisher": { "type": "string" },
         "title": { "type": "string" },
         "version_or_date": { "type": "string" },
@@ -189,7 +207,22 @@
         "accessed_at": { "type": "string", "format": "date" },
         "organizational_status": {
           "enum": ["public", "organization_approved", "unknown"]
+        },
+        "version_currency": {
+          "enum": ["as_received", "current_verified", "superseded", "conflicting", "unknown"]
         }
+      }
+    },
+    "reviewGap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "type", "status", "evidence_paths", "owner_role"],
+      "properties": {
+        "domain": { "enum": ["source", "content_alignment", "ui_design", "none", "unknown"] },
+        "type": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["open", "pending", "resolved", "accepted", "unknown"] },
+        "evidence_paths": { "type": "array", "items": { "type": "string" } },
+        "owner_role": { "type": "string", "minLength": 1 }
       }
     },
     "reviewAssignment": {

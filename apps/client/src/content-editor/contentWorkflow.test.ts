@@ -172,7 +172,9 @@ describe('content draft workflow', () => {
       review_status: 'approved_for_stated_use',
       authority_status: 'confirmed',
       source_status: 'verified',
+      gaps: [],
       source: {
+        source_tier: 'S3_SUPPLEMENTARY',
         publisher: 'Synthetic publisher',
         title: 'Synthetic source',
         version_or_date: 'synthetic-v1',
@@ -180,6 +182,7 @@ describe('content draft workflow', () => {
         page_section_anchor: 'synthetic-section',
         accessed_at: '2026-01-01',
         organizational_status: 'unknown',
+        version_currency: 'current_verified',
       },
       affected_paths: ['synthetic/path'],
       affected_node_ids: [nodeId],

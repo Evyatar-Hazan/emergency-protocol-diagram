@@ -8,6 +8,8 @@
 
 מסגרת מוצר: `learning-first`, בהתאם לטיוטת Task 51 ב־`docs/product/intended-use.md`. המסמך מגדיר ממשל ואינו מאשר תוכן רפואי, פרוטוקול ארגוני, נוסח משפטי או שימוש בזמן טיפול.
 
+החלטת מקור מ־`2026-10-02T13:23:32Z`: המשתמש קבע כי „53/56 חומר הקורס שיש לנו הוא מקור הייחוס הראשוני” (`Sentinel_3602c67d7e4481919e6b486a60783e97`). פירוש מצומצם: מתחילים כל השוואה מחומר הקורס הקיים; אין בכך קביעה שהוא העדכני ביותר, אישור ארגוני גורף או אישור אוטומטי לכל שינוי.
+
 ## 1. מטרת התהליך
 
 למנוע פרסום שינוי בעל משמעות קלינית בלי:
@@ -54,20 +56,45 @@
 
 כל ספק מסווג כלפי מעלה. שינוי מקור בלבד הוא `G1` רק אם checksum/השוואה מוכיחים שאין שינוי משמעות; אחרת הוא `G2` או `G3`.
 
+## 4א. היררכיית מקורות
+
+| דרגה | מקור | מעמד | מגבלה |
+|---|---|---|---|
+| `S1` | קובץ הקורס המקורי הקיים ב־Drive, עם filename/ID/תאריך | מקור הייחוס הראשוני להשוואה | אין להניח שהוא הגרסה האחרונה או אישור לפרסום |
+| `S1_DERIVED` | `docs/source-truth/united-hatzalah-bls/modules/*.md` | תמלול/ארגון נגיש של `S1` | `raw-ingested` דורש בדיקת נאמנות מול הקובץ המקורי לפני החלטה בסיכון גבוה |
+| `S2-CANDIDATE` | חומר קורס או פרוטוקול חדש יותר, מזוהה ומתוארך | מועמד לעדכון מקור הייחוס | אינו גובר אוטומטית; נדרש diff והכרעה מתועדת |
+| `S3-SUPPLEMENTARY` | מקור רשמי/ציבורי משלים | ראיית תמיכה, הקשר או איתור סתירה | אינו מחליף לבדו את `S1` ואינו מוכיח התאמה ארגונית |
+| `RUNTIME` | JSON/טקסט שמוצג באפליקציה | מושא הסקירה | לעולם אינו מקור לעצמו |
+| `COMMUNITY` | תגובה או תוכן משתמש | קלט לדיון בלבד | אינו מקור קליני מאשר |
+
+כאשר `S1` סותר `S2-CANDIDATE` או `S3-SUPPLEMENTARY`, לא בוחרים בשקט צד. פותחים `source_conflict`, מתעדים before/after ומשאירים review ב־`pending` עד הכרעה בתחום סמכות מתאים.
+
+### הבחנה בין סוגי פערים
+
+| תחום פער | משמעות | דוגמאות | מי מטפל |
+|---|---|---|---|
+| `source` | חסרה ראיה מספקת על המקור עצמו | מקור חסר, גרסה לא ידועה, תמלול לא מאומת, סתירת מקורות | אוצר מקורות + סוקר מתאים |
+| `content_alignment` | המקור קיים אך תוכן runtime אינו תואם לו או טרם הושווה | threshold שונה, השמטה, semantic drift | מחבר שינוי + סוקר קליני |
+| `ui_design` | המקור והמשמעות ידועים; טרם הוחלט כיצד להציגם | badge, מיקום provenance, disclosure, layout | Product/UX; review קליני רק אם הניסוח משנה משמעות |
+| `none` | אין פער ידוע | התאמה מתועדת ומאומתת | אין פעולה מעבר ל־review_due |
+| `unknown` | טרם סווג | מידע חסר | triage לפני עבודה |
+
+פער UI אינו נסגר באמצעות המצאת מקור, ופער מקור אינו נסגר באמצעות badge או layout. מודול שסווג במכוון `לא יעד זרימה` אינו UI gap רק משום שאין לו צומת ראשי.
+
 ## 5. מחזור החיים
 
 ```text
 draft
-  -> evidence-ready
-  -> clinical-review
-  -> changes-requested | scope-blocked | approved-for-stated-use
-  -> release-ready
+  -> evidence_ready
+  -> clinical_review
+  -> changes_requested | scope_blocked | approved_for_stated_use
+  -> release_ready
   -> published
   -> superseded | expired | withdrawn
 ```
 
-- `approved-for-stated-use` חייב לכלול שימוש מאושר מפורש, למשל `לימוד BLS בלבד`.
-- `release-ready` מתקבל רק לאחר שכל בדיקות הקוד/תרחיש עברו; review קליני אינו תחליף ל־QA.
+- `approved_for_stated_use` חייב לכלול שימוש מאושר מפורש, למשל `לימוד BLS בלבד`.
+- `release_ready` מתקבל רק לאחר שכל בדיקות הקוד/תרחיש עברו; review קליני אינו תחליף ל־QA.
 - `published` דורש SHA/גרסה וראיית readback. merge לבדו אינו פרסום.
 - שינוי מקור, גרסה, intended use או תוכן מושפע מבטל את האישור ומחזיר ל־`clinical-review`.
 - review תקופתי מומלץ: 12 חודשים לכל היותר, או מוקדם יותר עם שינוי מקור/פרוטוקול/הכשרה. זהו ברירת מחדל מוצעת, לא מדיניות ארגונית מאושרת.
@@ -99,6 +126,7 @@ affected_paths: []
 affected_protocols: []
 affected_node_ids: []
 source:
+  source_tier: S1|S1_DERIVED|S2_CANDIDATE|S3_SUPPLEMENTARY|RUNTIME|COMMUNITY|unknown
   publisher: ""
   title: ""
   version_or_date: ""
@@ -106,6 +134,11 @@ source:
   page_section_anchor: ""
   accessed_at: YYYY-MM-DD
   organizational_status: public|organization_approved|unknown
+  version_currency: as_received|current_verified|superseded|conflicting|unknown
+gaps:
+  - domain: source|content_alignment|ui_design|none|unknown
+    type: ""
+    status: open|pending|resolved|accepted|unknown
 before_exact: ""
 after_exact: ""
 semantic_diff: ""
@@ -216,16 +249,33 @@ affected_node_ids:
   - attach_defib
   - start_compressions
 source:
+  source_tier: S1_DERIVED
+  publisher: "חומר הקורס הקיים"
+  title: "1-9 החייאת ילדים תינוקות וחנק 2025.pdf"
+  stable_url_or_repo_path: "docs/source-truth/united-hatzalah-bls/modules/05-pediatric-cpr-and-choking.md"
+  page_section_anchor: "חלוקה לגילים"
   organizational_status: unknown
+  version_currency: as_received
 before_exact:
   - "מבוגר (>8 שנים או >25 ק״ג)"
   - "מבוגר (>8 שנים)"
 after_exact: "PENDING — אין לשנות עד החלטה מול מקור ישראלי/ארגוני מאושר"
-semantic_diff: "שינוי קריטריון הסיווג בין קבוצות החייאה; עשוי לשנות בחירת מדבקות וטכניקת עיסויים"
-decision: scope-blocked
+candidate_after_exact: "ילד — שנה עד הופעת סימני בגרות מינית; הגדרת מבוגר נגזרת רק לאחר review מפורש"
+semantic_diff: "ה-runtime משתמש בגיל/משקל קבועים, בעוד חומר הקורס הראשוני מגדיר ילד עד הופעת סימני בגרות מינית; השינוי עשוי להשפיע על בחירת מדבקות וטכניקת עיסויים"
+gaps:
+  - domain: content_alignment
+    type: runtime_conflicts_with_primary_course_reference
+    status: open
+  - domain: source
+    type: source_version_currency_unknown
+    status: open
+  - domain: ui_design
+    type: how_to_present_age_group_boundary
+    status: pending
+decision: pending
 ```
 
-כדי לשחרר את החסם נדרשים: המקור המחייב, גרסה וסעיף; החלטה האם זהות הקריטריון זהה במדבקות ובעיסויים; סוקר BLS בלתי תלוי במחבר; ואם נטענת התאמה לארגון — מאשר מטעם אותו ארגון.
+חומר הקורס מספק כעת מקור ייחוס ראשוני וסעיף מפורש: מודול 05, שורות 31–34, מגדיר ילד מגיל שנה עד הופעת סימני בגרות מינית. לכן אין לסווג את הבעיה כ־`source_missing`. עדיין נדרשים אימות נאמנות מול ה־PDF המקורי, בדיקת עדכניות/סתירות, החלטה האם הקריטריון חל באופן זהה על מדבקות ועיסויים, וסוקר BLS בלתי תלוי במחבר. אם נטענת התאמה לארגון — נדרש גם מאשר מטעם אותו ארגון.
 
 ## 11. תנאי קבלה למשימה 53
 
@@ -234,7 +284,9 @@ decision: scope-blocked
 - [x] מחזור חיים, expiry ו־withdrawal הוגדרו.
 - [x] חוזה קלט מחייב source + exact diff + semantic diff.
 - [x] checklist סוקר ושער merge/release הוגדרו.
-- [x] adult threshold הוכן כ־packet חסום ולא אושר עצמאית.
+- [x] adult threshold הוכן כ־packet ב־`pending`; זוהה מקור ראשוני אך לא בוצע אישור עצמאי.
+- [x] חומר הקורס הוגדר כ־`S1` ראשוני, בלי טענת עדכניות או אישור גורף.
+- [x] פערי source, content alignment ו־UI design הופרדו במפורש.
 - [x] הוגדר במפורש שאין נתוני מטופלים.
 - [ ] המשתמש הכריע ב־D53-01 עד D53-05.
 - [x] טיוטת Task 51 סיפקה חוזה intended-use תואם `learning-first`; היא עדיין `draft-for-review` ואינה אישור קליני.
@@ -251,6 +303,9 @@ decision: scope-blocked
 5. כספת: `Emergency-Protocol-Diagram/overview.md`, ‏`current.md`, ‏`tasks.md`, ‏`decisions.md` — המוצר מוגדר כפלטפורמת למידה; שערי `CLIN-001/002` פתוחים.
 6. סשן המחקר `01a0fc6f-7686-77d5-b60d-b42fbdc4e0fa` — אפשרות 3: RACI למציע, בודק, מאשר ומפרסם, עם מקור, גרסה ותוקף.
 7. Task 51: `/Users/evyatarhazan/Documents/Codex/2026-10-02/task-5/deliverables/emergency-protocol-diagram/docs/product/intended-use.md` — חוזה מוצר learning-first, שימושים מותרים/אסורים ודרישה שסטטוס לא ידוע לא יוצג כאישור.
+8. `docs/source-truth/united-hatzalah-bls/README.md` — תיקיית Drive מוגדרת כמקור ראשי; קובצי Markdown הם שכבת ארגון ולא מקור חלופי.
+9. `docs/source-truth/united-hatzalah-bls/modules/05-pediatric-cpr-and-choking.md:31-34` — חומר הקורס הראשוני מגדיר ילד משנה ועד הופעת סימני בגרות מינית.
+10. החלטת המשתמש `Sentinel_3602c67d7e4481919e6b486a60783e97`, ‏`2026-10-02T13:23:32Z` — חומר הקורס הקיים הוא מקור הייחוס הראשוני.
 
 ## 13. diff מוצע לשילוב מאוחר
 
@@ -269,8 +324,9 @@ docs/governance/clinical-review-process.md
 +  lifecycle לאישור תחום ופקיעת review.
 +- בעל המוצר רשאי לסקור BLS בתחום הכשרתו בלבד; אין מכך סמכות ארגונית,
 +  משפטית או אישור לשימוש בזמן טיפול.
-+- `CLIN-2026-001` (adult threshold) נשאר `scope-blocked` עד מקור מחייב
-+  ומאשר מתאים. תהליך הממשל אינו סוגר את `CLIN-001` או `CLIN-002`.
++- `CLIN-2026-001` (adult threshold) נשאר `pending`: חומר הקורס הוא מקור
++  הייחוס הראשוני, אך נדרשים אימות נאמנות, בדיקת עדכניות וסוקר מתאים.
++  תהליך הממשל אינו סוגר את `CLIN-001` או `CLIN-002`.
 ```
 
 לא מוצע בשלב זה diff לקוד או לתוכן הקליני.
@@ -286,6 +342,7 @@ Task 54 רשאית לבנות את התשתית לפני מינוי כל בעל�
 5. התשתית מאפשרת `scope_blocked` ברמת record בודד; היא אינה חוסמת פיתוח או preview של workflow כולו.
 6. publish gate חל רק על הצגה של טענת אישור ועל שינוי קליני שהוגדר release candidate; הוא אינו מונע פיתוח schema, טפסים ובדיקות.
 7. seed/migration אינם רשאים להמיר `unknown` או `pending` ל־approved.
+8. כל review record כולל `source_tier`, ‏`version_currency` ורשימת `gaps` מסווגת.
 
 ### כללי validation שמעבר ל־JSON Schema
 
@@ -297,4 +354,5 @@ Task 54 צריכה לאכוף בשכבת הדומיין:
 - `source_status: verified` מעיד שהמקור זוהה ונגיש, לא שהתוכן אושר.
 - `publication_status: published` אינו משנה `review_status`; אלה צירים נפרדים.
 - שינוי `before_exact`, ‏`after_exact`, ‏`semantic_diff`, מקור או intended use לאחר אישור מאפס את `review_status` ל־`pending` ושומר audit event.
+- `source_tier: S1` אינו מספיק לאישור: `version_currency: current_verified` וסקירה תחומה הם החלטות נפרדות.
 - API לא יקבל badge/label של אישור כקלט חופשי; ה־UI יגזור אותו רק מסטטוס תקף.

@@ -14,6 +14,7 @@
     "review_status",
     "authority_status",
     "source_status",
+    "gaps",
     "affected_paths",
     "affected_node_ids",
     "before_exact",
@@ -67,15 +68,28 @@
       "type": ["object", "null"],
       "additionalProperties": false,
       "required": [
+        "source_tier",
         "publisher",
         "title",
         "version_or_date",
         "stable_url_or_repo_path",
         "page_section_anchor",
         "accessed_at",
-        "organizational_status"
+        "organizational_status",
+        "version_currency"
       ],
       "properties": {
+        "source_tier": {
+          "enum": [
+            "S1",
+            "S1_DERIVED",
+            "S2_CANDIDATE",
+            "S3_SUPPLEMENTARY",
+            "RUNTIME",
+            "COMMUNITY",
+            "unknown"
+          ]
+        },
         "publisher": { "type": "string" },
         "title": { "type": "string" },
         "version_or_date": { "type": "string" },
@@ -84,8 +98,16 @@
         "accessed_at": { "type": "string", "format": "date" },
         "organizational_status": {
           "enum": ["public", "organization_approved", "unknown"]
+        },
+        "version_currency": {
+          "enum": ["as_received", "current_verified", "superseded", "conflicting", "unknown"]
         }
       }
+    },
+    "gaps": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/gap" },
+      "default": []
     },
     "affected_paths": {
       "type": "array",
@@ -141,6 +163,24 @@
     "production_readback": { "type": ["string", "null"], "default": null }
   },
   "$defs": {
+    "gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "type", "status", "evidence_paths", "owner_role"],
+      "properties": {
+        "domain": {
+          "enum": ["source", "content_alignment", "ui_design", "none", "unknown"]
+        },
+        "type": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["open", "pending", "resolved", "accepted", "unknown"] },
+        "evidence_paths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "owner_role": { "$ref": "#/$defs/reviewRole" }
+      }
+    },
     "reviewRole": {
       "enum": [
         "product_owner",

@@ -52,7 +52,22 @@ export interface ReviewRecordReference {
   review_status: ReviewStatus;
   authority_status: AuthorityStatus;
   source_status: SourceStatus;
+  gaps: Array<{
+    domain: 'source' | 'content_alignment' | 'ui_design' | 'none' | 'unknown';
+    type: string;
+    status: 'open' | 'pending' | 'resolved' | 'accepted' | 'unknown';
+    evidence_paths: string[];
+    owner_role: string;
+  }>;
   source: {
+    source_tier:
+      | 'S1'
+      | 'S1_DERIVED'
+      | 'S2_CANDIDATE'
+      | 'S3_SUPPLEMENTARY'
+      | 'RUNTIME'
+      | 'COMMUNITY'
+      | 'unknown';
     publisher: string;
     title: string;
     version_or_date: string;
@@ -60,6 +75,7 @@ export interface ReviewRecordReference {
     page_section_anchor: string;
     accessed_at: string;
     organizational_status: 'public' | 'organization_approved' | 'unknown';
+    version_currency: 'as_received' | 'current_verified' | 'superseded' | 'conflicting' | 'unknown';
   } | null;
   affected_paths: string[];
   affected_node_ids: string[];

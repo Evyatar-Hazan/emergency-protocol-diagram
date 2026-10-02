@@ -9,7 +9,7 @@
 - תוכן הצמתים והקישורים: `apps/client/src/protocols/unified-flow.json`.
 - מיפוי העקיבות: `apps/client/src/protocols/source-provenance.json`.
 - חוזה המיפוי: `docs/schemas/node-source-provenance.schema.json`.
-- חוזה החלטת review: תוצר Task 53, ‏`TASK-53-clinical-review.schema.json`.
+- חוזה החלטת review: `docs/governance/schemas/clinical-review.schema.json`.
 
 ## ברירות מחדל בטוחות
 
