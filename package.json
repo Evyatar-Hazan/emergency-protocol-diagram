@@ -22,7 +22,8 @@
     "test:coverage": "npm run test:coverage:client && npm run test:coverage:production",
     "test:coverage:client": "npm run test:coverage --workspace @emergency-protocol-diagram/client",
     "test:coverage:production": "npm run test:coverage --workspace @emergency-protocol-diagram/server",
-    "test:server": "npm run test --workspace @emergency-protocol-diagram/server"
+    "test:server": "npm run test --workspace @emergency-protocol-diagram/server",
+    "generate:source-provenance": "node scripts/generate-source-provenance.mjs"
   },
   "engines": {
     "node": ">=22.12.0"

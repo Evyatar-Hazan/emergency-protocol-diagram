@@ -2,6 +2,10 @@ import { useState, type ReactNode } from 'react';
 import type { Protocol, Node } from '../../types/protocol';
 import { CommentsThread } from '../comments/CommentsThread';
 import { nodeLearningGuidance } from './nodeLearningGuidance';
+import {
+  getSourceProvenance,
+  getSourceProvenancePresentation,
+} from '../../protocols/sourceProvenance';
 
 interface StepByStepViewProps {
   protocols: Record<string, Protocol>;
@@ -676,19 +680,54 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
         <ul className="space-y-3">
           {currentNode.content.sources.map((source, idx) => (
             <li key={`${source.url}-${idx}`} className="rounded-2xl border border-slate-200 bg-white p-4">
-              <a
-                href={source.url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sm font-semibold text-clinical-blue underline-offset-2 hover:underline sm:text-base"
-              >
-                {source.label}
-              </a>
-              {source.note && (
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  {source.note}
-                </p>
-              )}
+              {(() => {
+                const provenance = getSourceProvenance(parsed!.protocolId, currentNode.id, source, idx);
+                const presentation = getSourceProvenancePresentation(provenance);
+
+                return (
+                  <>
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <a
+                        href={source.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm font-semibold text-clinical-blue underline-offset-2 hover:underline sm:text-base"
+                      >
+                        {source.label}
+                      </a>
+                      <span
+                        className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+                          presentation.approved
+                            ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+                            : 'border-amber-200 bg-amber-50 text-amber-800'
+                        }`}
+                      >
+                        {presentation.reviewLabel}
+                      </span>
+                    </div>
+                    {source.note && <p className="mt-2 text-sm leading-6 text-slate-600">{source.note}</p>}
+                    <dl className="mt-3 grid gap-2 border-t border-slate-100 pt-3 text-xs text-slate-600 sm:grid-cols-3">
+                      <div>
+                        <dt className="font-semibold text-slate-700">גרסה</dt>
+                        <dd className="mt-0.5">{presentation.versionLabel}</dd>
+                      </div>
+                      <div>
+                        <dt className="font-semibold text-slate-700">בדיקה אחרונה</dt>
+                        <dd className="mt-0.5">{presentation.reviewedAtLabel}</dd>
+                      </div>
+                      <div>
+                        <dt className="font-semibold text-slate-700">סמכות</dt>
+                        <dd className="mt-0.5">{presentation.authorityLabel}</dd>
+                      </div>
+                    </dl>
+                    {!presentation.approved && (
+                      <p className="mt-3 rounded-xl bg-amber-50 px-3 py-2 text-xs leading-5 text-amber-900">
+                        הקישור מוצג לצורכי עקיבות בלבד ואינו מעיד שהתוכן נבדק או אושר.
+                      </p>
+                    )}
+                  </>
+                );
+              })()}
             </li>
           ))}
         </ul>
