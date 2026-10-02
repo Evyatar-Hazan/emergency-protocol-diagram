@@ -7,6 +7,11 @@ import {
 } from '../../protocols/sourceProvenance';
 import { resolveSourceProvenance } from '../../protocols/sourceProvenanceRuntime';
 import { useSourceProvenanceRuntime } from '../../protocols/useSourceProvenanceRuntime';
+import {
+  ADVANCED_REFERENCE_SCOPE,
+  advancedReferenceCatalog,
+  isAdvancedReferenceNode,
+} from '../../protocols/advancedReferences';
 
 const ReviewQueuePanel = lazy(() =>
   import('../ReviewQueue/ReviewQueuePanel').then((module) => ({
@@ -37,6 +42,7 @@ type SchemaShortcutGroup = {
   key: string;
   title: string;
   icon: string;
+  scopeNote?: string;
   shortcuts: SchemaShortcut[];
 };
 
@@ -229,6 +235,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   const nodeDescription = currentNode.description?.trim();
   const hasBookmark = bookmarkedNodes.has(currentNodeId);
   const nodeGuidance = nodeLearningGuidance[currentNodeId];
+  const isAdvancedReference = Boolean(
+    parsed && isAdvancedReferenceNode(parsed.protocolId, parsed.nodeKey),
+  );
 
   const getNextOptions = (): Array<{ label: string; target: string }> => {
     if (currentNode.content?.actions && currentNode.content.actions.length > 0) {
@@ -268,7 +277,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
     return [];
   };
 
-  const nextOptions = getNextOptions();
+  // Reference topics are deliberately not an alternate action path. Their
+  // historical outgoing edges remain auditable but are not offered as UI actions.
+  const nextOptions = isAdvancedReference ? [] : getNextOptions();
 
   const schemaShortcutGroups: SchemaShortcutGroup[] = [
     {
@@ -381,6 +392,17 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
         },
       ],
     },
+    {
+      key: 'advanced-reference',
+      title: ADVANCED_REFERENCE_SCOPE.badge,
+      icon: '🧠',
+      scopeNote: ADVANCED_REFERENCE_SCOPE.description,
+      shortcuts: advancedReferenceCatalog.map(({ nodeId, label, description }) => ({
+        nodeId,
+        label,
+        description,
+      })),
+    },
   ];
 
   const availableSchemaShortcutGroups = schemaShortcutGroups
@@ -416,9 +438,15 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   };
 
   const primaryActionCards = [
-    currentNode.content?.checkMethod ? { label: 'בדיקה מיידית', value: currentNode.content.checkMethod } : null,
-    currentNode.content?.assessment ? { label: 'מה להעריך', value: currentNode.content.assessment } : null,
-    currentNode.content?.treatment ? { label: 'טיפול ראשוני', value: currentNode.content.treatment } : null,
+    currentNode.content?.checkMethod
+      ? { label: isAdvancedReference ? 'נקודות זיהוי ללמידה' : 'בדיקה מיידית', value: currentNode.content.checkMethod }
+      : null,
+    currentNode.content?.assessment
+      ? { label: isAdvancedReference ? 'נקודות לסקירה' : 'מה להעריך', value: currentNode.content.assessment }
+      : null,
+    currentNode.content?.treatment
+      ? { label: isAdvancedReference ? 'הקשר טיפולי מהמקור' : 'טיפול ראשוני', value: currentNode.content.treatment }
+      : null,
   ]
     .filter(Boolean)
     .map((item) => ({
@@ -434,7 +462,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   if (currentNode.content?.checkMethod) {
     immediateSections.push({
       key: 'checkMethod',
-      title: 'איך לבדוק',
+      title: isAdvancedReference ? 'נקודות זיהוי ללמידה' : 'איך לבדוק',
       icon: '🔍',
       tone: 'bg-sky-50',
       borderTone: 'border-sky-400',
@@ -449,7 +477,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   if (currentNode.content?.questions && currentNode.content.questions.length > 0) {
     immediateSections.push({
       key: 'questions',
-      title: 'שאלות לשאול',
+      title: isAdvancedReference ? 'שאלות חזרה' : 'שאלות לשאול',
       icon: '❓',
       tone: 'bg-amber-50',
       borderTone: 'border-amber-400',
@@ -469,7 +497,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   if (currentNode.content?.treatment) {
     learningSections.push({
       key: 'treatment',
-      title: 'טיפול ראשוני',
+      title: isAdvancedReference ? 'הקשר טיפולי מתוך חומר ההעשרה' : 'טיפול ראשוני',
       icon: '💊',
       tone: 'bg-emerald-50',
       borderTone: 'border-emerald-400',
@@ -493,7 +521,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   if (currentNode.content?.assessment) {
     learningSections.push({
       key: 'assessment',
-      title: 'מה להעריך',
+      title: isAdvancedReference ? 'נקודות לסקירה' : 'מה להעריך',
       icon: '✅',
       tone: 'bg-rose-50',
       borderTone: 'border-rose-400',
@@ -943,6 +971,11 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                         <span className="text-xl">{group.icon}</span>
                         <h4 className="text-sm font-bold text-slate-900 sm:text-base">{group.title}</h4>
                       </div>
+                      {group.scopeNote && (
+                        <p className="mb-3 rounded-2xl border border-violet-200 bg-violet-50 px-3 py-2 text-xs leading-5 text-violet-950">
+                          {group.scopeNote}
+                        </p>
+                      )}
                       <div className="space-y-2">
                         {group.shortcuts.map((shortcut) => {
                           const isCurrentShortcut = shortcut.nodeId === currentNodeId;
@@ -1189,7 +1222,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   </div>
                   <div className="flex-1">
                     <p className="mb-1 text-[0.7rem] font-semibold tracking-[0.16em] text-slate-600 sm:mb-2 sm:text-sm sm:tracking-[0.2em]">
-                      שלב בפרוטוקול הראשי
+                      {isAdvancedReference ? ADVANCED_REFERENCE_SCOPE.badge : 'שלב בפרוטוקול הראשי'}
                     </p>
                     <h1 className={`mb-1 font-display text-xl font-extrabold leading-tight sm:mb-2 sm:text-3xl md:text-4xl ${config.text}`}>
                       {currentNode.title}
@@ -1201,6 +1234,16 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                     )}
                   </div>
                 </div>
+
+                {isAdvancedReference && (
+                  <aside
+                    className="rounded-2xl border-2 border-violet-300 bg-violet-50 p-4 text-violet-950 shadow-sm"
+                    aria-label={ADVANCED_REFERENCE_SCOPE.title}
+                  >
+                    <p className="font-bold">{ADVANCED_REFERENCE_SCOPE.title}</p>
+                    <p className="mt-1 text-sm leading-6">{ADVANCED_REFERENCE_SCOPE.description}</p>
+                  </aside>
+                )}
 
                 {primaryActionCards.length > 0 && (
                   <div className="hidden sm:block">{renderPrimaryActionCards()}</div>
@@ -1214,8 +1257,12 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <section className="space-y-3 sm:space-y-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-xs font-bold tracking-[0.18em] text-slate-600">פעולה מיידית</p>
-                    <h2 className="font-display text-xl font-bold text-slate-900 sm:text-2xl">מה עושים עכשיו</h2>
+                    <p className="text-xs font-bold tracking-[0.18em] text-slate-600">
+                      {isAdvancedReference ? 'עיון לימודי' : 'פעולה מיידית'}
+                    </p>
+                    <h2 className="font-display text-xl font-bold text-slate-900 sm:text-2xl">
+                      {isAdvancedReference ? 'נקודות לסקירה ולרענון' : 'מה עושים עכשיו'}
+                    </h2>
                   </div>
                   <div className="rounded-full bg-slate-100 px-2.5 py-1 text-[0.7rem] font-semibold text-slate-600 sm:px-3 sm:text-xs">
                     צעד קצר וממוקד
@@ -1229,8 +1276,12 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             {learningSections.length > 0 && (
               <section className="space-y-4">
                 <div>
-                  <p className="text-xs font-bold tracking-[0.18em] text-slate-600">הערכת מצב והמשך טיפול</p>
-                  <h2 className="font-display text-2xl font-bold text-slate-900">מה המשמעות הקלינית עכשיו</h2>
+                  <p className="text-xs font-bold tracking-[0.18em] text-slate-600">
+                    {isAdvancedReference ? 'הקשר לימודי' : 'הערכת מצב והמשך טיפול'}
+                  </p>
+                  <h2 className="font-display text-2xl font-bold text-slate-900">
+                    {isAdvancedReference ? 'הרחבה מתוך חומר המקור' : 'מה המשמעות הקלינית עכשיו'}
+                  </h2>
                 </div>
                 <div className="grid gap-4">{learningSections.map(renderAccordionSection)}</div>
               </section>
@@ -1249,7 +1300,31 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
           </div>
 
           <div className={`${config.bg} border-t-[3px] ${config.border} p-4 sm:p-6 lg:p-8`}>
-            {nextOptions.length > 0 ? (
+            {isAdvancedReference ? (
+              <div className="text-center">
+                <div className="mb-3 text-5xl">🧠</div>
+                <h3 className="mb-2 text-2xl font-bold">סיום חומר ההעשרה</h3>
+                <p className="mx-auto mb-4 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+                  החומר אינו ממשיך למסלול פעולה. חזור לצעד הקודם או למסלול הראשי כדי להמשיך בתרגול.
+                </p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  {history.length > 0 && (
+                    <button
+                      onClick={goBack}
+                      className="rounded-xl border border-violet-300 bg-white px-6 py-3 font-bold text-violet-900 shadow-sm transition-colors hover:bg-violet-50"
+                    >
+                      חזור לצעד הקודם
+                    </button>
+                  )}
+                  <button
+                    onClick={restart}
+                    className="rounded-xl bg-clinical-blue px-6 py-3 font-bold text-white shadow-lg transition-colors hover:bg-clinical-deep"
+                  >
+                    חזור למסלול הראשי
+                  </button>
+                </div>
+              </div>
+            ) : nextOptions.length > 0 ? (
               <div className="space-y-4">
                 <div className="text-center">
                   <p className="text-xs font-bold tracking-[0.18em] text-slate-600">החלטה הבאה</p>

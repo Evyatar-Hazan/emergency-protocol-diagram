@@ -6,6 +6,7 @@ import {
   getDeclaredProtocolEdges,
   getNavigationProtocolEdges,
 } from './protocolGraphAudit';
+import { advancedReferenceNodeIds } from './advancedReferences';
 
 const documentedUnreachableNodeIds = [
   'airway_check_cpr',
@@ -21,6 +22,8 @@ const documentedUnreachableNodeIds = [
   'pulse_check',
   'ventilations',
 ];
+
+const approvedAdvancedReferenceNodeIds = advancedReferenceNodeIds.map((nodeId) => nodeId.split(':')[1]);
 
 describe('protocol graph audit', () => {
   it('reproduces the documented unified-flow node, edge, and reachability audit', () => {
@@ -64,15 +67,31 @@ describe('protocol graph audit', () => {
     ]);
   });
 
-  it('does not silently treat unresolved nodes as intentional reference content', () => {
+  it('separates approved advanced reference from the five still-unresolved nodes', () => {
     const unresolvedAudit = auditProtocolGraph(unifiedFlow as Protocol);
     expect(unresolvedAudit.intentionalReferenceNodeIds).toEqual([]);
     expect(unresolvedAudit.unresolvedUnreachableNodeIds).toEqual(documentedUnreachableNodeIds);
 
-    const approvedReferenceAudit = auditProtocolGraph(unifiedFlow as Protocol, ['pulse_check', 'report_departure']);
-    expect(approvedReferenceAudit.intentionalReferenceNodeIds).toEqual(['pulse_check']);
-    expect(approvedReferenceAudit.unresolvedUnreachableNodeIds).not.toContain('pulse_check');
-    expect(approvedReferenceAudit.intentionalReferenceNodeIds).not.toContain('report_departure');
+    const approvedReferenceAudit = auditProtocolGraph(
+      unifiedFlow as Protocol,
+      approvedAdvancedReferenceNodeIds,
+    );
+    expect(approvedReferenceAudit.intentionalReferenceNodeIds).toEqual([
+      'aortic_dissection',
+      'arrhythmia_afib',
+      'arrhythmia_bradycardia',
+      'arrhythmia_svt',
+      'arrhythmia_vt',
+      'cardiovascular_problem',
+      'mi_stemi',
+    ]);
+    expect(approvedReferenceAudit.unresolvedUnreachableNodeIds).toEqual([
+      'airway_check_cpr',
+      'hypertensive_emergency',
+      'pneumothorax',
+      'pulse_check',
+      'ventilations',
+    ]);
   });
 
   it('reports every declared edge while matching the step-by-step navigation precedence', () => {
