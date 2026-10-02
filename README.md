@@ -29,6 +29,14 @@ With the local Pages process running, verify both the binding and schema from a 
 node scripts/verify-pages-local.mjs
 ```
 
+For a reproducible, isolated smoke and performance baseline, run:
+
+```bash
+npm run baseline:local
+```
+
+This creates a fresh local D1 state, validates health and anonymous comment reads, records local endpoint latency and bundle sizes, and checks explicit budgets. Evidence and Wrangler logs are written below `.artifacts/option19/`; scope and limitations are documented in [`docs/development/option19-local-baseline.md`](docs/development/option19-local-baseline.md).
+
 The smoke check requires JSON `200` responses from `/api/health` and `/api/comments/dev-001-smoke`. Finally, load the app and confirm the browser console has no Axios `Network Error` or `Failed to load comments` entry; the comments request should return JSON `200` in the Network panel.
 
 ### Vite + Express workspace development

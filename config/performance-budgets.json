@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "bundle": {
+    "javascriptGzipBytes": 276480,
+    "cssGzipBytes": 12288,
+    "largestJavaScriptGzipBytes": 128000
+  },
+  "localApi": {
+    "healthP95Ms": 100,
+    "commentsP95Ms": 150
+  },
+  "browserTargets": {
+    "lcpMs": 2500,
+    "lighthousePerformance": 90,
+    "status": "target-only-until-a-browser-runner-is-approved-and-pinned"
+  }
+}
