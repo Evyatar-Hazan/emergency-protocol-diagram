@@ -8,6 +8,7 @@ export default defineConfig({
       include: [
         'src/store/flowStore.ts',
         'src/components/comments/commentTaxonomy.ts',
+        'src/protocols/protocolGraphAudit.ts',
         'src/protocols/sourceFallbacks.ts',
       ],
       thresholds: {

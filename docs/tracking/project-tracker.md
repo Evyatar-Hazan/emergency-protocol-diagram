@@ -89,12 +89,20 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 - אין להחליף בשקט את מקורות ההחייאה משנת `2020` או מקור רפואי אחר. מעבר ל-AHA 2025, לעמוד איחוד הצלה המעודכן מ-`2025-12-29`, או למקור חלופי אחר דורש מפת שינוי ואישור בעל תוכן קליני לפני פרסום.
 - השינוי טרם פורסם, לא נדחף ולא נפרס לפרודקשן.
 
+### FLOW-001 technical audit snapshot — 2026-10-02
+
+- בדיקת גרף אוטומטית משחזרת 205 צמתים, 358 קשתות מוצהרות, 357 קשתות ניווט אפקטיביות, 193 צמתים נגישים ו-12 צמתים לא נגישים.
+- 12 הצמתים מתחלקים ל-4 רכיבים מנותקים: `pulse_check`; ‏`airway_check_cpr -> ventilations`; ‏`pneumothorax`; ורכיב `cardiovascular_problem` עם שבעת צמתי ההמשך שלו.
+- אין dangling targets ואין אי-התאמות בין מפתח צומת ל-`id`.
+- לא נמצא אישור קנוני לסווג אחד מ-12 הצמתים כ-reference מכוון. כולם נשארים `unresolved` עד החלטת בעל תוכן מוסמך; לא שונו קשתות או תוכן קליני.
+- בדיקות regression נוספו ב-[FLOW-001 graph integrity audit](./flow-001-graph-integrity-audit.md). החלק הטכני הושלם, אך `FLOW-001` נשאר פתוח עד הכרעה ותיקון מאושרים.
+
 ### P1 — אמינות קלינית, כיסוי תרחישים ו-parity
 
 | ID | סטטוס | ממצא עובדתי | פעולה נדרשת | Definition of Done | אימות |
 |---|---|---|---|---|---|
 | `CONTENT-001` | Open — partial remediation local | חמש כתובות Drive שגויות ושתי וריאציות URL משובשות תוקנו מקומית ב-55 הופעות. נשארו קישורי `404`, חריגי `gov.il`/מד"א ומקורות החייאה ישנים שדורשים הכרעה קלינית; ראו snapshot מ-`2026-10-01`. | לאמת ידנית את החריגים, לאשר מפת מקורות קלינית, לתקן את יתר הקישורים ולתעד כתובת וגרסה מאושרות לכל מקור. | אין `404/400` במקורות המאושרים; לכל חסימת בודק יש תוצאת בדיקה ידנית מתועדת; מקורות ההחייאה תואמים לגרסה שאושרה; אין אובדן מקור קליני. | סריקת כל 51 הכתובות + בדיקה ידנית לחריגים + review בעל תוכן + spot-check ב-UI מקומי ובפרודקשן. |
-| `FLOW-001` | Open | 12 צמתים אינם נגישים מ-`report_departure`: `pulse_check`, `airway_check_cpr`, `ventilations`, `pneumothorax`, `cardiovascular_problem`, `mi_stemi`, `arrhythmia_vt`, `arrhythmia_svt`, `arrhythmia_afib`, `arrhythmia_bradycardia`, `aortic_dissection`, `hypertensive_emergency`. | בעל התוכן יחליט עבור כל צומת אם לחבר לזרימה או להסיר כ-legacy, ואז לעדכן את הגרף. | אין צומת production יתום ללא החלטה מתועדת; 0 dangling edges; מסלולים מחוברים תואמים להחלטה הקלינית. | בדיקת reachability אוטומטית + מעבר ידני בכל מסלול ששונה. |
+| `FLOW-001` | Open — automated audit added | 12 צמתים אינם נגישים מ-`report_departure`: `pulse_check`, `airway_check_cpr`, `ventilations`, `pneumothorax`, `cardiovascular_problem`, `mi_stemi`, `arrhythmia_vt`, `arrhythmia_svt`, `arrhythmia_afib`, `arrhythmia_bradycardia`, `aortic_dissection`, `hypertensive_emergency`. ה-audit הטכני משחזר אותם כ-4 רכיבים מנותקים; 0 סווגו כ-reference מאושר. | בעל התוכן יחליט עבור כל צומת אם לחבר לזרימה, להסיר כ-legacy או לסמן במפורש כ-reference, ואז לעדכן את הגרף והבדיקה. | אין צומת production יתום ללא החלטה מתועדת; 0 dangling edges; מסלולים מחוברים תואמים להחלטה הקלינית. | בדיקת reachability אוטומטית ב-`protocolGraphAudit.test.ts` + מעבר ידני בכל מסלול ששונה; ראו [דוח audit](./flow-001-graph-integrity-audit.md). |
 | `QA-005` | Open | קיימים 17 תרחישי ייחוס כתובים, אך אין suite E2E בר-הרצה. | לממש E2E אוטומטי לתרחישים, כולל navigation, back, cross-protocol ונתיבי קצה. | כל 17 התרחישים רצים באופן דטרמיניסטי מקומית וב-CI, עם artifacts בכשל. | פקודת E2E מתועדת + ריצת CI ירוקה + דוח 17/17. |
 | `DEV-001` | Open | Pages+D1 מקומי נכשל ללא schema ועם API base שגוי; README מתאר בעיקר Vite+Express. | להוסיף setup/script מתועד ל-Cloudflare Pages+D1 עם migration ו-`VITE_API_URL=/api`. | checkout חדש יכול להרים סביבת parity, לקבל `200` מ-health/comments וללא שגיאת comments בקונסול. | לבצע את המדריך מסביבה נקייה ולשמור פקודות ותוצאות ב-tracker/audit. |
 | `CLIN-001` | Open | סף adult בקוד הוא `>8 years`; AHA 2025 משתמש בסימני התבגרות. זו אי-התאמה הדורשת הכרעת בעל תוכן מול פרוטוקול ישראלי/איחוד הצלה. | לבצע review קליני מתועד לסף הגיל ולמדגם צמתים בסיכון גבוה, עם גרסת מקור ובעל אישור. | קיימת החלטה קלינית חתומה/מתועדת; התוכן והבדיקות תואמים לה; אין שינוי רפואי על בסיס הנחה. | השוואת תוכן מול המקור המאושר + review בעל תוכן + regression לתרחישים שהושפעו. |
