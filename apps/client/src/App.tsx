@@ -11,7 +11,7 @@ import { SafetyScopeNotice } from './components/safety/SafetyScopeNotice';
 import './App.css';
 
 type ViewMode = 'step-by-step' | 'practice' | 'vital-signs' | 'instructor';
-type SecondaryTool = 'none' | 'diagram' | 'content-editor';
+type SecondaryTool = 'none' | 'diagram' | 'content-editor' | 'offline-learning';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 const hasGoogleClientId =
@@ -100,6 +100,11 @@ const InstructorGroupsPanel = enableSyntheticInstructorTools
     )
   : null;
 
+const OfflineLearningManager = lazy(() =>
+  import('./offlineLearning/OfflineLearningManager').then((module) => ({
+    default: module.OfflineLearningManager,
+  }))
+);
 function AppContent() {
   const { flowData, activeProtocol, loadData, setActiveProtocol } = useFlowStore();
   const { checkAuth } = useAuthStore();
@@ -289,7 +294,6 @@ function AppContent() {
               </button>
               <button
                 onClick={() => {
-                  setIsMenuOpen(false);
                   setShowDiagramTools(!showDiagramTools);
                 }}
                 className="w-full rounded-2xl border border-slate-200/90 bg-white/75 px-4 py-3 text-sm font-semibold text-clinical-ink transition-all hover:bg-white"
@@ -331,6 +335,20 @@ function AppContent() {
                       </button>
                     </div>
                   )}
+                  <div className="mt-3 flex flex-col gap-3 border-t border-slate-200 pt-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-sm leading-6 text-slate-600">
+                      חבילת קריאה לימודית ללא רשת כוללת רק תוכן שעבר את חוזה האימות ובתוקף.
+                    </p>
+                    <button
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setSecondaryTool('offline-learning');
+                      }}
+                      className="rounded-2xl bg-clinical-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-clinical-deep"
+                    >
+                      ניהול למידה ללא רשת
+                    </button>
+                  </div>
                 </div>
               )}
               <button
@@ -439,6 +457,32 @@ function AppContent() {
             }
           >
             <FullFlowDiagram protocols={flowData.protocols} />
+          </Suspense>
+        </div>
+      ) : secondaryTool === 'offline-learning' ? (
+        <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6">
+          <div className="mb-4 flex justify-start">
+            <button
+              onClick={() => setSecondaryTool('none')}
+              className="rounded-2xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+            >
+              חזרה למסלול הלמידה
+            </button>
+          </div>
+          <Suspense
+            fallback={
+              <div className="surface-card flex min-h-[260px] items-center justify-center rounded-3xl p-6 text-center">
+                <p className="text-sm font-semibold text-clinical-muted">טוען את מנהל ה־offline…</p>
+              </div>
+            }
+          >
+            {flowData.protocols.unified_flow ? (
+              <OfflineLearningManager protocol={flowData.protocols.unified_flow} />
+            ) : (
+              <div className="surface-card rounded-3xl p-6 text-center text-sm text-red-800">
+                הפרוטוקול הפעיל אינו זמין; לא ניתן להכין חבילה.
+              </div>
+            )}
           </Suspense>
         </div>
       ) : viewMode === 'step-by-step' ? (
