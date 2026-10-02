@@ -1,4 +1,6 @@
-import type { FlowData } from '../types/protocol';
+import protocolAssetUrl from '../protocols/unified-flow.json?url';
+import { applySourceFallbacks } from '../protocols/sourceFallbacks';
+import type { FlowData, Protocol } from '../types/protocol';
 
 /**
  * Bootstrap Logic - טעינת נתונים ראשוניים
@@ -50,8 +52,19 @@ function mergeFlowData(
  */
 export async function initializeFlowData(): Promise<FlowData> {
   // 1. התחל עם הדאטא המובנה
-  const { protocolsData } = await import('../protocols');
-  let flowData: FlowData = protocolsData;
+  const protocolResponse = await fetch(protocolAssetUrl, { credentials: 'omit' });
+  if (!protocolResponse.ok) {
+    throw new Error(`Failed to load protocol data: ${protocolResponse.status}`);
+  }
+  const protocol = await protocolResponse.json() as Protocol;
+  if (protocol.id !== 'unified_flow' || !protocol.nodes || !protocol.startNode) {
+    throw new Error('Protocol data did not pass the runtime shape check');
+  }
+  let flowData: FlowData = {
+    version: '2.0.0',
+    language: 'he',
+    protocols: { unified_flow: applySourceFallbacks(protocol) },
+  };
 
   // 2. בדוק אם יש window.__INITIAL_FLOW_DATA__
   if (typeof window !== 'undefined' && window.__INITIAL_FLOW_DATA__) {

@@ -52,7 +52,9 @@ const approvedReviewRecord: ReviewRecordReference = {
   review_status: 'approved_for_stated_use',
   authority_status: 'confirmed',
   source_status: 'verified',
+  gaps: [],
   source: {
+    source_tier: 'S3_SUPPLEMENTARY',
     publisher: 'Test publisher',
     title: 'Test source',
     version_or_date: '2026.1',
@@ -60,6 +62,7 @@ const approvedReviewRecord: ReviewRecordReference = {
     page_section_anchor: 'p1',
     accessed_at: '2026-09-01',
     organizational_status: 'organization_approved',
+    version_currency: 'current_verified',
   },
   affected_paths: ['apps/client/src/protocols/unified-flow.json'],
   affected_node_ids: ['approved'],

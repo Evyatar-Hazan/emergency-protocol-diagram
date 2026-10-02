@@ -3,6 +3,19 @@ const CACHE_PREFIX = 'offline-learning-package-v1-';
 const ACTIVE_RECORD_PATH = '/__offline-learning/active.json';
 const PACKAGE_PATH = '/__offline-learning/package.json';
 const OFFLINE_PAGE_PATH = '/offline-learning.html';
+const MAX_PACKAGE_BYTES = 5_000_000;
+const MAX_NODE_COUNT = 1_000;
+const ALLOWED_CONTENT_KEYS = new Set([
+  'checkMethod',
+  'about',
+  'whatToLookFor',
+  'assessment',
+  'explanation',
+  'equipment',
+  'questions',
+  'vitals',
+  'treatment',
+]);
 
 let activeInstall = null;
 
@@ -15,19 +28,31 @@ export async function sha256(value) {
 }
 
 export async function validateOfflinePackage(packageValue, now = new Date()) {
+  const serialized = JSON.stringify(packageValue);
   if (
     !packageValue ||
     typeof packageValue !== 'object' ||
     !packageValue.payload ||
     packageValue.payload.schemaVersion !== '1.0.0' ||
     packageValue.payload.intendedUse !== 'learning_only' ||
+    typeof packageValue.payload.packageId !== 'string' ||
+    !/^[a-zA-Z0-9._-]+$/.test(packageValue.payload.packageId) ||
+    typeof packageValue.payload.protocolVersion !== 'string' ||
+    !/^[0-9a-f]{40}$/.test(packageValue.payload.provenanceBaseSha) ||
+    serialized.length > MAX_PACKAGE_BYTES ||
     !Array.isArray(packageValue.payload.nodes) ||
     packageValue.payload.nodes.length === 0 ||
+    packageValue.payload.nodes.length > MAX_NODE_COUNT ||
     packageValue.payload.nodes.length !== packageValue.payload.nodeCount ||
     !packageValue.payload.nodes.every(
       (node) =>
         typeof node.id === 'string' &&
         typeof node.title === 'string' &&
+        (!node.content || (
+          typeof node.content === 'object' &&
+          !Array.isArray(node.content) &&
+          Object.keys(node.content).every((key) => ALLOWED_CONTENT_KEYS.has(key))
+        )) &&
         Array.isArray(node.sources) &&
         node.sources.length > 0 &&
         node.sources.every(
@@ -68,7 +93,14 @@ const safeShellUrls = (html, origin) => {
   const linkPattern = /(?:src|href)=["']([^"']+)["']/g;
   for (const match of html.matchAll(linkPattern)) {
     const url = new URL(match[1], origin);
-    if (url.origin === origin && !url.pathname.startsWith('/api/')) urls.add(url.toString());
+    if (
+      url.origin === origin &&
+      !url.username &&
+      !url.password &&
+      url.pathname.startsWith('/assets/')
+    ) {
+      urls.add(url.toString());
+    }
   }
   return [...urls];
 };
@@ -76,7 +108,7 @@ const safeShellUrls = (html, origin) => {
 const fetchRequired = async (url, fetcher, signal) => {
   const response = await fetcher(url, {
     cache: 'no-store',
-    credentials: 'same-origin',
+    credentials: 'omit',
     signal,
   });
   if (!response.ok) throw new Error(`הורדת משאב offline נכשלה (${response.status}).`);
@@ -184,6 +216,12 @@ const statusFromRecord = (record) => record
 
 const reply = (event, response) => event.ports[0]?.postMessage(response);
 
+const mutationAllowedFrom = (event) => {
+  if (!event.source || typeof event.source.url !== 'string') return false;
+  const sourceUrl = new URL(event.source.url);
+  return sourceUrl.origin === self.location.origin && ['/', '/index.html'].includes(sourceUrl.pathname);
+};
+
 if (typeof self !== 'undefined' && 'addEventListener' in self) {
   self.addEventListener('install', () => self.skipWaiting());
   self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));
@@ -193,6 +231,10 @@ if (typeof self !== 'undefined' && 'addEventListener' in self) {
     if (!request || typeof request.type !== 'string') return;
 
     if (request.type === 'OFFLINE_LEARNING_CANCEL') {
+      if (!mutationAllowedFrom(event)) {
+        reply(event, { ok: false, error: 'מקור הבקשה אינו מורשה לשנות חבילת offline.' });
+        return;
+      }
       const cancelled = activeInstall?.operationId === request.operationId;
       if (cancelled) activeInstall.controller.abort();
       reply(event, { ok: true, result: { cancelled } });
@@ -204,11 +246,13 @@ if (typeof self !== 'undefined' && 'addEventListener' in self) {
         return statusFromRecord(await readActiveRecord());
       }
       if (request.type === 'OFFLINE_LEARNING_DELETE') {
+        if (!mutationAllowedFrom(event)) throw new Error('מקור הבקשה אינו מורשה לשנות חבילת offline.');
         if (activeInstall) activeInstall.controller.abort();
         await deleteOfflinePackage();
         return statusFromRecord(null);
       }
       if (request.type === 'OFFLINE_LEARNING_INSTALL') {
+        if (!mutationAllowedFrom(event)) throw new Error('מקור הבקשה אינו מורשה לשנות חבילת offline.');
         if (activeInstall) throw new Error('הורדת חבילת offline אחרת כבר מתבצעת.');
         const controller = new AbortController();
         activeInstall = { operationId: request.operationId, controller };

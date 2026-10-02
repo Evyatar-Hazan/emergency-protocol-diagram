@@ -157,4 +157,37 @@ describe('offline learning atomic cache', () => {
     })).rejects.toThrow('תוקף סקירת התוכן');
     expect(await readActiveRecord(cacheStorage, origin)).toBeNull();
   });
+
+  it('fetches only the offline shell and hashed assets without credentials', async () => {
+    const cacheStorage = new MemoryCacheStorage();
+    const requests = [];
+    const fetcher = async (url, options) => {
+      requests.push({ url, credentials: options.credentials });
+      if (url.endsWith('/offline-learning.html')) {
+        return new Response([
+          '<script src="/assets/reader.js"></script>',
+          '<link href="/assets/reader.css">',
+          '<img src="/api/comments/private">',
+          '<img src="/account/private">',
+          '<script src="https://attacker.invalid/x.js"></script>',
+        ].join(''));
+      }
+      return new Response(`asset:${url}`);
+    };
+    await installOfflinePackageAtomic({
+      packageValue: await createPackage(),
+      operationId: 'allowlist',
+      cacheStorage,
+      fetcher,
+      origin,
+      now: new Date('2026-10-02T12:00:00Z'),
+    });
+
+    expect(requests.map(({ url }) => url)).toEqual([
+      `${origin}/offline-learning.html`,
+      `${origin}/assets/reader.js`,
+      `${origin}/assets/reader.css`,
+    ]);
+    expect(requests.every(({ credentials }) => credentials === 'omit')).toBe(true);
+  });
 });
