@@ -10,7 +10,7 @@ import { GoogleIdentityManagerProvider } from './components/auth/GoogleIdentityM
 import { SafetyScopeNotice } from './components/safety/SafetyScopeNotice';
 import './App.css';
 
-type ViewMode = 'step-by-step' | 'vital-signs';
+type ViewMode = 'step-by-step' | 'practice' | 'vital-signs';
 type SecondaryTool = 'none' | 'diagram';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
@@ -20,6 +20,12 @@ const hasGoogleClientId =
 const FullFlowDiagram = lazy(() =>
   import('./components/flow/FullFlowDiagram').then((module) => ({
     default: module.FullFlowDiagram,
+  }))
+);
+
+const PracticeMode = lazy(() =>
+  import('./components/PracticeMode/PracticeMode').then((module) => ({
+    default: module.PracticeMode,
   }))
 );
 
@@ -113,6 +119,19 @@ function AppContent() {
               פרוטוקול ראשי
             </button>
             <button
+              onClick={() => {
+                setViewMode('practice');
+                setSecondaryTool('none');
+              }}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                viewMode === 'practice'
+                  ? 'bg-white text-clinical-ink shadow-soft'
+                  : 'bg-white/10 text-white hover:bg-white/16'
+              }`}
+            >
+              מצב תרגול
+            </button>
+            <button
               onClick={() => setViewMode('vital-signs')}
               className={`rounded-full px-4 py-2 text-sm font-semibold transition-all ${
                 viewMode === 'vital-signs'
@@ -168,6 +187,23 @@ function AppContent() {
                 <span className="flex items-center justify-center gap-3">
                   <span className="text-lg">◎</span>
                   <span>מסלול למידה צעד־אחר־צעד</span>
+                </span>
+              </button>
+              <button
+                onClick={() => {
+                  setViewMode('practice');
+                  setSecondaryTool('none');
+                  setIsMenuOpen(false);
+                }}
+                className={`w-full rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
+                  viewMode === 'practice'
+                    ? 'bg-clinical-blue text-white shadow-soft'
+                    : 'bg-white/75 text-clinical-ink hover:bg-white'
+                }`}
+              >
+                <span className="flex items-center justify-center gap-3">
+                  <span className="text-lg">◇</span>
+                  <span>מצב תרגול מדורג</span>
                 </span>
               </button>
               <button
@@ -271,6 +307,19 @@ function AppContent() {
         </div>
       ) : viewMode === 'step-by-step' ? (
         <StepByStepView protocols={flowData.protocols} />
+      ) : viewMode === 'practice' ? (
+        <Suspense
+          fallback={
+            <div className="mx-auto flex min-h-[420px] w-full max-w-6xl items-center justify-center px-4 py-8 text-center">
+              <div className="surface-card rounded-3xl p-8">
+                <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-[3px] border-clinical-blue/20 border-t-clinical-blue" />
+                <p className="text-sm font-semibold text-clinical-muted">טוען סביבת תרגול...</p>
+              </div>
+            </div>
+          }
+        >
+          <PracticeMode />
+        </Suspense>
       ) : (
         <VitalSignsView />
       )}

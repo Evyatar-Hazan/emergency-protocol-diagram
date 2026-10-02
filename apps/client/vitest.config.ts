@@ -9,6 +9,7 @@ export default defineConfig({
         'src/store/flowStore.ts',
         'src/components/comments/commentTaxonomy.ts',
         'src/components/VitalSigns/vitalSignsRetrieval.ts',
+        'src/components/PracticeMode/practiceSession.ts',
         'src/protocols/protocolGraphAudit.ts',
         'src/protocols/sourceFallbacks.ts',
       ],
