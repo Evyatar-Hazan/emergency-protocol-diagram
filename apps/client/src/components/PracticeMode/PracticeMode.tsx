@@ -27,7 +27,11 @@ const persistedSession = () =>
 
 const scrollToTop = () => window.requestAnimationFrame(() => window.scrollTo({ top: 0 }));
 
-export function PracticeMode() {
+interface PracticeModeProps {
+  onExit: () => void;
+}
+
+export function PracticeMode({ onExit }: PracticeModeProps) {
   const [restorableSession, setRestorableSession] = useState<PracticeSession | null>(persistedSession);
   const [session, setSession] = useState<PracticeSession | null>(null);
 
@@ -129,6 +133,13 @@ export function PracticeMode() {
                     התחלת תרגול TEST DATA
                   </button>
                 )}
+                <button
+                  type="button"
+                  onClick={onExit}
+                  className="rounded-2xl border border-slate-300 bg-transparent px-6 py-3.5 font-bold text-clinical-ink transition hover:bg-white/70"
+                >
+                  חזרה למסלול הלמידה
+                </button>
               </div>
             </div>
 
@@ -219,6 +230,13 @@ export function PracticeMode() {
             >
               איפוס ותרגול מחדש
             </button>
+            <button
+              type="button"
+              onClick={onExit}
+              className="rounded-2xl border border-slate-300 bg-transparent px-5 py-3 font-bold text-clinical-ink transition hover:bg-white/70"
+            >
+              חזרה למסלול הלמידה
+            </button>
           </div>
         </section>
         <SafetyScopeNotice id="practice-summary-safety" className="mt-5" />
@@ -264,6 +282,13 @@ export function PracticeMode() {
             className="mt-5 w-full rounded-2xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-bold text-red-800 transition hover:bg-red-100"
           >
             איפוס התרגול השמור
+          </button>
+          <button
+            type="button"
+            onClick={onExit}
+            className="mt-2 w-full rounded-2xl border border-slate-300 bg-white/70 px-4 py-2.5 text-sm font-bold text-clinical-ink transition hover:bg-white"
+          >
+            חזרה למסלול הלמידה
           </button>
         </aside>
 

@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Component, Suspense, lazy, useEffect, useState, type ReactNode } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useFlowStore } from './store/flowStore';
 import { useAuthStore } from './store/authStore';
@@ -28,6 +28,58 @@ const PracticeMode = lazy(() =>
     default: module.PracticeMode,
   }))
 );
+
+class PracticeModeBoundary extends Component<
+  { children: ReactNode; onExit: () => void },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error('Failed to load practice mode:', error);
+  }
+
+  render() {
+    if (!this.state.hasError) return this.props.children;
+
+    return (
+      <div className="mx-auto w-full max-w-4xl px-4 py-8">
+        <section className="surface-card-strong rounded-4xl p-6 text-center sm:p-8" role="alert">
+          <span className="clinical-kicker">מצב תרגול</span>
+          <h2 className="mt-4 font-display text-2xl font-extrabold text-clinical-ink">
+            סביבת התרגול לא נטענה
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-clinical-muted">
+            ההתקדמות המקומית נשמרה. אפשר לטעון מחדש ולנסות שוב, או לחזור למסלול הלמידה בלי למחוק אותה.
+          </p>
+          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="rounded-2xl bg-clinical-blue px-5 py-3 font-bold text-white transition hover:bg-clinical-deep"
+            >
+              טעינה מחדש וניסיון נוסף
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                this.setState({ hasError: false });
+                this.props.onExit();
+              }}
+              className="rounded-2xl border border-slate-300 bg-white px-5 py-3 font-bold text-clinical-ink transition hover:bg-slate-50"
+            >
+              חזרה למסלול הלמידה
+            </button>
+          </div>
+        </section>
+      </div>
+    );
+  }
+}
 
 function AppContent() {
   const { flowData, activeProtocol, loadData, setActiveProtocol } = useFlowStore();
@@ -318,7 +370,9 @@ function AppContent() {
             </div>
           }
         >
-          <PracticeMode />
+          <PracticeModeBoundary onExit={() => setViewMode('step-by-step')}>
+            <PracticeMode onExit={() => setViewMode('step-by-step')} />
+          </PracticeModeBoundary>
         </Suspense>
       ) : (
         <VitalSignsView />
