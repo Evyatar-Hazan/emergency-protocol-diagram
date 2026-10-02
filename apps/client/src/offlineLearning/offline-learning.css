@@ -1,34 +1,11 @@
-:root {
-  font-family: system-ui, sans-serif;
-  color: #16202c;
-}
-
 * { box-sizing: border-box; }
-body { margin: 0; min-height: 100vh; }
-.reader-shell { width: min(900px, calc(100% - 24px)); margin: 0 auto; padding: 24px 0 64px; }
+body { margin: 0; font-family: system-ui; }
+.reader-shell { width: min(900px, calc(100% - 1rem)); margin: auto; }
 .reader-hero, .reader-card, .reader-version, .reader-message, .reader-search {
-  border: 1px solid rgba(16, 52, 84, .18);
-  border-radius: 24px;
-  background: #fffaf2;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #789;
 }
-.reader-hero { padding: 24px; }
-.reader-hero h1 { margin: 10px 0 8px; font-size: clamp(2rem, 7vw, 3.2rem); }
-.reader-kicker, .reader-node-id { color: #0e4b76; font-size: .8rem; font-weight: 800; }
-.reader-boundary { padding: 12px; border-radius: 14px; background: #fff3cd; color: #553d00; font-weight: 700; }
-.reader-version { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-top: 16px; padding: 18px; }
-.reader-search { display: grid; gap: 8px; margin-top: 16px; padding: 18px; font-weight: 700; }
-.reader-search input { width: 100%; border: 1px solid #a9b7c5; border-radius: 14px; padding: 12px 14px; font: inherit; }
-.reader-list { display: grid; gap: 16px; margin-top: 16px; }
-.reader-card { padding: 22px; }
-.reader-card h2 { margin: 6px 0; font-size: 1.5rem; }
-.reader-card p, .reader-card li, .reader-card dd { line-height: 1.7; }
-.reader-section { padding: 14px 0; border-top: 1px solid #e1d8cb; }
-.reader-details { display: grid; gap: 10px; }
-.reader-details dd { margin: 0; }
-.reader-message { margin-top: 16px; padding: 24px; line-height: 1.7; }
-.reader-error { border-color: #d69a8d; background: #fff3ef; color: #712e22; }
-
-@media (max-width: 520px) {
-  .reader-shell { width: min(100% - 16px, 900px); padding-top: 8px; }
-  .reader-hero, .reader-card { border-radius: 18px; padding: 18px; }
-}
+.reader-version { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 1rem; }
+.reader-search { display: block; }
+input { width: 100%; padding: .75rem; font: inherit; }
