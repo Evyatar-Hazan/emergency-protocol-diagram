@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bls-protocol.evyatarhazan.com/schemas/node-source-provenance.schema.json",
+  "title": "Emergency Protocol Diagram node source provenance manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "protocol_id",
+    "protocol_version",
+    "generated_from",
+    "base_sha",
+    "nodes",
+    "review_records"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "protocol_id": { "type": "string", "minLength": 1 },
+    "protocol_version": { "type": "string", "minLength": 1 },
+    "generated_from": { "type": "string", "minLength": 1 },
+    "base_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "nodes": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/nodeProvenance" }
+    },
+    "review_records": {
+      "type": "array",
+      "description": "Full review records must also validate against TASK-53-clinical-review.schema.json.",
+      "items": { "$ref": "#/$defs/reviewRecordReference" }
+    }
+  },
+  "$defs": {
+    "reviewStatus": {
+      "enum": [
+        "not_requested",
+        "pending",
+        "in_review",
+        "changes_requested",
+        "scope_blocked",
+        "approved_for_stated_use",
+        "rejected",
+        "expired",
+        "withdrawn"
+      ]
+    },
+    "authorityStatus": {
+      "enum": ["unknown", "unassigned", "nominated", "confirmed", "declined"]
+    },
+    "sourceStatus": {
+      "enum": ["missing", "pending", "verified", "rejected"]
+    },
+    "nodeProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node_id", "node_content_hash", "sources"],
+      "properties": {
+        "node_id": { "type": "string", "minLength": 1 },
+        "node_content_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/sourceProvenance" }
+        }
+      }
+    },
+    "sourceProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_index",
+        "label",
+        "url",
+        "version_or_date",
+        "source_status",
+        "review_status",
+        "authority_status",
+        "approved_use",
+        "reviewed_at",
+        "review_due",
+        "review_record_id"
+      ],
+      "properties": {
+        "source_id": { "type": "string", "pattern": "^src_[0-9a-f]{16}$" },
+        "source_index": { "type": "integer", "minimum": 0 },
+        "label": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "minLength": 1 },
+        "note": { "type": "string" },
+        "version_or_date": { "type": ["string", "null"] },
+        "source_status": { "$ref": "#/$defs/sourceStatus" },
+        "review_status": { "$ref": "#/$defs/reviewStatus" },
+        "authority_status": { "$ref": "#/$defs/authorityStatus" },
+        "approved_use": { "type": ["string", "null"] },
+        "reviewed_at": { "type": ["string", "null"], "format": "date-time" },
+        "review_due": { "type": ["string", "null"], "format": "date" },
+        "review_record_id": {
+          "type": ["string", "null"],
+          "pattern": "^CLIN-[0-9]{4}-[0-9]{3,}$"
+        }
+      }
+    },
+    "reviewRecordReference": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "schema_version",
+        "change_id",
+        "title",
+        "intended_use",
+        "content_domain",
+        "risk_tier",
+        "review_status",
+        "authority_status",
+        "source_status",
+        "source",
+        "affected_paths",
+        "affected_node_ids",
+        "before_exact",
+        "after_exact",
+        "semantic_diff",
+        "review_assignments",
+        "review_decisions",
+        "approved_use",
+        "decided_at",
+        "review_due"
+      ],
+      "properties": {
+        "schema_version": { "const": "1.0.0" },
+        "change_id": { "type": "string", "pattern": "^CLIN-[0-9]{4}-[0-9]{3,}$" },
+        "title": { "type": "string", "minLength": 1 },
+        "intended_use": { "enum": ["learning_only", "training_facilitation", "unknown"] },
+        "content_domain": {
+          "enum": [
+            "non_clinical",
+            "product_scope",
+            "bls",
+            "als",
+            "organizational_policy",
+            "legal",
+            "unknown"
+          ]
+        },
+        "risk_tier": { "enum": ["G0", "G1", "G2", "G3", "unknown"] },
+        "review_status": { "$ref": "#/$defs/reviewStatus" },
+        "authority_status": { "$ref": "#/$defs/authorityStatus" },
+        "source_status": { "$ref": "#/$defs/sourceStatus" },
+        "source": {
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/clinicalSource" }
+          ]
+        },
+        "affected_paths": { "type": "array", "items": { "type": "string" } },
+        "affected_node_ids": { "type": "array", "items": { "type": "string" } },
+        "before_exact": { "type": "string" },
+        "after_exact": { "type": "string" },
+        "semantic_diff": { "type": "string" },
+        "review_assignments": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reviewAssignment" }
+        },
+        "approved_use": { "type": ["string", "null"] },
+        "decided_at": { "type": ["string", "null"], "format": "date-time" },
+        "review_due": { "type": ["string", "null"], "format": "date" },
+        "review_decisions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/reviewDecision" }
+        }
+      }
+    },
+    "clinicalSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "publisher",
+        "title",
+        "version_or_date",
+        "stable_url_or_repo_path",
+        "page_section_anchor",
+        "accessed_at",
+        "organizational_status"
+      ],
+      "properties": {
+        "publisher": { "type": "string" },
+        "title": { "type": "string" },
+        "version_or_date": { "type": "string" },
+        "stable_url_or_repo_path": { "type": "string" },
+        "page_section_anchor": { "type": "string" },
+        "accessed_at": { "type": "string", "format": "date" },
+        "organizational_status": {
+          "enum": ["public", "organization_approved", "unknown"]
+        }
+      }
+    },
+    "reviewAssignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "assignee_status",
+        "assignee_name",
+        "authority_basis",
+        "scope_statement"
+      ],
+      "properties": {
+        "role": { "type": "string" },
+        "assignee_status": { "$ref": "#/$defs/authorityStatus" },
+        "assignee_name": { "type": ["string", "null"] },
+        "authority_basis": { "type": "string" },
+        "scope_statement": { "type": ["string", "null"] },
+        "independent_of_author": { "type": ["boolean", "null"] }
+      }
+    },
+    "reviewDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "decision", "reviewer_name", "scope_statement", "notes"],
+      "properties": {
+        "role": { "type": "string" },
+        "decision": {
+          "enum": ["pending", "approved", "changes_requested", "scope_blocked", "rejected"]
+        },
+        "reviewer_name": { "type": ["string", "null"] },
+        "scope_statement": { "type": ["string", "null"] },
+        "notes": { "type": "string" },
+        "decided_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    }
+  }
+}

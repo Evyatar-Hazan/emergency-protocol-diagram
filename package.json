@@ -24,7 +24,8 @@
     "test:coverage:production": "npm run test:coverage --workspace @emergency-protocol-diagram/server",
     "test:server": "npm run test --workspace @emergency-protocol-diagram/server",
     "baseline:local": "node scripts/run-local-baseline.mjs",
-    "baseline:check": "node scripts/check-local-baseline.mjs"
+    "baseline:check": "node scripts/check-local-baseline.mjs",
+    "generate:source-provenance": "node scripts/generate-source-provenance.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
