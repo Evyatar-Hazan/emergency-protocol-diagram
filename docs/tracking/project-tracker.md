@@ -79,6 +79,15 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 
 כל המשימות להלן נפתחו על בסיס ה-audit העובדתי מ-`2026-08-14` ועומדות ב-[REM-003 Audit Gate](./rem-003-audit-gate.md).
 
+### Jarvis 62 — Synthetic instructor groups candidate — 2026-10-02
+
+- מומש ב־branch מבודד כלי feature-gated להקצאת `SCN-01` לקבוצות סינתטיות ולצפייה בתוצאות מצרפיות בלבד; הוא כבוי כברירת מחדל ואינו נחשף ללא `VITE_ENABLE_SYNTHETIC_INSTRUCTOR_TOOLS=true`.
+- הרשאות השרת fail-closed: נדרשת רשומת `training_roles` מפורשת ב־scope ‏`synthetic_only`; אין endpoint להענקת role, אין grant בסכמת הבסיס, ו־instructor אינו יכול לנהל קבוצה של instructor אחר.
+- אין טבלת לומדים או תוצאות אישיות. נשמרים רק group metadata, assignment ואגרגטים; חתך קטן מ־10 השלמות מוסתר ללא counts.
+- fixture הבדיקה משתמש רק בזהויות `.invalid`; לא נוצרו חשבונות אמיתיים ולא שונו הרשאות production.
+- הוכחות מקומיות: client ‏`113/113`, server ‏`49/49`, lint ו־build עברו; coverage client ‏`94.25/88.70/100/98.43`, server ‏`81.62/72.62/81.81/84.07`; schema+fixture עברו SQLite; Playwright עבר desktop והתאמה ל־`390×844`, כולל assignment, suppression ומעבר למצב תרגול.
+- פירוט: [task-62-synthetic-instructor-groups.md](./task-62-synthetic-instructor-groups.md). אין merge, push, deployment או אישור פיילוט.
+
 ### Jarvis 66 — Community trust and moderation candidate — 2026-10-02
 
 - מומש בענף מבודד `codex/jarvis-66-community-safety` על בסיס
