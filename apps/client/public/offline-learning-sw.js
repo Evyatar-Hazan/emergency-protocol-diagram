@@ -133,12 +133,17 @@ export async function installOfflinePackageAtomic({
     const offlinePageUrl = new URL(OFFLINE_PAGE_PATH, origin).toString();
     const htmlResponse = await fetchRequired(offlinePageUrl, fetcher, signal);
     const html = await htmlResponse.clone().text();
+    const offlineShellResponse = new Response(html, {
+      status: htmlResponse.status,
+      statusText: htmlResponse.statusText,
+      headers: htmlResponse.headers,
+    });
     const shellUrls = safeShellUrls(html, origin);
 
     for (const url of shellUrls) {
       if (signal?.aborted) throw new DOMException('ההורדה בוטלה.', 'AbortError');
       const response = url === offlinePageUrl
-        ? htmlResponse.clone()
+        ? offlineShellResponse.clone()
         : await fetchRequired(url, fetcher, signal);
       await cache.put(url, response);
     }

@@ -4,7 +4,7 @@ import {
   installOfflinePackageAtomic,
   readActiveRecord,
   sha256,
-} from './offline-learning-sw.js';
+} from '../../public/offline-learning-sw.js';
 
 class MemoryCache {
   entries = new Map();

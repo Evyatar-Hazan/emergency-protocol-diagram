@@ -9,6 +9,7 @@ const clientRoot = fileURLToPath(new URL(".", import.meta.url));
 export default defineConfig({
   plugins: [react()],
   build: {
+    cssCodeSplit: false,
     rollupOptions: {
       input: {
         main: resolve(clientRoot, "index.html"),
