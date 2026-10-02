@@ -26,7 +26,23 @@ interface ApiUser {
   isAdmin: boolean;
 }
 
-interface ApiComment {
+export type CommentTrustStatus = 'community_unreviewed' | 'moderation_reviewed';
+export type CommentReportReason =
+  | 'potentially_unsafe'
+  | 'misleading'
+  | 'spam'
+  | 'harassment'
+  | 'other_policy';
+export type CommentModerationAction = 'mark_reviewed' | 'hide' | 'restore' | 'dismiss_reports';
+export type CommentModerationReason =
+  | 'community_guidelines'
+  | 'potentially_unsafe'
+  | 'misleading'
+  | 'spam'
+  | 'harassment'
+  | 'report_unsubstantiated';
+
+export interface ApiComment {
   id: string;
   nodeId: string;
   content: string;
@@ -38,7 +54,19 @@ interface ApiComment {
   likesCount?: number;
   viewsCount?: number;
   viewerHasLiked?: boolean;
+  trustStatus: CommentTrustStatus;
   replies?: ApiComment[];
+}
+
+export interface ModerationQueueItem {
+  commentId: string;
+  nodeId: string;
+  content: string;
+  moderationStatus: CommentTrustStatus;
+  visibilityStatus: 'visible' | 'hidden';
+  createdAt: string;
+  reportCount: number;
+  reportReasons: CommentReportReason[];
 }
 
 function getViewerKey() {
@@ -131,5 +159,29 @@ export const commentService = {
       },
     });
     return unwrapApiData<{ viewsCount: number }>(response.data);
+  },
+
+  reportComment: async (commentId: string, reason: CommentReportReason) => {
+    const response = await apiClient.post(`/comments/${commentId}/report`, { reason });
+    return unwrapApiData<{ status: 'queued' }>(response.data);
+  },
+
+  getModerationQueue: async () => {
+    const response = await apiClient.get('/comments/moderation/queue');
+    return unwrapApiData<{ items: ModerationQueueItem[] }>(response.data).items;
+  },
+
+  moderateComment: async (
+    commentId: string,
+    action: CommentModerationAction,
+    reason: CommentModerationReason,
+  ) => {
+    const response = await apiClient.post(`/comments/${commentId}/moderate`, { action, reason });
+    return unwrapApiData<{
+      status: 'moderated';
+      action: CommentModerationAction;
+      trustStatus: CommentTrustStatus;
+      approvalStatus: 'not_approved';
+    }>(response.data);
   },
 };
