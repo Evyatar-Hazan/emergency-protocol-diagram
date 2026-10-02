@@ -6,7 +6,7 @@ import { isAdaptiveReviewEventForRubric } from '../assessment/adaptiveReviewEven
 import type { LearningAssessmentRubric } from '../assessment/types';
 
 export const REVIEW_QUEUE_STORAGE_KEY = 'epd.adaptive-review.v1';
-export const REVIEW_QUEUE_SCHEMA_VERSION = 1 as const;
+export const REVIEW_QUEUE_SCHEMA_VERSION = 2 as const;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -27,13 +27,17 @@ export interface ReviewQueueItem {
 
 export interface ReviewQueueState {
   schemaVersion: typeof REVIEW_QUEUE_SCHEMA_VERSION;
+  consent: 'unknown' | 'granted' | 'declined';
   enabled: boolean;
+  assessmentCursor: number;
   items: readonly ReviewQueueItem[];
 }
 
 export const emptyReviewQueue = (): ReviewQueueState => ({
   schemaVersion: REVIEW_QUEUE_SCHEMA_VERSION,
-  enabled: true,
+  consent: 'unknown',
+  enabled: false,
+  assessmentCursor: 0,
   items: [],
 });
 
@@ -112,13 +116,36 @@ export function loadReviewQueue(storage: Storage): ReviewQueueState {
       return emptyReviewQueue();
     }
     const record = parsed as Record<string, unknown>;
-    const exactKeys = ['enabled', 'items', 'schemaVersion'].sort();
+    const legacyKeys = ['enabled', 'items', 'schemaVersion'].sort();
+    if (
+      record.schemaVersion === 1 &&
+      Object.keys(record).sort().length === legacyKeys.length &&
+      Object.keys(record).sort().every((key, index) => key === legacyKeys[index]) &&
+      typeof record.enabled === 'boolean' &&
+      Array.isArray(record.items) &&
+      record.items.every(isReviewQueueItem)
+    ) {
+      return {
+        schemaVersion: REVIEW_QUEUE_SCHEMA_VERSION,
+        consent: 'unknown',
+        enabled: false,
+        assessmentCursor: 0,
+        items: sortReviewItems(record.items),
+      };
+    }
+
+    const exactKeys = ['assessmentCursor', 'consent', 'enabled', 'items', 'schemaVersion'].sort();
     const actualKeys = Object.keys(record).sort();
+    const allowedConsent = new Set(['unknown', 'granted', 'declined']);
     if (
       actualKeys.length !== exactKeys.length ||
       !actualKeys.every((key, index) => key === exactKeys[index]) ||
       record.schemaVersion !== REVIEW_QUEUE_SCHEMA_VERSION ||
+      !allowedConsent.has(record.consent as string) ||
       typeof record.enabled !== 'boolean' ||
+      (record.enabled && record.consent !== 'granted') ||
+      !Number.isInteger(record.assessmentCursor) ||
+      (record.assessmentCursor as number) < 0 ||
       !Array.isArray(record.items) ||
       !record.items.every(isReviewQueueItem)
     ) {
@@ -126,7 +153,9 @@ export function loadReviewQueue(storage: Storage): ReviewQueueState {
     }
     return {
       schemaVersion: REVIEW_QUEUE_SCHEMA_VERSION,
+      consent: record.consent as ReviewQueueState['consent'],
       enabled: record.enabled,
+      assessmentCursor: record.assessmentCursor as number,
       items: sortReviewItems(record.items),
     };
   } catch {
@@ -139,7 +168,9 @@ export function saveReviewQueue(storage: Storage, state: ReviewQueueState): void
     REVIEW_QUEUE_STORAGE_KEY,
     JSON.stringify({
       schemaVersion: REVIEW_QUEUE_SCHEMA_VERSION,
+      consent: state.consent,
       enabled: state.enabled,
+      assessmentCursor: state.assessmentCursor,
       items: sortReviewItems(state.items),
     }),
   );
@@ -272,11 +303,34 @@ export function setReviewQueueEnabled(
   state: ReviewQueueState,
   enabled: boolean,
 ): ReviewQueueState {
-  return { ...state, enabled };
+  return { ...state, enabled: enabled && state.consent === 'granted' };
 }
 
-export function resetReviewQueue(enabled = true): ReviewQueueState {
-  return { ...emptyReviewQueue(), enabled };
+export function grantReviewQueueConsent(
+  state: ReviewQueueState,
+  assessmentBaseline: number,
+): ReviewQueueState {
+  return {
+    ...state,
+    consent: 'granted',
+    enabled: true,
+    assessmentCursor: Math.max(0, assessmentBaseline),
+  };
+}
+
+export function declineReviewQueueConsent(state: ReviewQueueState): ReviewQueueState {
+  return { ...state, consent: 'declined', enabled: false };
+}
+
+export function advanceAssessmentCursor(
+  state: ReviewQueueState,
+  assessmentCursor: number,
+): ReviewQueueState {
+  return { ...state, assessmentCursor: Math.max(state.assessmentCursor, assessmentCursor) };
+}
+
+export function resetReviewQueue(): ReviewQueueState {
+  return emptyReviewQueue();
 }
 
 export function dueReviewCount(state: ReviewQueueState, now: Date): number {

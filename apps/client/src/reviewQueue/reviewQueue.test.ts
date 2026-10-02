@@ -4,9 +4,11 @@ import type { AssessmentLearningResultRecordedEvent } from '../assessment/adapti
 import {
   REVIEW_QUEUE_STORAGE_KEY,
   completeReview,
+  declineReviewQueueConsent,
   dueReviewCount,
   emptyReviewQueue,
   ingestAssessmentEvent,
+  grantReviewQueueConsent,
   loadReviewQueue,
   removeReviewItem,
   resetReviewQueue,
@@ -217,14 +219,27 @@ describe('personal review queue', () => {
   });
 
   it('can disable scheduling without deleting local items', () => {
-    const state = syncBookmarks(emptyReviewQueue(), ['unified_flow:scene_assessment'], now);
+    const consented = grantReviewQueueConsent(emptyReviewQueue(), 0);
+    const state = syncBookmarks(consented, ['unified_flow:scene_assessment'], now);
     const disabled = setReviewQueueEnabled(state, false);
     expect(disabled.items).toHaveLength(1);
     expect(dueReviewCount(disabled, now)).toBe(0);
   });
 
   it('can reset all local review data while preserving the chosen enabled state', () => {
-    expect(resetReviewQueue(false)).toEqual({ schemaVersion: 1, enabled: false, items: [] });
+    expect(resetReviewQueue()).toEqual({
+      schemaVersion: 2,
+      consent: 'unknown',
+      enabled: false,
+      assessmentCursor: 0,
+      items: [],
+    });
+  });
+
+  it('cannot enable the queue without explicit granted consent', () => {
+    expect(setReviewQueueEnabled(emptyReviewQueue(), true).enabled).toBe(false);
+    expect(setReviewQueueEnabled(declineReviewQueueConsent(emptyReviewQueue()), true).enabled).toBe(false);
+    expect(setReviewQueueEnabled(grantReviewQueueConsent(emptyReviewQueue(), 0), true).enabled).toBe(true);
   });
 
   it('persists and restores the same schedule after closing', () => {
@@ -247,6 +262,28 @@ describe('personal review queue', () => {
       JSON.stringify({ schemaVersion: 1, enabled: true, items: [], userId: 'forbidden' }),
     );
     expect(loadReviewQueue(storage)).toEqual(emptyReviewQueue());
+  });
+
+  it('preserves legacy v1 items but requires a new explicit choice', () => {
+    const storage = new MemoryStorage();
+    const legacyItem = syncBookmarks(
+      grantReviewQueueConsent(emptyReviewQueue(), 0),
+      ['unified_flow:scene_assessment'],
+      now,
+    ).items[0];
+    storage.setItem(
+      REVIEW_QUEUE_STORAGE_KEY,
+      JSON.stringify({ schemaVersion: 1, enabled: true, items: [legacyItem] }),
+    );
+
+    const migrated = loadReviewQueue(storage);
+    expect(migrated).toMatchObject({
+      schemaVersion: 2,
+      consent: 'unknown',
+      enabled: false,
+      assessmentCursor: 0,
+    });
+    expect(migrated.items).toEqual([legacyItem]);
   });
 
   it('converts a stored assessment attempt without adding learner data', () => {

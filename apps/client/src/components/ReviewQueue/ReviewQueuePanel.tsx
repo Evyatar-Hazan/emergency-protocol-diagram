@@ -4,20 +4,20 @@ import {
   loadScn01LearningRubric,
   type RuntimeLearningRubric,
 } from '../../assessment/loadScn01Rubric';
-import { loadAssessmentAttempts } from '../../assessment/localStorage';
-import type { LearningAssessmentRubric } from '../../assessment/types';
-import { eventFromStoredAttempt } from '../../reviewQueue/assessmentHistory';
+import {
+  grantConsentWithoutBackfill,
+  hydrateConsentedLocalSources,
+} from '../../reviewQueue/localSources';
 import {
   completeReview,
+  declineReviewQueueConsent,
   dueReviewCount,
-  ingestAssessmentEvent,
   loadReviewQueue,
   removeReviewItem,
   resetReviewQueue,
   saveReviewQueue,
   setReviewQueueEnabled,
   snoozeReview,
-  syncBookmarks,
   type ReviewQueueItem,
   type ReviewQueueState,
 } from '../../reviewQueue/reviewQueue';
@@ -32,30 +32,6 @@ interface ReviewQueuePanelProps {
 }
 
 const defaultNowProvider = () => new Date();
-
-function hydrateFromLocalSources(
-  state: ReviewQueueState,
-  bookmarkedNodeIds: readonly string[],
-  storage: Storage,
-  now: Date,
-  rubric: LearningAssessmentRubric,
-): ReviewQueueState {
-  if (!state.enabled) return state;
-  let hydrated = syncBookmarks(state, bookmarkedNodeIds, now);
-  const attempts = loadAssessmentAttempts(storage);
-  const latestAttempt = attempts.at(-1);
-  if (!latestAttempt) return hydrated;
-  const event = eventFromStoredAttempt(latestAttempt, rubric);
-  if (!event) return hydrated;
-  hydrated = ingestAssessmentEvent(
-    hydrated,
-    event,
-    rubric,
-    now,
-    attempts.length,
-  );
-  return hydrated;
-}
 
 function formatDueDate(item: ReviewQueueItem, now: Date): string {
   const due = new Date(item.dueAt);
@@ -96,7 +72,7 @@ function LoadedReviewQueuePanel({
   const [confirmReset, setConfirmReset] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [state, setState] = useState<ReviewQueueState>(() => {
-    const hydrated = hydrateFromLocalSources(
+    const hydrated = hydrateConsentedLocalSources(
       loadReviewQueue(storage),
       bookmarkedNodeIds,
       storage,
@@ -144,9 +120,28 @@ function LoadedReviewQueuePanel({
     const enabled = !state.enabled;
     const toggled = setReviewQueueEnabled(state, enabled);
     const next = enabled
-      ? hydrateFromLocalSources(toggled, bookmarkedNodeIds, storage, nowProvider(), scn01LearningRubric)
+      ? hydrateConsentedLocalSources(toggled, bookmarkedNodeIds, storage, nowProvider(), scn01LearningRubric)
       : toggled;
     persist(next, enabled ? 'תור החזרות הופעל.' : 'תור החזרות כובה. הנתונים נשארו במכשיר.');
+  };
+
+  const handleGrantConsent = () => {
+    const consented = grantConsentWithoutBackfill(state, storage);
+    const next = hydrateConsentedLocalSources(
+      consented,
+      bookmarkedNodeIds,
+      storage,
+      nowProvider(),
+      scn01LearningRubric,
+    );
+    persist(next, 'ההסכמה נשמרה מקומית ותור החזרות הופעל.');
+  };
+
+  const handleDeclineConsent = () => {
+    persist(
+      declineReviewQueueConsent(state),
+      'תור החזרות נשאר כבוי ולא נקראה היסטוריית למידה.',
+    );
   };
 
   const handleComplete = (item: ReviewQueueItem) => {
@@ -166,7 +161,7 @@ function LoadedReviewQueuePanel({
   };
 
   const handleReset = () => {
-    persist(resetReviewQueue(false), 'נתוני תור החזרות נמחקו והתור כובה.');
+    persist(resetReviewQueue(), 'נתוני תור החזרות והעדפת ההסכמה נמחקו; התור כבוי.');
     setConfirmReset(false);
   };
 
@@ -187,59 +182,97 @@ function LoadedReviewQueuePanel({
         </span>
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={toggleEnabled}
-          aria-pressed={state.enabled}
-          className={`min-h-11 rounded-2xl px-4 py-2 text-sm font-bold transition-colors ${
-            state.enabled
-              ? 'bg-clinical-teal text-white hover:bg-teal-700'
-              : 'border border-slate-300 bg-white text-slate-800 hover:bg-slate-50'
-          }`}
-        >
-          {state.enabled ? 'התור פעיל' : 'הפעל את התור'}
-        </button>
-        <button
-          type="button"
-          onClick={() => setConfirmReset(true)}
-          className="min-h-11 rounded-2xl border border-rose-200 bg-white px-4 py-2 text-sm font-bold text-rose-800 transition-colors hover:bg-rose-50"
-        >
-          מחק נתוני תור
-        </button>
-      </div>
+      <p className="sr-only" aria-live="polite">{statusMessage}</p>
 
-      {confirmReset && (
-        <div className="mb-4 rounded-2xl border border-rose-200 bg-rose-50 p-3" role="alert">
-          <p className="text-sm leading-6 text-rose-900">
-            המחיקה תסיר את מועדי החזרה וההיסטוריה המקומית של התור ותכבה אותו. הסימניות ונתוני ההערכה נשמרים במאגרים המקומיים הנפרדים שלהם.
+      {state.consent !== 'granted' ? (
+        <div className="rounded-3xl border border-clinical-blue/25 bg-white p-4 shadow-sm">
+          <h4 className="text-base font-bold text-slate-900">הפעלה רק לאחר הסכמה</h4>
+          <p className="mt-2 text-sm leading-6 text-slate-700">
+            בהפעלה, התור יקרא בדפדפן הזה סימניות וניסיונות תרגול חדשים, וישמור מקומית רק מזהי תוכן, סוגי משוב ומועדי חזרה. לא נשלח מידע לשרת או לספק חיצוני.
           </p>
-          <div className="mt-3 flex gap-2">
-            <button type="button" onClick={handleReset} className="min-h-11 rounded-xl bg-rose-700 px-3 py-2 text-sm font-bold text-white">
-              מחק וכבה
+          <p className="mt-2 rounded-2xl bg-sky-50 px-3 py-2 text-xs leading-5 text-sky-900">
+            ניסיונות שכבר קיימים לא ייובאו בדיעבד. אפשר לכבות או למחוק את נתוני התור בכל עת בלי לפגוע בגישה לתוכן.
+          </p>
+          {state.items.length > 0 && (
+            <p className="mt-2 text-xs leading-5 text-slate-600">
+              נמצאו {state.items.length} פריטי תור מגרסה קודמת. הם נשמרו ללא שינוי ואינם מוצגים או מתעדכנים לפני בחירה מפורשת.
+            </p>
+          )}
+          {state.consent === 'declined' && (
+            <p className="mt-2 text-xs font-bold text-slate-700">
+              בחרת להשאיר את התור כבוי. אפשר לשנות את הבחירה כאן.
+            </p>
+          )}
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={handleGrantConsent}
+              className="min-h-11 rounded-2xl bg-clinical-blue px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-clinical-deep"
+            >
+              אני מסכים/ה ומפעיל/ה תור מקומי
             </button>
-            <button type="button" onClick={() => setConfirmReset(false)} className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-bold text-slate-800">
-              ביטול
+            <button
+              type="button"
+              onClick={handleDeclineConsent}
+              className="min-h-11 rounded-2xl border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-800 hover:bg-slate-50"
+            >
+              לא עכשיו
             </button>
           </div>
         </div>
-      )}
-
-      <p className="sr-only" aria-live="polite">{statusMessage}</p>
-
-      {!state.enabled ? (
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
-          התור כבוי. לא נוצרים מועדי חזרה חדשים עד שתפעיל אותו שוב.
-        </div>
-      ) : activeItems.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-white/80 p-5 text-center">
-          <div className="text-3xl" aria-hidden="true">↻</div>
-          <p className="mt-2 text-sm font-bold text-slate-900">התור עדיין ריק</p>
-          <p className="mt-1 text-xs leading-5 text-slate-600">הוסף סימניה, או השלם תרגול שמפיק משוב לימודי.</p>
-        </div>
       ) : (
-        <div className="space-y-3">
-          {activeItems.map((item) => {
+        <>
+          <div className="mb-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={toggleEnabled}
+              aria-pressed={state.enabled}
+              className={`min-h-11 rounded-2xl px-4 py-2 text-sm font-bold transition-colors ${
+                state.enabled
+                  ? 'bg-clinical-teal text-white hover:bg-teal-700'
+                  : 'border border-slate-300 bg-white text-slate-800 hover:bg-slate-50'
+              }`}
+            >
+              {state.enabled ? 'התור פעיל' : 'הפעל את התור'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmReset(true)}
+              className="min-h-11 rounded-2xl border border-rose-200 bg-white px-4 py-2 text-sm font-bold text-rose-800 transition-colors hover:bg-rose-50"
+            >
+              מחק נתוני תור
+            </button>
+          </div>
+
+          {confirmReset && (
+            <div className="mb-4 rounded-2xl border border-rose-200 bg-rose-50 p-3" role="alert">
+              <p className="text-sm leading-6 text-rose-900">
+                המחיקה תסיר את מועדי החזרה, ההיסטוריה והעדפת ההסכמה של התור. הסימניות ונתוני ההערכה נשמרים במאגרים המקומיים הנפרדים שלהם.
+              </p>
+              <div className="mt-3 flex gap-2">
+                <button type="button" onClick={handleReset} className="min-h-11 rounded-xl bg-rose-700 px-3 py-2 text-sm font-bold text-white">
+                  מחק וכבה
+                </button>
+                <button type="button" onClick={() => setConfirmReset(false)} className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-bold text-slate-800">
+                  ביטול
+                </button>
+              </div>
+            </div>
+          )}
+
+          {!state.enabled ? (
+            <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
+              התור כבוי. לא נקראת היסטוריית למידה ולא נוצרים מועדי חזרה חדשים עד שתפעיל אותו שוב.
+            </div>
+          ) : activeItems.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-300 bg-white/80 p-5 text-center">
+              <div className="text-3xl" aria-hidden="true">↻</div>
+              <p className="mt-2 text-sm font-bold text-slate-900">התור עדיין ריק</p>
+              <p className="mt-1 text-xs leading-5 text-slate-600">הוסף סימניה, או השלם תרגול חדש שמפיק משוב לימודי.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {activeItems.map((item) => {
             const presentation = scn01LearningRubric.review_reason_presentation[item.reason];
             const resolved = resolveItem(item);
             const isDue = Date.parse(item.dueAt) <= nowProvider().getTime();
@@ -277,8 +310,10 @@ function LoadedReviewQueuePanel({
                 </div>
               </article>
             );
-          })}
-        </div>
+              })}
+            </div>
+          )}
+        </>
       )}
     </section>
   );
