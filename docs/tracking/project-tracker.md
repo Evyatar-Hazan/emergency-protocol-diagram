@@ -95,6 +95,14 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
   בסביבה מורשית. אין שימוש בנתוני מטופלים, תגובות חיות או ספק analytics.
 - מדיניות מלאה: [community-moderation-policy.md](../governance/community-moderation-policy.md).
 
+### Task 68 — סביבת עריכת תוכן מקומית
+
+- מומשה סביבת טיוטות מקומית לצמתים עם preview diff, validation, workflow סקירה, revisions ו־rollback append-only.
+- הטיוטות נשמרות ב־`localStorage` בלבד ואינן משנות את `unified-flow.json`; אין פעולת publish, merge או deploy.
+- ה־review gates משתמשים בחוזה runtime של provenance ממשימה 69 ונכשלים סגור בכל מצב שאינו `ready`, וכן על `pending`, ‏`unknown`, מקור ששונה או היעדר reviewer בלתי תלוי.
+- השלמת התשתית אינה מאשרת תוכן רפואי כלשהו ואינה סוגרת את `CONTENT-001`, ‏`CLIN-001` או `CLIN-002`.
+- תיעוד: [content-editor-workflow.md](../development/content-editor-workflow.md).
+
 ### CONTENT-001 remediation snapshot — 2026-10-01
 
 - הוחלפו מקומית חמש כתובות Drive שגויות בכתובות המודולים התואמים בריפו: יחידות `03`, `06`, `10`, `15` ו-`45`. השינוי מתקן `47` הופעות בלי לשנות תוכן או משמעות קלינית.

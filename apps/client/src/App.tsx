@@ -11,11 +11,12 @@ import { SafetyScopeNotice } from './components/safety/SafetyScopeNotice';
 import './App.css';
 
 type ViewMode = 'step-by-step' | 'practice' | 'vital-signs';
-type SecondaryTool = 'none' | 'diagram';
+type SecondaryTool = 'none' | 'diagram' | 'content-editor';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 const hasGoogleClientId =
   Boolean(googleClientId) && !googleClientId.includes('your_google_client_id_here');
+const contentEditorEnabled = import.meta.env.DEV || import.meta.env.VITE_ENABLE_CONTENT_EDITOR === 'true';
 
 const FullFlowDiagram = lazy(() =>
   import('./components/flow/FullFlowDiagram').then((module) => ({
@@ -80,6 +81,12 @@ class PracticeModeBoundary extends Component<
     );
   }
 }
+
+const ContentEditorWorkspace = lazy(() =>
+  import('./components/content-editor/ContentEditorWorkspace').then((module) => ({
+    default: module.ContentEditorWorkspace,
+  }))
+);
 
 function AppContent() {
   const { flowData, activeProtocol, loadData, setActiveProtocol } = useFlowStore();
@@ -289,6 +296,19 @@ function AppContent() {
                       פתח מבט מערכת
                     </button>
                   </div>
+                  {contentEditorEnabled && (
+                    <div className="mt-3 border-t border-slate-200 pt-3">
+                      <button
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          setSecondaryTool('content-editor');
+                        }}
+                        className="w-full rounded-2xl border border-clinical-blue/20 bg-clinical-blue/5 px-4 py-3 text-sm font-semibold text-clinical-deep transition hover:bg-clinical-blue/10"
+                      >
+                        פתח סביבת עריכת תוכן מקומית
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
               <button
@@ -321,7 +341,30 @@ function AppContent() {
         <SafetyScopeNotice id="global-safety-scope" />
       </div>
 
-      {secondaryTool === 'diagram' ? (
+      {secondaryTool === 'content-editor' && contentEditorEnabled ? (
+        <div>
+          <div className="mx-auto w-full max-w-[1500px] px-3 pt-4 sm:px-6">
+            <button
+              onClick={() => setSecondaryTool('none')}
+              className="rounded-2xl border border-slate-300 bg-white/80 px-4 py-2.5 text-sm font-semibold text-clinical-ink transition hover:border-clinical-blue"
+            >
+              חזרה למסלול הלמידה
+            </button>
+          </div>
+          <Suspense
+            fallback={
+              <div className="mx-auto flex min-h-[420px] max-w-7xl items-center justify-center p-6 text-center">
+                <div>
+                  <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-[3px] border-clinical-blue/20 border-t-clinical-blue" />
+                  <p className="text-sm font-semibold text-clinical-muted">טוען את סביבת העריכה המקומית...</p>
+                </div>
+              </div>
+            }
+          >
+            <ContentEditorWorkspace protocol={flowData.protocols.unified_flow} />
+          </Suspense>
+        </div>
+      ) : secondaryTool === 'diagram' ? (
         <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6">
           <div className="surface-card mb-4 rounded-3xl p-4 sm:p-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
