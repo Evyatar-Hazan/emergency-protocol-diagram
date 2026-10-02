@@ -1,14 +1,32 @@
 # Emergency Protocol Diagram
 
-A full-stack emergency protocol platform for interactive medical flow diagrams, step-by-step protocol guidance, vital signs references, Google OAuth login, and comments on protocol nodes.
+A full-stack Hebrew BLS learning and review platform with guided flow diagrams, quick-reference material, Google OAuth login, and comments on protocol nodes.
+
+## Product Scope
+
+Emergency Protocol Diagram is intended for learning and review. It is not intended to make clinical decisions or guide treatment during a live incident, and it does not replace training, current organizational protocols, dispatch instructions, or professional judgment.
+
+The detailed proposed scope is documented in [`docs/product/intended-use.md`](docs/product/intended-use.md). That document remains `draft-for-review`; it is not clinical, legal, instructional, or organizational approval, and its short-form wording is not an approved user-facing disclaimer.
 
 ## Structure
 
 ```text
 apps/
   client/  React + TypeScript + Vite emergency protocol UI
-  server/  Express + TypeScript + Prisma API for auth and comments
+  server/  Express + TypeScript + Prisma local/legacy API workspace
+functions/ Cloudflare Pages Functions used by the production API
 ```
+
+The production runtime is Cloudflare Pages + Pages Functions + D1. The Express + Prisma workspace is retained for local/server development and regression coverage; it is not the production backend.
+
+## Documentation Authority
+
+- Product scope: [`docs/product/intended-use.md`](docs/product/intended-use.md), currently `draft-for-review`.
+- Current repository status and backlog: [`docs/tracking/project-tracker.md`](docs/tracking/project-tracker.md).
+- Current deployment architecture: this README and `wrangler.toml`.
+- Clinical source inventory and mapping: [`docs/source-truth/united-hatzalah-bls/`](docs/source-truth/united-hatzalah-bls/).
+- Phase, redesign, audit, and development-log documents are evidence or historical snapshots unless they explicitly say otherwise.
+- [`apps/client/APP.md`](apps/client/APP.md) and [`apps/client/PROTOCOL_DEVELOPMENT.md`](apps/client/PROTOCOL_DEVELOPMENT.md) are preserved historical documents, not current product or delivery specifications.
 
 ## Local Pages + D1 Development
 
@@ -93,4 +111,4 @@ The root build compiles both workspaces and then mirrors the client output to `/
 
 Production API routes are served by Cloudflare Pages Functions under `/functions`, with D1 bound as `DB` for health checks, comments, likes, and view tracking. The Express + Prisma server remains the local API workspace and shares the same domain model, but Cloudflare Functions + D1 are the live production path.
 
-`apps/client/netlify.toml` is retained only as a legacy Netlify configuration and is aligned to Node 20 for parity with the root `engines` field and GitHub Actions. A local Netlify project link is not required for the Cloudflare Pages deployment path.
+`apps/client/netlify.toml` is retained only as historical configuration. Netlify is not a supported build, preview, or production path for the current project; the legacy repository connection was disconnected on 2026-10-02 without deleting its site or deployment history.
