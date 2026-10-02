@@ -1,0 +1,307 @@
+{
+  "schema_version": "1.0.0",
+  "task_id": 58,
+  "title": "Emergency Protocol Diagram BLS competency and learning outcome map",
+  "language": "he",
+  "status": "draft_pending_instructor_review",
+  "intended_use": "learning_only",
+  "based_on_sha": "64a325516f1fa6065a169cb3aa837fb23571da04",
+  "base_sha_verification": "verified_with_command_line_tools_git",
+  "technical_baseline": {
+    "scenario_count": 17,
+    "flow_node_count": 205,
+    "course_module_count": 46,
+    "scenario_baseline_is_credentialing_evidence": false
+  },
+  "review_defaults": {
+    "review_status": "pending",
+    "authority_status": "unknown",
+    "source_status": "pending",
+    "publication_status": "draft"
+  },
+  "competencies": [
+    {
+      "competency_id": "BLS-C01",
+      "name": "בטיחות זירה והתרשמות ראשונית",
+      "scope": "זיהוי סיכוני זירה, מספר נפגעים, מנגנון והצורך במסלול אירוע מיוחד לפני הערכת מטופל",
+      "review_status": "pending"
+    },
+    {
+      "competency_id": "BLS-C02",
+      "name": "הערכה ראשונית ותעדוף לפי ABCDE",
+      "scope": "שמירת סדר הערכה, זיהוי בעיה מסכנת חיים וחזרה להערכה לאחר שינוי",
+      "review_status": "pending"
+    },
+    {
+      "competency_id": "BLS-C03",
+      "name": "החייאה בסיסית ושימוש ב AED",
+      "scope": "זיהוי מסלול החייאה, רצף פעולות בסיסי ועבודה עם AED ברמת למידה",
+      "review_status": "pending"
+    },
+    {
+      "competency_id": "BLS-C04",
+      "name": "הערכת נתיב אוויר ונשימה",
+      "scope": "זיהוי דפוסים בנתיב אוויר ובנשימה והבחנה בין מסלולי למידה רלוונטיים",
+      "review_status": "pending"
+    },
+    {
+      "competency_id": "BLS-C05",
+      "name": "מחזור דם דימום והלם",
+      "scope": "זיהוי חוסר יציבות, דימום משמעותי וסימנים המחייבים תעדוף והסלמה",
+      "review_status": "pending"
+    },
+    {
+      "competency_id": "BLS-C06",
+      "name": "זיהוי דפוסי חירום רפואיים והסלמה",
+      "scope": "שיוך ממצאים למסלול למידה מתאים בלי להציג אבחנה סופית",
+      "review_status": "pending"
+    },
+    {
+      "competency_id": "BLS-C07",
+      "name": "הערכת טראומה ורצף XABCDE",
+      "scope": "שמירת רצף הערכת טראומה והבחנה בין מנגנונים ואזורים פגועים",
+      "review_status": "pending"
+    },
+    {
+      "competency_id": "BLS-C08",
+      "name": "מטופלים ומצבים מיוחדים",
+      "scope": "זיהוי התאמות והסלמה במצבי ילדים הריון לידה וסביבות מיוחדות בגבול BLS",
+      "review_status": "pending"
+    },
+    {
+      "competency_id": "BLS-C09",
+      "name": "ניהול אירוע מיוחד ובטיחות תפעולית",
+      "scope": "זיהוי מוקדם של ארן חומס צלילה חשמל מים וחשיפה ביולוגית והמעבר למסלול המתאים",
+      "review_status": "pending"
+    },
+    {
+      "competency_id": "BLS-C10",
+      "name": "תקשורת עבודת צוות ותיעוד",
+      "scope": "העברת מידע ממוקדת, תיאום צוות ותיעוד לצורכי למידה",
+      "review_status": "pending"
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "SCN-01",
+      "title": "החייאת מבוגר ללא נשימה וללא דופק",
+      "path_node_ids": ["report_departure", "report_arrival", "scene_assessment", "initial_presentation_gate", "avpu_check", "breathing_check", "cpr_protocol", "attach_defib"],
+      "source_modules": ["02-intro-to-cpr", "03-adult-cpr-single-rescuer-and-aed", "04-team-cpr-and-equipment"],
+      "competency_ids": ["BLS-C01", "BLS-C02", "BLS-C03", "BLS-C10"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-01-01", "statement": "הלומד יסביר את רצף המעבר מהערכת זירה והכרה אל מסלול החייאה ו AED.", "evidence_type": "path_order_explanation", "indicator": "מסדר את תחנות הנתיב ומנמק את המעבר ביניהן בלי לדלג על שערי הפתיחה.", "critical_error_candidate": "דילוג על הערכת זירה או שערי הערכה ראשונית.", "review_status": "pending"},
+        {"outcome_id": "LO-01-02", "statement": "הלומד יזהה במסלול את נקודות ההחלטה שבהן נדרשת פעולה בסיסית והצטרפות ציוד או צוות.", "evidence_type": "decision_point_identification", "indicator": "מצביע על נקודות ההחלטה הרלוונטיות ומבדיל בין למידה לבין הנחיה באירוע חי.", "critical_error_candidate": "שימוש במסלול כאישור פעולה בזמן אמת.", "review_status": "pending"}
+      ],
+      "review_flags": ["HIGH_RISK_CONTENT", "AGE_THRESHOLD_OPEN", "INSTRUCTOR_RUBRIC_REQUIRED"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-02",
+      "title": "חנק בילד או תינוק",
+      "path_node_ids": ["scene_assessment", "avpu_check", "airway_assessment", "choking_protocol", "infant_choking"],
+      "source_modules": ["05-pediatric-cpr-and-choking"],
+      "competency_ids": ["BLS-C01", "BLS-C02", "BLS-C04", "BLS-C08"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-02-01", "statement": "הלומד יבחין בין שערי ההערכה המובילים לענף חנק לבין המשך הערכת נתיב אוויר.", "evidence_type": "branch_rationale", "indicator": "מסביר באילו ממצאים לימודיים נבחר הענף ומזהה את פיצול קבוצת הגיל.", "critical_error_candidate": "ערבוב בין קבוצות גיל או בין חסימה חלקית ומלאה.", "review_status": "pending"},
+        {"outcome_id": "LO-02-02", "statement": "הלומד יתאר מתי המסלול עובר מחנק למסלול החייאה ברמת התרחיש.", "evidence_type": "transition_explanation", "indicator": "מזהה את נקודת המעבר בתרחיש ללא הצגת הכלי כהנחיית טיפול.", "critical_error_candidate": "אי זיהוי מעבר למסלול החייאה.", "review_status": "pending"}
+      ],
+      "review_flags": ["PEDIATRIC_SCOPE", "HIGH_RISK_CONTENT", "INSTRUCTOR_RUBRIC_REQUIRED"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-03",
+      "title": "חולה נשימתי עם PE דלקת ריאות או אסטמה",
+      "path_node_ids": ["scene_assessment", "avpu_check", "abcde_assessment", "breathing_assessment", "breathing_problem_type"],
+      "source_modules": ["08-respiratory-anatomy", "15-respiratory-emergencies", "29-respiratory-emergencies-advanced"],
+      "competency_ids": ["BLS-C02", "BLS-C04", "BLS-C06"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-03-01", "statement": "הלומד יארגן ממצאי נשימה לפי שער B לפני בחירת ענף לימודי.", "evidence_type": "finding_sort", "indicator": "מקבץ ממצאים לפי מאמץ נשימתי וסיפור מקרה ומסביר מדוע אין לקבוע אבחנה סופית.", "critical_error_candidate": "קפיצה לאבחנה לפני השלמת הערכת B.", "review_status": "pending"},
+        {"outcome_id": "LO-03-02", "statement": "הלומד ישווה בין מסלולי הנשימה המוצגים ויזהה סימני החמרה המחייבים הסלמה במסגרת הלמידה.", "evidence_type": "comparison", "indicator": "מבדיל בין ענפי המסלול ומציין שהחלטה מבצעית נשענת על פרוטוקול מוסמך.", "critical_error_candidate": "התעלמות מסימני החמרה או טשטוש גבול BLS.", "review_status": "pending"}
+      ],
+      "review_flags": ["DIAGNOSTIC_LANGUAGE", "ESCALATION_CRITERIA", "ADVANCED_MODULE_BOUNDARY"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-04",
+      "title": "כאב חזה ACS דיסקציה או כאב לא קרדיאלי",
+      "path_node_ids": ["scene_assessment", "avpu_check", "abcde_assessment", "circulation_assessment", "acs_assessment"],
+      "source_modules": ["09-cardiovascular-anatomy", "16-cardiac-emergencies", "30-cardiac-emergencies-advanced"],
+      "competency_ids": ["BLS-C02", "BLS-C05", "BLS-C06"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-04-01", "statement": "הלומד יסביר כיצד הערכת C מובילה למסלול כאב חזה בלי לקבוע אבחנה סופית.", "evidence_type": "clinical_reasoning_explanation", "indicator": "מזהה סימני חוסר יציבות ושומר על שפה של חשד ותעדוף.", "critical_error_candidate": "הצגת אבחנה סופית או הרגעת יתר על בסיס סימן יחיד.", "review_status": "pending"},
+        {"outcome_id": "LO-04-02", "statement": "הלומד יבחין בין ענפי הלמידה של כאב חזה ויזהה מתי נדרשת הסלמה לפי המסגרת המאושרת.", "evidence_type": "branch_comparison", "indicator": "משווה את מטרת הענפים ומפנה לסקירת מדריך עבור קריטריוני הסלמה.", "critical_error_candidate": "שימוש בקריטריונים שלא אושרו או חריגה מ BLS.", "review_status": "pending"}
+      ],
+      "review_flags": ["HIGH_RISK_CONTENT", "DIAGNOSTIC_LANGUAGE", "ESCALATION_CRITERIA"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-05",
+      "title": "טראומה עם דימום מסכן חיים",
+      "path_node_ids": ["scene_assessment", "initial_presentation_gate", "trauma_protocol", "stop_bleeding", "trauma_bleeding_control", "trauma_tourniquet_control", "trauma_wound_packing", "trauma_shock_assessment"],
+      "source_modules": ["17-intro-to-trauma", "18-trauma-approach-and-treatment-stages", "19-shock-and-hemorrhage-control"],
+      "competency_ids": ["BLS-C01", "BLS-C05", "BLS-C07"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-05-01", "statement": "הלומד יסביר מדוע מסלול טראומה מתעדף דימום משמעותי לפני המשך XABCDE.", "evidence_type": "priority_rationale", "indicator": "מסדר את הנתיב ומזהה את נקודת החזרה להערכת טראומה מלאה.", "critical_error_candidate": "אי תעדוף דימום משמעותי או עצירה לאחר פעולה אחת בלי הערכה חוזרת.", "review_status": "pending"},
+        {"outcome_id": "LO-05-02", "statement": "הלומד יבדיל בין ענפי בקרת הדימום הקיימים ברמת בחירת מסלול.", "evidence_type": "branch_selection_rationale", "indicator": "מסביר את מטרת כל ענף ומסמן קריטריונים מדויקים לסקירת מדריך.", "critical_error_candidate": "בחירת ענף על בסיס כלל לא מאושר.", "review_status": "pending"}
+      ],
+      "review_flags": ["HIGH_RISK_CONTENT", "PROCEDURAL_SKILL", "INSTRUCTOR_OBSERVATION_REQUIRED"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-06",
+      "title": "חבלת חזה",
+      "path_node_ids": ["scene_assessment", "trauma_protocol", "abcde_trauma", "trauma_breathing_gate"],
+      "source_modules": ["18-trauma-approach-and-treatment-stages", "21-chest-trauma"],
+      "competency_ids": ["BLS-C02", "BLS-C04", "BLS-C07"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-06-01", "statement": "הלומד ימקם חבלת חזה בתוך שלב B של XABCDE ויזהה את תתי הענפים הקיימים.", "evidence_type": "path_mapping", "indicator": "מקשר מנגנון וממצאים לשער הנשימה בטראומה בלי להציג אבחנה סופית.", "critical_error_candidate": "דילוג על A או על הערכת החמרה נשימתית.", "review_status": "pending"},
+        {"outcome_id": "LO-06-02", "statement": "הלומד יסביר אילו הבחנות דורשות בדיקת מדריך לפני שהן משמשות כמחוון ביצוע.", "evidence_type": "review_boundary_identification", "indicator": "מסמן אבחנה מבדלת ופעולות פרוצדורליות כ pending.", "critical_error_candidate": "הפיכת תיאור לימודי להוראת טיפול.", "review_status": "pending"}
+      ],
+      "review_flags": ["HIGH_RISK_CONTENT", "DIAGNOSTIC_LANGUAGE", "PROCEDURAL_SKILL"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-07",
+      "title": "טראומת בטן אגן או יציאת איברים",
+      "path_node_ids": ["scene_assessment", "trauma_protocol", "abcde_trauma", "trauma_circulation_gate", "trauma_abdomen_pelvis", "trauma_penetrating_abdomen", "trauma_blunt_abdomen", "trauma_evisceration", "trauma_pelvic_injury"],
+      "source_modules": ["18-trauma-approach-and-treatment-stages", "19-shock-and-hemorrhage-control", "22-abdominal-trauma"],
+      "competency_ids": ["BLS-C05", "BLS-C07"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-07-01", "statement": "הלומד ימפה מנגנון ומיקום פגיעה לתת הענף המתאים לאחר הערכת C בטראומה.", "evidence_type": "branch_mapping", "indicator": "מבחין בין ענפי הפגיעה ומסביר את הקשר לסיכון לדימום וחוסר יציבות.", "critical_error_candidate": "התמקדות באזור הפגיעה לפני השלמת תעדוף XABCDE.", "review_status": "pending"},
+        {"outcome_id": "LO-07-02", "statement": "הלומד יזהה אילו פעולות ותיאורי חומרה מחייבים הערכת מדריך מעשית.", "evidence_type": "scope_boundary", "indicator": "מסמן פרוצדורות וקריטריוני חומרה כלא ניתנים לאישור באמצעות ניווט בלבד.", "critical_error_candidate": "הסקת כשירות מעשית מהשלמת מסלול דיגיטלי.", "review_status": "pending"}
+      ],
+      "review_flags": ["HIGH_RISK_CONTENT", "INSTRUCTOR_OBSERVATION_REQUIRED"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-08",
+      "title": "חשד לשבץ פרכוס או שינוי הכרה",
+      "path_node_ids": ["scene_assessment", "avpu_check", "disability_assessment", "disability_status"],
+      "source_modules": ["07-neurological-anatomy", "12-unconscious-breathing-syncope-and-seizures", "13-neurological-emergencies", "14-diabetes-and-poisoning"],
+      "competency_ids": ["BLS-C02", "BLS-C06"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-08-01", "statement": "הלומד יארגן שינויי הכרה בתוך שלב D ויזהה את הענפים הלימודיים הרלוונטיים.", "evidence_type": "differential_path_map", "indicator": "מבדיל בין מסלולי שבץ פרכוס סוכר ושינוי הכרה תוך שימוש בשפת חשד.", "critical_error_candidate": "דילוג על גורמים הפיכים או על הערכת ABC קודמת.", "review_status": "pending"},
+        {"outcome_id": "LO-08-02", "statement": "הלומד יזהה את פריטי המידע שחשוב להעביר הלאה בכל ענף.", "evidence_type": "handoff_content", "indicator": "מנסח מסירת מידע קצרה ומסמן זמני התחלה וקריטריוני הסלמה לסקירת מדריך.", "critical_error_candidate": "השמטת מידע תלוי זמן או קביעת אבחנה סופית.", "review_status": "pending"}
+      ],
+      "review_flags": ["HIGH_RISK_CONTENT", "TIME_DEPENDENT_CRITERIA", "DIAGNOSTIC_LANGUAGE"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-09",
+      "title": "חולה מדבק דקירת מחט או חשיפה לנוזלי גוף",
+      "path_node_ids": ["scene_assessment", "secondary_survey_finish", "infectious_exposure_control"],
+      "source_modules": ["32-infectious-diseases", "36-medical-documentation-app"],
+      "competency_ids": ["BLS-C01", "BLS-C09", "BLS-C10"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-09-01", "statement": "הלומד יבחין בין מסלול מטופל מדבק לבין מסלול חשיפת איש צוות ברמת הזרימה.", "evidence_type": "incident_classification", "indicator": "בוחר את שכבת ההמשך המתאימה ומזהה את הצורך בדיווח ותיעוד.", "critical_error_candidate": "ערבוב בין טיפול במטופל לבין ניהול חשיפה של איש צוות.", "review_status": "pending"},
+        {"outcome_id": "LO-09-02", "statement": "הלומד ימנה את קטגוריות המידע הנדרשות לתיעוד בלי להזין נתוני מטופל אמיתיים.", "evidence_type": "documentation_outline", "indicator": "משתמש בנתוני תרגול בלבד ומבדיל בין תוכן לימודי לנוהל ארגוני.", "critical_error_candidate": "הזנת מידע מזהה או הצגת נוהל מקומי כתקן כללי.", "review_status": "pending"}
+      ],
+      "review_flags": ["ORGANIZATIONAL_POLICY", "PRIVACY_BOUNDARY", "POST_EXPOSURE_SCOPE"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-10",
+      "title": "תאונת צלילה",
+      "path_node_ids": ["scene_assessment", "diving_emergency_overview"],
+      "source_modules": ["34-diving-emergencies"],
+      "competency_ids": ["BLS-C01", "BLS-C06", "BLS-C09"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-10-01", "statement": "הלומד יזהה את סיפור הצלילה כמנגנון המוביל למסלול מיוחד תוך שמירת ABCDE.", "evidence_type": "mechanism_to_path", "indicator": "מסביר מדוע מנגנון מכוון את הענף אך אינו מחליף הערכה ראשונית.", "critical_error_candidate": "התמקדות בפרטי הצלילה לפני זיהוי חוסר יציבות.", "review_status": "pending"},
+        {"outcome_id": "LO-10-02", "statement": "הלומד יסמן פעולות וקריטריוני פינוי או הסלמה הדורשים מדריך מוסמך.", "evidence_type": "review_boundary_identification", "indicator": "אינו מסיק כשירות לטיפול ייעודי מתוך המסלול.", "critical_error_candidate": "חריגה מגבול BLS או נוהל ארגוני.", "review_status": "pending"}
+      ],
+      "review_flags": ["SPECIALTY_SCOPE", "ESCALATION_CRITERIA", "INSTRUCTOR_REVIEW_REQUIRED"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-11",
+      "title": "הריון לידה או מצב חירום מיילדותי",
+      "path_node_ids": ["scene_assessment", "avpu_check", "special_patient_pregnancy", "labor_assessment", "obstetric_emergency", "preeclampsia_eclampsia", "pregnancy_bleeding_emergency", "ectopic_pregnancy_emergency", "obstetric_delivery_complication", "pregnancy_trauma_emergency"],
+      "source_modules": ["33-special-patient", "39-pregnancy-and-delivery", "40-obstetric-emergencies"],
+      "competency_ids": ["BLS-C02", "BLS-C06", "BLS-C08"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-11-01", "statement": "הלומד יבחין בין מסלול לידה מתקדמת לבין מסלולי חירום מיילדותיים ברמת הזרימה.", "evidence_type": "branch_comparison", "indicator": "מתאר את מטרת הענפים ושומר על תעדוף האם והערכת ABCDE.", "critical_error_candidate": "ערבוב בין לידה רגילה לסיבוך או דילוג על חוסר יציבות.", "review_status": "pending"},
+        {"outcome_id": "LO-11-02", "statement": "הלומד יזהה אילו ביצועים אינם ניתנים להערכה דיגיטלית ודורשים תרגול מודרך.", "evidence_type": "modality_boundary", "indicator": "מסמן מיומנויות לידה ויילוד כתצפית מדריך ולא כהישג ניווט.", "critical_error_candidate": "הצגת השלמת מסלול כהוכחת כשירות מעשית.", "review_status": "pending"}
+      ],
+      "review_flags": ["HIGH_RISK_CONTENT", "SPECIAL_POPULATION", "INSTRUCTOR_OBSERVATION_REQUIRED"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-12",
+      "title": "אירוע רב נפגעים",
+      "path_node_ids": ["scene_assessment", "mass_casualty_protocol"],
+      "source_modules": ["37-mass-casualty-incident", "46-mass-casualty-incident-operational-protocol-2025"],
+      "competency_ids": ["BLS-C01", "BLS-C09", "BLS-C10"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-12-01", "statement": "הלומד יזהה מאפייני זירה המובילים למסלול ארן במקום למסלול מטופל יחיד.", "evidence_type": "scene_classification", "indicator": "מנמק את המעבר למסלול אירוע מיוחד בלי להציג נוהל ארגוני כמאושר.", "critical_error_candidate": "כניסה למסלול מטופל יחיד כאשר התרחיש מחייב ניהול זירה.", "review_status": "pending"},
+        {"outcome_id": "LO-12-02", "statement": "הלומד ימפה את צרכי התקשורת והתיאום המרכזיים בתרחיש לימודי.", "evidence_type": "coordination_outline", "indicator": "מציג סדר דיווח ותיאום כללי ומסמן פרטים ארגוניים כ scope blocked.", "critical_error_candidate": "המצאת שרשרת פיקוד או נוהל ארגוני.", "review_status": "pending"}
+      ],
+      "review_flags": ["ORGANIZATIONAL_POLICY", "OPERATIONAL_PROTOCOL", "AUTHORITY_UNKNOWN"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-13",
+      "title": "אירוע חומרים מסוכנים",
+      "path_node_ids": ["scene_assessment", "hazmat_protocol"],
+      "source_modules": ["38-hazmat-incidents"],
+      "competency_ids": ["BLS-C01", "BLS-C09", "BLS-C10"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-13-01", "statement": "הלומד יזהה רמזי זירה שמונעים גישה רגילה ומובילים למסלול חומס.", "evidence_type": "hazard_recognition", "indicator": "מסביר שהבטיחות והנחיית גורם מוסמך קודמות לניווט במסלול מטופל.", "critical_error_candidate": "המלצה להתקרב לזירה לא בטוחה או עקיפת הנחיה מוסמכת.", "review_status": "pending"},
+        {"outcome_id": "LO-13-02", "statement": "הלומד יבדיל בין מטרת ההמחשה הלימודית לבין נוהל חומס ארגוני.", "evidence_type": "scope_statement", "indicator": "מציין במפורש שהמסלול אינו הרשאת פעולה.", "critical_error_candidate": "הצגת תוכן לימודי כהוראה תפעולית.", "review_status": "pending"}
+      ],
+      "review_flags": ["HIGH_RISK_SCENE", "ORGANIZATIONAL_POLICY", "AUTHORITY_UNKNOWN"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-14",
+      "title": "פגיעות שלד עמוד שדרה וקיבועים",
+      "path_node_ids": ["scene_assessment", "trauma_protocol", "abcde_trauma", "trauma_spine_extremity", "trauma_spine_precautions", "trauma_fracture_assessment", "trauma_splinting"],
+      "source_modules": ["18-trauma-approach-and-treatment-stages", "23-musculoskeletal-trauma-and-splinting", "24-spinal-trauma-and-extrication"],
+      "competency_ids": ["BLS-C02", "BLS-C07"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-14-01", "statement": "הלומד ימקם הערכת עמוד שדרה וגפיים לאחר התעדוף הראשוני בטראומה.", "evidence_type": "sequence_explanation", "indicator": "מסדר את שלבי התרחיש ומבדיל בין חשד לעמוד שדרה לבין הערכת גפה.", "critical_error_candidate": "תעדוף קיבוע לפני בעיה מסכנת חיים.", "review_status": "pending"},
+        {"outcome_id": "LO-14-02", "statement": "הלומד יזהה שקיבוע ובדיקת תוצאה הם מיומנויות הדורשות תצפית מדריך.", "evidence_type": "practical_skill_boundary", "indicator": "אינו מייחס כשירות מעשית להשלמת המסלול ומפנה לרובריקה מודרכת.", "critical_error_candidate": "אישור עצמי של מיומנות קיבוע.", "review_status": "pending"}
+      ],
+      "review_flags": ["PROCEDURAL_SKILL", "INSTRUCTOR_OBSERVATION_REQUIRED", "SPINE_PRECAUTION_POLICY"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-15",
+      "title": "טביעה או התחשמלות",
+      "path_node_ids": ["scene_assessment", "trauma_environmental", "drowning_incident", "electrical_injury", "drowning_resuscitation", "drowning_post_rescue", "electrical_resuscitation", "electrical_conscious_management"],
+      "source_modules": ["26-drowning-and-electrical-injury", "27-environmental-injuries"],
+      "competency_ids": ["BLS-C01", "BLS-C02", "BLS-C03", "BLS-C09"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-15-01", "statement": "הלומד יזהה סכנת זירה ומנגנון לפני בחירת ענף טביעה או חשמל.", "evidence_type": "scene_and_mechanism_map", "indicator": "מסביר מדוע אין לגשת לפני בטיחות וממקם את הענף בתוך ההערכה הראשונית.", "critical_error_candidate": "התקרבות לזירה לא בטוחה או דילוג על הערכה ראשונית.", "review_status": "pending"},
+        {"outcome_id": "LO-15-02", "statement": "הלומד יתאר את המעברים בין ענף סביבתי לענף החייאה או המשך הערכה.", "evidence_type": "transition_explanation", "indicator": "מזהה את נקודות המעבר ומסמן פעולות מדויקות לסקירת מדריך.", "critical_error_candidate": "ערבוב רצפים או הצגת הנחיה ללא אישור.", "review_status": "pending"}
+      ],
+      "review_flags": ["HIGH_RISK_SCENE", "HIGH_RISK_CONTENT", "INSTRUCTOR_REVIEW_REQUIRED"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-16",
+      "title": "נשיכה הכשה או פגיעה ימית",
+      "path_node_ids": ["scene_assessment", "trauma_protocol", "abcde_trauma", "trauma_exposure_gate", "trauma_animal_bites", "animal_bite_rabies", "venomous_bite_sting", "marine_animal_injury", "bee_sting_reaction"],
+      "source_modules": ["28-animal-bites-venomous-and-marine-injuries"],
+      "competency_ids": ["BLS-C01", "BLS-C02", "BLS-C06", "BLS-C07"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-16-01", "statement": "הלומד ימפה מנגנון חשיפה לתת הענף המתאים לאחר הערכת טראומה בסיסית.", "evidence_type": "exposure_branch_map", "indicator": "מבדיל בין סוגי החשיפה ומזהה את החיבור לאנפילקסיס כאשר הוא מופיע בתרחיש.", "critical_error_candidate": "התמקדות בסוג בעל החיים לפני זיהוי חוסר יציבות.", "review_status": "pending"},
+        {"outcome_id": "LO-16-02", "statement": "הלומד יזהה שטיפול ספציפי והסלמה תלויים במקור ובפרוטוקול מאושרים.", "evidence_type": "scope_boundary", "indicator": "מסמן המלצות טיפול וקריטריונים לסקירת מדריך ואינו ממציא הנחיות.", "critical_error_candidate": "המלצה קלינית לא מאושרת או חריגה מ BLS.", "review_status": "pending"}
+      ],
+      "review_flags": ["TREATMENT_SPECIFICITY", "ANAPHYLAXIS_LINK", "SOURCE_REVIEW_REQUIRED"],
+      "review_status": "pending"
+    },
+    {
+      "scenario_id": "SCN-17",
+      "title": "כוויה שאיפת עשן או פצע רקמה רכה",
+      "path_node_ids": ["scene_assessment", "trauma_protocol", "abcde_trauma", "trauma_exposure_gate", "trauma_soft_tissue_burns", "burns", "smoke_inhalation", "soft_tissue_wound_support"],
+      "source_modules": ["25-soft-tissue-burns-and-smoke-inhalation"],
+      "competency_ids": ["BLS-C01", "BLS-C02", "BLS-C04", "BLS-C07"],
+      "learning_outcomes": [
+        {"outcome_id": "LO-17-01", "statement": "הלומד יבחין בין מסלולי כוויה שאיפת עשן ופצע רקמה רכה לאחר XABCDE.", "evidence_type": "branch_comparison", "indicator": "מקשר מנגנון וממצאים לשער המתאים ושומר על תעדוף נתיב אוויר ונשימה.", "critical_error_candidate": "דילוג על A או B במנגנון של שאיפת עשן.", "review_status": "pending"},
+        {"outcome_id": "LO-17-02", "statement": "הלומד יסמן מדדי חומרה ופעולות טיפול כפריטים המחייבים סקירת מדריך.", "evidence_type": "review_boundary_identification", "indicator": "אינו משתמש באומדן או בטיפול כמדד כשירות לפני אישור.", "critical_error_candidate": "יישום כלל חומרה או טיפול שלא נבדק.", "review_status": "pending"}
+      ],
+      "review_flags": ["HIGH_RISK_CONTENT", "SEVERITY_CRITERIA", "PROCEDURAL_SKILL"],
+      "review_status": "pending"
+    }
+  ]
+}
