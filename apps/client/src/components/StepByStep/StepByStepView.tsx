@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { Protocol, Node } from '../../types/protocol';
 import { CommentsThread } from '../comments/CommentsThread';
 import { nodeLearningGuidance } from './nodeLearningGuidance';
@@ -7,6 +7,7 @@ import {
 } from '../../protocols/sourceProvenance';
 import { resolveSourceProvenance } from '../../protocols/sourceProvenanceRuntime';
 import { useSourceProvenanceRuntime } from '../../protocols/useSourceProvenanceRuntime';
+import { ReviewQueuePanel } from '../ReviewQueue/ReviewQueuePanel';
 
 interface StepByStepViewProps {
   protocols: Record<string, Protocol>;
@@ -55,6 +56,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
     return new Set();
   });
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
+  const bookmarkedNodeIds = useMemo(() => [...bookmarkedNodes].sort(), [bookmarkedNodes]);
 
   useEffect(() => {
     if (!isSidebarOpen) {
@@ -888,7 +890,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <div>
                 <h2 id="quick-tools-title" className="text-lg font-bold sm:text-xl">כלי עזר מהירים</h2>
                 <p className="text-xs text-white/80 sm:text-sm">
-                  קפיצה לסכמות ונקודות חזרה שמורות
+                  תור חזרה, קפיצה לסכמות ונקודות שמורות
                 </p>
               </div>
             </div>
@@ -903,6 +905,14 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
           </div>
 
           <div className="flex-1 overflow-y-auto">
+            <ReviewQueuePanel
+              key={bookmarkedNodeIds.join('|')}
+              protocols={protocols}
+              bookmarkedNodeIds={bookmarkedNodeIds}
+              onOpenNode={jumpToNode}
+              onRemoveBookmark={toggleBookmark}
+            />
+
             {availableSchemaShortcutGroups.length > 0 && (
               <div className="border-b border-slate-200 bg-slate-50/80 p-4 sm:p-5">
                 <div className="mb-4">
@@ -1071,7 +1081,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   onClick={(event) => openSidebar(event.currentTarget)}
                   className="flex h-11 min-w-[108px] items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 text-[11px] font-medium text-white transition-all hover:shadow-lg"
                   title="פתח כלי עזר מהירים"
-                  aria-label="כלים: פתח קפיצות לסכמות וסימניות"
+                  aria-label="כלים: פתח תור חזרה, קפיצות לסכמות וסימניות"
                 >
                   <span>🧰</span>
                   <span>כלים</span>
@@ -1139,10 +1149,10 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   onClick={(event) => openSidebar(event.currentTarget)}
                   className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 py-2 text-sm font-medium text-white transition-all hover:shadow-lg"
                   title="פתח כלי עזר מהירים"
-                  aria-label="סכמות וסימניות: פתח כלי עזר מהירים"
+                  aria-label="תור חזרה, סכמות וסימניות: פתח כלי עזר מהירים"
                 >
                   <span className="text-base">🧰</span>
-                  <span>סכמות וסימניות</span>
+                  <span>חזרות וכלים</span>
                   {bookmarkedNodes.size > 0 && (
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-bold text-purple-600">
                       {bookmarkedNodes.size}
