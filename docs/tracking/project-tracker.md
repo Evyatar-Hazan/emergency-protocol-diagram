@@ -79,6 +79,22 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 
 כל המשימות להלן נפתחו על בסיס ה-audit העובדתי מ-`2026-08-14` ועומדות ב-[REM-003 Audit Gate](./rem-003-audit-gate.md).
 
+### Jarvis 66 — Community trust and moderation candidate — 2026-10-02
+
+- מומש בענף מבודד `codex/jarvis-66-community-safety` על בסיס
+  `4a3a1b20bc955cc6be633ad61b3668c3b482a524`; טרם שולב, נדחף או נפרס.
+- נוספו תוויות fail-closed: `תוכן קהילתי — לא מאושר` ו־
+  `נבדק לפי מדיניות הקהילה — לא אישור קליני`. אין פעולה או badge בשם `approve`.
+- נוספו דיווח בסיבה סגורה בלבד, תור סקירה לאדמין, soft hide/restore ו־audit trail.
+  ברירת המחדל לכל תגובה קיימת נשארת `community_unreviewed + visible`; אין שינוי תוכן.
+- בדיקות סינתטיות מכסות guest/user/admin, חסימת שדות חופשיים, הרשאות תור/פעולות,
+  וחסימת ניסיון `approve` גם מאדמין. client `75/75`, server `41/41`, ‏17 תרחישי
+  הייחוס עברו במסגרת `20/20` assertions; build, typecheck ו־lint עברו תחת Node `22.23.2`.
+- build עדיין מציג את אזהרת chunk התקציב הקיימת; Jarvis 66 אינו טוען לסגירת ביצועים.
+- deployment דורש תחילה החלטת retention לפרטי moderation, review של migration וגיבוי/readback
+  בסביבה מורשית. אין שימוש בנתוני מטופלים, תגובות חיות או ספק analytics.
+- מדיניות מלאה: [community-moderation-policy.md](../governance/community-moderation-policy.md).
+
 ### CONTENT-001 remediation snapshot — 2026-10-01
 
 - הוחלפו מקומית חמש כתובות Drive שגויות בכתובות המודולים התואמים בריפו: יחידות `03`, `06`, `10`, `15` ו-`45`. השינוי מתקן `47` הופעות בלי לשנות תוכן או משמעות קלינית.
