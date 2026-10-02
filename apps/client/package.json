@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:reference-scenarios": "vitest run src/protocols/referenceScenarios.test.ts --configLoader=runner",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {

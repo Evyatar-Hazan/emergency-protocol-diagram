@@ -19,6 +19,7 @@
     "lint:server": "npm run lint --workspace @emergency-protocol-diagram/server",
     "test": "npm run test:client && npm run test:server",
     "test:client": "npm run test --workspace @emergency-protocol-diagram/client",
+    "test:reference-scenarios": "npm run test:reference-scenarios --workspace @emergency-protocol-diagram/client --",
     "test:coverage": "npm run test:coverage:client && npm run test:coverage:production",
     "test:coverage:client": "npm run test:coverage --workspace @emergency-protocol-diagram/client",
     "test:coverage:production": "npm run test:coverage --workspace @emergency-protocol-diagram/server",
