@@ -156,7 +156,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
               setShowComposer((current) => !current);
             }}
             className="flex items-center justify-center gap-2 rounded-full py-2 text-sm transition hover:bg-sky-50 hover:text-sky-700"
-            aria-label="תגובות"
+            aria-label={`תגובות: ${stats.comments}`}
           >
             <ReplyIcon />
             <span className="text-xs font-medium tabular-nums">{stats.comments}</span>
@@ -164,7 +164,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
           <button
             type="button"
             className="flex items-center justify-center gap-2 rounded-full py-2 text-sm transition hover:bg-emerald-50 hover:text-emerald-700"
-            aria-label="שרשורים"
+            aria-label={`שרשורים: ${comments.length}`}
           >
             <ThreadsIcon />
             <span className="text-xs font-medium tabular-nums">{comments.length}</span>
@@ -172,7 +172,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
           <button
             type="button"
             className="flex items-center justify-center gap-2 rounded-full py-2 text-sm transition hover:bg-rose-50 hover:text-rose-600"
-            aria-label="לייקים"
+            aria-label={`לייקים: ${stats.likes}`}
           >
             <LikeIcon />
             <span className="text-xs font-medium tabular-nums">{stats.likes}</span>
@@ -180,7 +180,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
           <button
             type="button"
             className="flex items-center justify-center gap-2 rounded-full py-2 text-sm transition hover:bg-slate-100 hover:text-slate-700"
-            aria-label="צפיות"
+            aria-label={`צפיות: ${stats.views}`}
           >
             <ViewIcon />
             <span className="text-xs font-medium tabular-nums">{stats.views}</span>

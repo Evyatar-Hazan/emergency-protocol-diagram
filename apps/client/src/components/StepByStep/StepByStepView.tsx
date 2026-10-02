@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { Protocol, Node } from '../../types/protocol';
 import { CommentsThread } from '../comments/CommentsThread';
 import { nodeLearningGuidance } from './nodeLearningGuidance';
@@ -37,6 +37,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   const [currentNodeId, setCurrentNodeId] = useState<string>('unified_flow:report_departure');
   const [history, setHistory] = useState<string[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const sidebarCloseButtonRef = useRef<HTMLButtonElement>(null);
+  const sidebarTriggerRef = useRef<HTMLButtonElement | null>(null);
   const [bookmarkedNodes, setBookmarkedNodes] = useState<Set<string>>(() => {
     const saved = localStorage.getItem('protocol-bookmarks');
     if (saved) {
@@ -50,6 +53,59 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
     return new Set();
   });
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!isSidebarOpen) {
+      sidebarTriggerRef.current?.focus();
+      return;
+    }
+
+    sidebarCloseButtonRef.current?.focus();
+
+    const handleSidebarKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setIsSidebarOpen(false);
+        return;
+      }
+
+      if (event.key !== 'Tab') {
+        return;
+      }
+
+      const focusableElements = sidebarRef.current?.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), a[href], input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (!focusableElements?.length) {
+        return;
+      }
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleSidebarKeyDown);
+    return () => document.removeEventListener('keydown', handleSidebarKeyDown);
+  }, [isSidebarOpen]);
+
+  const openSidebar = (trigger: HTMLButtonElement) => {
+    sidebarTriggerRef.current = trigger;
+    setIsSidebarOpen(true);
+  };
+
+  const scrollToTop = () => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+  };
 
   const saveBookmarks = (bookmarks: Set<string>) => {
     localStorage.setItem('protocol-bookmarks', JSON.stringify(Array.from(bookmarks)));
@@ -113,7 +169,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   const navigateToNode = (nodeId: string) => {
     setHistory([...history, currentNodeId]);
     setCurrentNodeId(nodeId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTop();
   };
 
   const goBack = () => {
@@ -121,14 +177,14 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
       const previous = history[history.length - 1];
       setHistory(history.slice(0, -1));
       setCurrentNodeId(previous);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollToTop();
     }
   };
 
   const restart = () => {
     setCurrentNodeId('unified_flow:report_departure');
     setHistory([]);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTop();
   };
 
   if (!currentNode || !currentProtocol) {
@@ -332,9 +388,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
     if (nodeId !== currentNodeId) {
       setHistory([...history, currentNodeId]);
       setCurrentNodeId(nodeId);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setIsSidebarOpen(false);
+      scrollToTop();
     }
+    setIsSidebarOpen(false);
   };
 
   const formatPreview = (value: unknown) => {
@@ -745,7 +801,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
         <div className="grid grid-cols-3 gap-2.5">
           {primaryActionCards.map((card) => (
             <div key={card.label} className="rounded-2xl border border-white/70 bg-white/80 px-3 py-2.5 shadow-sm">
-              <p className="mb-1 text-[0.65rem] font-bold tracking-[0.16em] text-slate-500">
+              <p className="mb-1 text-[0.65rem] font-bold tracking-[0.16em] text-slate-600">
                 {card.label}
               </p>
               <p className="line-clamp-2 whitespace-pre-line text-xs leading-5 text-slate-700">
@@ -761,7 +817,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
       <div className="grid gap-3 md:grid-cols-3">
         {primaryActionCards.map((card) => (
           <div key={card.label} className="hover-lift rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm">
-            <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+            <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-slate-600">
               {card.label}
             </p>
             <p className="line-clamp-4 whitespace-pre-line text-sm leading-6 text-slate-700">
@@ -799,32 +855,36 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
   return (
     <div className="app-shell px-3 py-4 sm:px-5 sm:py-6 lg:px-8" dir="rtl">
       {isSidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 transition-opacity"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/50 transition-opacity"
+            onClick={() => setIsSidebarOpen(false)}
+            aria-hidden="true"
+          />
 
-      <div
-        className={`fixed top-0 right-0 z-50 h-full w-full bg-white shadow-2xl transition-transform duration-300 ease-in-out sm:w-96 ${
-          isSidebarOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
+          <div
+            ref={sidebarRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="quick-tools-title"
+            className="fixed top-0 right-0 z-50 h-full w-full bg-white shadow-2xl transition-transform duration-300 ease-in-out sm:w-96"
+          >
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between bg-gradient-to-l from-purple-600 to-blue-600 p-4 text-white shadow-lg sm:p-5">
             <div className="flex items-center gap-3">
               <span className="text-2xl sm:text-3xl">🧰</span>
               <div>
-                <h2 className="text-lg font-bold sm:text-xl">כלי עזר מהירים</h2>
+                <h2 id="quick-tools-title" className="text-lg font-bold sm:text-xl">כלי עזר מהירים</h2>
                 <p className="text-xs text-white/80 sm:text-sm">
                   קפיצה לסכמות ונקודות חזרה שמורות
                 </p>
               </div>
             </div>
             <button
+              ref={sidebarCloseButtonRef}
               onClick={() => setIsSidebarOpen(false)}
               className="rounded-lg p-2 text-xl text-white transition-colors hover:bg-white/20 sm:p-2.5"
-              aria-label="סגור"
+              aria-label="סגור כלי עזר מהירים"
             >
               ✕
             </button>
@@ -866,7 +926,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                                 <span className="text-sm font-bold text-slate-900">{shortcut.label}</span>
                                 <span className="text-xs font-semibold text-clinical-muted">פתח</span>
                               </div>
-                              <p className="mt-1 text-xs leading-5 text-slate-500 sm:text-sm">
+                              <p className="mt-1 text-xs leading-5 text-slate-600 sm:text-sm">
                                 {shortcut.description}
                               </p>
                             </button>
@@ -944,7 +1004,9 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             </div>
           </div>
         </div>
-      </div>
+          </div>
+        </>
+      )}
 
       <div className="mx-auto mb-4 w-full max-w-5xl sm:mb-6">
         <div className="surface-card clinical-panel rise-in rounded-[26px] p-2 sm:hidden">
@@ -994,10 +1056,10 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   <span>חזור</span>
                 </button>
                 <button
-                  onClick={() => setIsSidebarOpen(true)}
+                  onClick={(event) => openSidebar(event.currentTarget)}
                   className="flex h-11 min-w-[108px] items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 text-[11px] font-medium text-white transition-all hover:shadow-lg"
                   title="פתח כלי עזר מהירים"
-                  aria-label="פתח את קפיצות הסכמות והסימניות"
+                  aria-label="כלים: פתח קפיצות לסכמות וסימניות"
                 >
                   <span>🧰</span>
                   <span>כלים</span>
@@ -1026,7 +1088,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   <div className={`rounded-full border px-3 py-1 text-xs font-semibold ${config.border} ${config.bg} ${config.text}`}>
                     {config.icon} {config.label}
                   </div>
-                  <div className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5 text-center font-mono text-[11px] text-slate-500 shadow-sm sm:w-auto sm:rounded-full sm:py-1 sm:text-xs">
+                  <div className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5 text-center font-mono text-[11px] text-slate-600 shadow-sm sm:w-auto sm:rounded-full sm:py-1 sm:text-xs">
                     {currentNode.id}
                   </div>
                 </div>
@@ -1062,10 +1124,10 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                   <span>חזור</span>
                 </button>
                 <button
-                  onClick={() => setIsSidebarOpen(true)}
+                  onClick={(event) => openSidebar(event.currentTarget)}
                   className="flex min-w-0 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 py-2 text-sm font-medium text-white transition-all hover:shadow-lg"
                   title="פתח כלי עזר מהירים"
-                  aria-label="פתח את קפיצות הסכמות והסימניות"
+                  aria-label="סכמות וסימניות: פתח כלי עזר מהירים"
                 >
                   <span className="text-base">🧰</span>
                   <span>סכמות וסימניות</span>
@@ -1091,7 +1153,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                     {config.icon}
                   </div>
                   <div className="flex-1">
-                    <p className="mb-1 text-[0.7rem] font-semibold tracking-[0.16em] text-slate-500 sm:mb-2 sm:text-sm sm:tracking-[0.2em]">
+                    <p className="mb-1 text-[0.7rem] font-semibold tracking-[0.16em] text-slate-600 sm:mb-2 sm:text-sm sm:tracking-[0.2em]">
                       שלב בפרוטוקול הראשי
                     </p>
                     <h1 className={`mb-1 font-display text-xl font-extrabold leading-tight sm:mb-2 sm:text-3xl md:text-4xl ${config.text}`}>
@@ -1117,10 +1179,10 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
               <section className="space-y-3 sm:space-y-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-xs font-bold tracking-[0.18em] text-slate-500">פעולה מיידית</p>
+                    <p className="text-xs font-bold tracking-[0.18em] text-slate-600">פעולה מיידית</p>
                     <h2 className="font-display text-xl font-bold text-slate-900 sm:text-2xl">מה עושים עכשיו</h2>
                   </div>
-                  <div className="rounded-full bg-slate-100 px-2.5 py-1 text-[0.7rem] font-semibold text-slate-500 sm:px-3 sm:text-xs">
+                  <div className="rounded-full bg-slate-100 px-2.5 py-1 text-[0.7rem] font-semibold text-slate-600 sm:px-3 sm:text-xs">
                     צעד קצר וממוקד
                   </div>
                 </div>
@@ -1132,7 +1194,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             {learningSections.length > 0 && (
               <section className="space-y-4">
                 <div>
-                  <p className="text-xs font-bold tracking-[0.18em] text-slate-500">הערכת מצב והמשך טיפול</p>
+                  <p className="text-xs font-bold tracking-[0.18em] text-slate-600">הערכת מצב והמשך טיפול</p>
                   <h2 className="font-display text-2xl font-bold text-slate-900">מה המשמעות הקלינית עכשיו</h2>
                 </div>
                 <div className="grid gap-4">{learningSections.map(renderAccordionSection)}</div>
@@ -1142,7 +1204,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             {deepDiveSections.length > 0 && (
               <section className="space-y-4">
                 <div>
-                  <p className="text-xs font-bold tracking-[0.18em] text-slate-500">שכבת עזר והקשר</p>
+                  <p className="text-xs font-bold tracking-[0.18em] text-slate-600">שכבת עזר והקשר</p>
                   <h2 className="font-display text-2xl font-bold text-slate-900">הבהרות, רקע ומקורות</h2>
                 </div>
                 <div className="grid gap-4">{deepDiveSections.map(renderAccordionSection)}</div>
@@ -1155,7 +1217,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             {nextOptions.length > 0 ? (
               <div className="space-y-4">
                 <div className="text-center">
-                  <p className="text-xs font-bold tracking-[0.18em] text-slate-500">החלטה הבאה</p>
+                  <p className="text-xs font-bold tracking-[0.18em] text-slate-600">החלטה הבאה</p>
                   <h3 className="font-display text-2xl font-extrabold text-slate-900">מה הצעד הבא?</h3>
                   <p className="mt-2 text-sm text-slate-600 sm:text-base">
                     בחר את ההמשך המתאים כדי לשמור על רצף פרוטוקול ברור וללא דילוגים.
@@ -1167,9 +1229,8 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                       key={idx}
                       onClick={() => navigateToNode(option.target)}
                       className="w-full rounded-3xl border-2 border-white/70 bg-white px-5 py-4 text-right shadow-md transition-all hover:-translate-y-0.5 hover:border-clinical-blue hover:bg-gray-50 hover:shadow-xl sm:px-6"
-                      aria-label={`עבור לאפשרות ${idx + 1}: ${option.label}`}
                     >
-                      <span className="mb-2 block text-xs font-bold tracking-[0.18em] text-slate-400">
+                      <span className="mb-2 block text-xs font-bold tracking-[0.18em] text-slate-600">
                         אפשרות {idx + 1}
                       </span>
                       <span className="block text-base font-bold text-slate-900 sm:text-lg">{option.label}</span>

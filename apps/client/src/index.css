@@ -24,7 +24,7 @@
   --color-accent: #bf7a2b;
   --color-success: #2f7d65;
   --color-danger: #b44836;
-  --color-ring: rgba(29, 95, 145, 0.22);
+  --color-ring: #0e4b76;
   --shadow-soft: 0 18px 48px rgba(26, 43, 58, 0.08);
   --shadow-strong: 0 24px 60px rgba(17, 35, 51, 0.14);
   --radius-card: 24px;
@@ -255,5 +255,16 @@ select {
   60%,
   100% {
     transform: translateX(120%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
