@@ -94,7 +94,7 @@ export function VitalSignsView() {
     try {
       return new Set(JSON.parse(saved));
     } catch (error) {
-      console.error('Failed to load vital-sign favorites', error);
+      if (import.meta.env.DEV) console.error('Failed to load vital-sign favorites', error);
       return new Set();
     }
   });

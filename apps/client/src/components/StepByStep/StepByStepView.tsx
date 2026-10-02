@@ -55,7 +55,7 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
         const parsed = JSON.parse(saved);
         return new Set(parsed);
       } catch (e) {
-        console.error('Failed to load bookmarks', e);
+        if (import.meta.env.DEV) console.error('Failed to load bookmarks', e);
       }
     }
     return new Set();

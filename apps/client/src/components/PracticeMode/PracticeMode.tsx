@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { use, useMemo, useState } from 'react';
 import { evaluateLearningAssessment } from '../../assessment/engine';
+import { loadScn01LearningRubric } from '../../assessment/loadScn01Rubric';
 import { saveAssessmentAttempt } from '../../assessment/localStorage';
-import { scn01LearningRubric } from '../../assessment/scn01Rubric';
+import type { LearningAssessmentRubric } from '../../assessment/types';
 import { SafetyScopeNotice } from '../safety/SafetyScopeNotice';
 import {
   advancePracticeSession,
@@ -32,6 +33,30 @@ interface PracticeModeProps {
 }
 
 export function PracticeMode({ onExit }: PracticeModeProps) {
+  const scn01LearningRubric = use(loadScn01LearningRubric());
+  if (!scn01LearningRubric) {
+    return (
+      <main className="mx-auto w-full max-w-4xl px-4 py-8">
+        <section className="surface-card-strong rounded-4xl p-6 text-center" role="alert">
+          <h2 className="font-display text-2xl font-extrabold text-clinical-ink">התרגול אינו זמין כרגע</h2>
+          <p className="mt-3 text-sm leading-7 text-clinical-muted">
+            המחוון הזמני לא עבר אימות, ולכן התרגול נעצר בלי לחשב משוב או לשנות נתונים שמורים.
+          </p>
+          <button type="button" onClick={onExit} className="mt-5 rounded-2xl bg-clinical-blue px-5 py-3 font-bold text-white">
+            חזרה למסלול הלמידה
+          </button>
+        </section>
+        <SafetyScopeNotice id="practice-rubric-error-safety" className="mt-5" />
+      </main>
+    );
+  }
+  return <LoadedPracticeMode onExit={onExit} rubric={scn01LearningRubric} />;
+}
+
+function LoadedPracticeMode({
+  onExit,
+  rubric: scn01LearningRubric,
+}: PracticeModeProps & { rubric: LearningAssessmentRubric }) {
   const [restorableSession, setRestorableSession] = useState<PracticeSession | null>(persistedSession);
   const [session, setSession] = useState<PracticeSession | null>(null);
 
@@ -45,7 +70,7 @@ export function PracticeMode({ onExit }: PracticeModeProps) {
         critical_error_candidate_observed: response.criticalErrorCandidateObserved,
       })),
     });
-  }, [session]);
+  }, [scn01LearningRubric, session]);
 
   const persist = (nextSession: PracticeSession) => {
     setSession(nextSession);

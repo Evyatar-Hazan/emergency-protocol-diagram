@@ -153,7 +153,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
       onCommentDeleted?.();
     } catch (err) {
       setError('לא הצלחנו למחוק את התגובה. אפשר לנסות שוב.');
-      console.error('Failed to delete comment:', err);
+      if (import.meta.env.DEV) console.error('Failed to delete comment:', err);
     } finally {
       setIsLoading(false);
     }
@@ -173,7 +173,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
       setLikedOverride(result.liked);
     } catch (err) {
       setError('לא הצלחנו לעדכן את הלייק. אפשר לנסות שוב.');
-      console.error('Failed to toggle like:', err);
+      if (import.meta.env.DEV) console.error('Failed to toggle like:', err);
     } finally {
       setIsLikeLoading(false);
     }
@@ -194,7 +194,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     } catch (err) {
       setReportStatus('idle');
       setError('לא הצלחנו להעביר את הדיווח. אפשר לנסות שוב.');
-      console.error('Failed to report comment:', err);
+      if (import.meta.env.DEV) console.error('Failed to report comment:', err);
     }
   };
 
@@ -233,7 +233,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
             setViewOverride(result.viewsCount);
           })
           .catch((err) => {
-            console.error('Failed to track comment view:', err);
+            if (import.meta.env.DEV) console.error('Failed to track comment view:', err);
           });
       },
       { threshold: 0.6 }

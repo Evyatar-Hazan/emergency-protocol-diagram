@@ -1,7 +1,11 @@
-import { useMemo, useState } from 'react';
+import { use, useMemo, useState } from 'react';
 import type { Protocol } from '../../types/protocol';
+import {
+  loadScn01LearningRubric,
+  type RuntimeLearningRubric,
+} from '../../assessment/loadScn01Rubric';
 import { loadAssessmentAttempts } from '../../assessment/localStorage';
-import { scn01LearningRubric } from '../../assessment/scn01Rubric';
+import type { LearningAssessmentRubric } from '../../assessment/types';
 import { eventFromStoredAttempt } from '../../reviewQueue/assessmentHistory';
 import {
   completeReview,
@@ -15,7 +19,6 @@ import {
   snoozeReview,
   syncBookmarks,
   type ReviewQueueItem,
-  type ReviewQueueReason,
   type ReviewQueueState,
 } from '../../reviewQueue/reviewQueue';
 
@@ -30,51 +33,24 @@ interface ReviewQueuePanelProps {
 
 const defaultNowProvider = () => new Date();
 
-const reasonPresentation: Record<ReviewQueueReason, { label: string; tone: string; explanation: string }> = {
-  bookmark: {
-    label: 'נשמר בסימניות',
-    tone: 'border-amber-200 bg-amber-50 text-amber-900',
-    explanation: 'נוסף לבחירתך כדי שיהיה קל לחזור אליו.',
-  },
-  revisit: {
-    label: 'כדאי לחזור',
-    tone: 'border-rose-200 bg-rose-50 text-rose-900',
-    explanation: 'ניסיון התרגול האחרון סימן נקודה לחזרה.',
-  },
-  reinforce: {
-    label: 'כדאי לחזק',
-    tone: 'border-orange-200 bg-orange-50 text-orange-900',
-    explanation: 'הניסיון האחרון הראה ראיה חלקית בלבד.',
-  },
-  maintain: {
-    label: 'שימור',
-    tone: 'border-emerald-200 bg-emerald-50 text-emerald-900',
-    explanation: 'נקבעה חזרה מרווחת לשימור תרגול שכבר הודגם.',
-  },
-  instructor_required: {
-    label: 'נדרשת סקירת מדריך',
-    tone: 'border-purple-200 bg-purple-50 text-purple-900',
-    explanation: 'הפריט אינו ניתן לאישור דיגיטלי וממתין לסקירה מתאימה.',
-  },
-};
-
 function hydrateFromLocalSources(
   state: ReviewQueueState,
   bookmarkedNodeIds: readonly string[],
   storage: Storage,
   now: Date,
+  rubric: LearningAssessmentRubric,
 ): ReviewQueueState {
   if (!state.enabled) return state;
   let hydrated = syncBookmarks(state, bookmarkedNodeIds, now);
   const attempts = loadAssessmentAttempts(storage);
   const latestAttempt = attempts.at(-1);
   if (!latestAttempt) return hydrated;
-  const event = eventFromStoredAttempt(latestAttempt, scn01LearningRubric);
+  const event = eventFromStoredAttempt(latestAttempt, rubric);
   if (!event) return hydrated;
   hydrated = ingestAssessmentEvent(
     hydrated,
     event,
-    scn01LearningRubric,
+    rubric,
     now,
     attempts.length,
   );
@@ -92,13 +68,31 @@ function formatDueDate(item: ReviewQueueItem, now: Date): string {
 }
 
 export function ReviewQueuePanel({
+  ...props
+}: ReviewQueuePanelProps) {
+  const scn01LearningRubric = use(loadScn01LearningRubric());
+  if (!scn01LearningRubric) {
+    return (
+      <section className="border-b border-rose-200 bg-rose-50 p-5" role="alert">
+        <h3 className="font-bold text-rose-950">תור החזרות לא נטען</h3>
+        <p className="mt-2 text-sm leading-6 text-rose-900">
+          המחוון הזמני לא עבר אימות. הנתונים המקומיים נשמרו ללא שינוי ולא נוצרו המלצות חדשות.
+        </p>
+      </section>
+    );
+  }
+  return <LoadedReviewQueuePanel {...props} rubric={scn01LearningRubric} />;
+}
+
+function LoadedReviewQueuePanel({
   protocols,
   bookmarkedNodeIds,
   onOpenNode,
   onRemoveBookmark,
   storage = window.localStorage,
   nowProvider = defaultNowProvider,
-}: ReviewQueuePanelProps) {
+  rubric: scn01LearningRubric,
+}: ReviewQueuePanelProps & { rubric: RuntimeLearningRubric }) {
   const [confirmReset, setConfirmReset] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [state, setState] = useState<ReviewQueueState>(() => {
@@ -107,6 +101,7 @@ export function ReviewQueuePanel({
       bookmarkedNodeIds,
       storage,
       nowProvider(),
+      scn01LearningRubric,
     );
     saveReviewQueue(storage, hydrated);
     return hydrated;
@@ -149,7 +144,7 @@ export function ReviewQueuePanel({
     const enabled = !state.enabled;
     const toggled = setReviewQueueEnabled(state, enabled);
     const next = enabled
-      ? hydrateFromLocalSources(toggled, bookmarkedNodeIds, storage, nowProvider())
+      ? hydrateFromLocalSources(toggled, bookmarkedNodeIds, storage, nowProvider(), scn01LearningRubric)
       : toggled;
     persist(next, enabled ? 'תור החזרות הופעל.' : 'תור החזרות כובה. הנתונים נשארו במכשיר.');
   };
@@ -245,7 +240,7 @@ export function ReviewQueuePanel({
       ) : (
         <div className="space-y-3">
           {activeItems.map((item) => {
-            const presentation = reasonPresentation[item.reason];
+            const presentation = scn01LearningRubric.review_reason_presentation[item.reason];
             const resolved = resolveItem(item);
             const isDue = Date.parse(item.dueAt) <= nowProvider().getTime();
             return (

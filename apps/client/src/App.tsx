@@ -41,7 +41,7 @@ class PracticeModeBoundary extends Component<
   }
 
   componentDidCatch(error: unknown) {
-    console.error('Failed to load practice mode:', error);
+    if (import.meta.env.DEV) console.error('Failed to load practice mode:', error);
   }
 
   render() {
@@ -82,11 +82,13 @@ class PracticeModeBoundary extends Component<
   }
 }
 
-const ContentEditorWorkspace = lazy(() =>
-  import('./components/content-editor/ContentEditorWorkspace').then((module) => ({
-    default: module.ContentEditorWorkspace,
-  }))
-);
+const ContentEditorWorkspace = contentEditorEnabled
+  ? lazy(() =>
+      import('./components/content-editor/ContentEditorWorkspace').then((module) => ({
+        default: module.ContentEditorWorkspace,
+      })),
+    )
+  : null;
 
 function AppContent() {
   const { flowData, activeProtocol, loadData, setActiveProtocol } = useFlowStore();
@@ -104,10 +106,8 @@ function AppContent() {
 
         const data = await initializeFlowData();
         loadData(data);
-
-        console.log('[App] Auto-starting unified flow');
       } catch (error) {
-        console.error('Failed to initialize app:', error);
+        if (import.meta.env.DEV) console.error('Failed to initialize app:', error);
       } finally {
         setIsLoading(false);
       }
@@ -118,7 +118,6 @@ function AppContent() {
 
   useEffect(() => {
     if (!isLoading && !activeProtocol && flowData.protocols.unified_flow) {
-      console.log('[App] Setting unified_flow as active protocol');
       setActiveProtocol('unified_flow');
     }
   }, [isLoading, activeProtocol, flowData, setActiveProtocol]);
@@ -144,8 +143,6 @@ function AppContent() {
       </div>
     );
   }
-
-  console.log('[App] activeProtocol:', activeProtocol);
 
   return (
     <div className="app-shell editorial-grid font-body text-clinical-ink" dir="rtl">
@@ -341,7 +338,7 @@ function AppContent() {
         <SafetyScopeNotice id="global-safety-scope" />
       </div>
 
-      {secondaryTool === 'content-editor' && contentEditorEnabled ? (
+      {secondaryTool === 'content-editor' && contentEditorEnabled && ContentEditorWorkspace ? (
         <div>
           <div className="mx-auto w-full max-w-[1500px] px-3 pt-4 sm:px-6">
             <button

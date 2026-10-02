@@ -123,7 +123,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
       setComments(data || []);
     } catch (err) {
       setError('לא הצלחנו לטעון את התגובות כרגע. אפשר לנסות שוב בעוד רגע.');
-      console.error('Failed to load comments:', err);
+      if (import.meta.env.DEV) console.error('Failed to load comments:', err);
     } finally {
       setIsLoading(false);
     }

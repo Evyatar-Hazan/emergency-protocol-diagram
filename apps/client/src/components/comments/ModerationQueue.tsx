@@ -27,7 +27,7 @@ export const ModerationQueue: React.FC = () => {
       setItems(await commentService.getModerationQueue());
     } catch (queueError) {
       setError('לא הצלחנו לטעון את תור הסקירה.');
-      console.error('Failed to load moderation queue:', queueError);
+      if (import.meta.env.DEV) console.error('Failed to load moderation queue:', queueError);
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +53,7 @@ export const ModerationQueue: React.FC = () => {
       await loadQueue();
     } catch (moderationError) {
       setError('פעולת הסקירה נכשלה. לא בוצע שינוי בתגובה.');
-      console.error('Failed to moderate comment:', moderationError);
+      if (import.meta.env.DEV) console.error('Failed to moderate comment:', moderationError);
       setIsLoading(false);
     }
   };

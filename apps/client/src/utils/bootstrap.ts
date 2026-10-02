@@ -18,11 +18,10 @@ async function loadConfigFiles(): Promise<Partial<FlowData> | null> {
     const response = await fetch('/config/flow-overrides.json');
     if (response.ok) {
       const overrides = await response.json();
-      console.log('[Bootstrap] Loaded config overrides:', overrides);
       return overrides;
     }
   } catch {
-    console.log('[Bootstrap] No config overrides found');
+    // Optional local override is absent or unavailable.
   }
   return null;
 }
@@ -50,15 +49,12 @@ function mergeFlowData(
  * אתחול הדאטא - נקרא פעם אחת בהתחלה
  */
 export async function initializeFlowData(): Promise<FlowData> {
-  console.log('[Bootstrap] Initializing flow data...');
-
   // 1. התחל עם הדאטא המובנה
   const { protocolsData } = await import('../protocols');
   let flowData: FlowData = protocolsData;
 
   // 2. בדוק אם יש window.__INITIAL_FLOW_DATA__
   if (typeof window !== 'undefined' && window.__INITIAL_FLOW_DATA__) {
-    console.log('[Bootstrap] Found window.__INITIAL_FLOW_DATA__');
     flowData = mergeFlowData(flowData, window.__INITIAL_FLOW_DATA__);
   }
 
@@ -67,12 +63,6 @@ export async function initializeFlowData(): Promise<FlowData> {
   if (configOverrides) {
     flowData = mergeFlowData(flowData, configOverrides);
   }
-
-  console.log('[Bootstrap] Flow data initialized:', {
-    version: flowData.version,
-    language: flowData.language,
-    protocols: Object.keys(flowData.protocols),
-  });
 
   return flowData;
 }
@@ -85,11 +75,10 @@ export async function loadFeatureFlags(): Promise<Record<string, unknown>> {
     const response = await fetch('/config/feature-flags.json');
     if (response.ok) {
       const flags = await response.json();
-      console.log('[Bootstrap] Loaded feature flags:', flags);
       return flags;
     }
   } catch {
-    console.log('[Bootstrap] No feature flags found, using defaults');
+    // Optional local feature flags are absent or unavailable.
   }
 
   return {
