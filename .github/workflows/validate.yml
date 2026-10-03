@@ -46,6 +46,10 @@ jobs:
 
       - name: Upload reference scenario report
         if: always()
+        # Artifact storage is diagnostic only. Report generation above remains
+        # a required gate, while transient GitHub artifact-service failures
+        # must not skip the coverage gates that follow.
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: reference-scenario-results
