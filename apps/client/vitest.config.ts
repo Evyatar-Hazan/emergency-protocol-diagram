@@ -10,7 +10,6 @@ export default defineConfig({
         'src/components/comments/commentTaxonomy.ts',
         'src/components/VitalSigns/vitalSignsRetrieval.ts',
         'src/components/PracticeMode/practiceSession.ts',
-        'src/instructor/instructorGroups.ts',
         'src/protocols/protocolGraphAudit.ts',
         'src/protocols/sourceFallbacks.ts',
       ],

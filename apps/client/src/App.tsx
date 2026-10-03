@@ -10,7 +10,7 @@ import { GoogleIdentityManagerProvider } from './components/auth/GoogleIdentityM
 import { SafetyScopeNotice } from './components/safety/SafetyScopeNotice';
 import './App.css';
 
-type ViewMode = 'step-by-step' | 'practice' | 'vital-signs' | 'instructor';
+type ViewMode = 'step-by-step' | 'practice' | 'vital-signs';
 type SecondaryTool = 'none' | 'diagram' | 'content-editor' | 'offline-learning';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
@@ -18,8 +18,6 @@ const hasGoogleClientId =
   Boolean(googleClientId) && !googleClientId.includes('your_google_client_id_here');
 const contentEditorEnabled = import.meta.env.DEV || import.meta.env.VITE_ENABLE_CONTENT_EDITOR === 'true';
 const enablePracticeAndAssessment = import.meta.env.VITE_ENABLE_PRACTICE_MODE === 'true';
-const enableSyntheticInstructorTools =
-  import.meta.env.VITE_ENABLE_SYNTHETIC_INSTRUCTOR_TOOLS === 'true';
 
 const FullFlowDiagram = lazy(() =>
   import('./components/flow/FullFlowDiagram').then((module) => ({
@@ -91,14 +89,6 @@ const ContentEditorWorkspace = contentEditorEnabled
   ? lazy(() =>
       import('./components/content-editor/ContentEditorWorkspace').then((module) => ({
         default: module.ContentEditorWorkspace,
-      })),
-    )
-  : null;
-
-const InstructorGroupsPanel = enableSyntheticInstructorTools
-  ? lazy(() =>
-      import('./components/InstructorGroups/InstructorGroupsPanel').then((module) => ({
-        default: module.InstructorGroupsPanel,
       })),
     )
   : null;
@@ -217,21 +207,6 @@ function AppContent() {
             >
               מדדים מהירים
             </button>
-            {enableSyntheticInstructorTools && (
-              <button
-                onClick={() => {
-                  setViewMode('instructor');
-                  setSecondaryTool('none');
-                }}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition-all ${
-                  viewMode === 'instructor'
-                    ? 'bg-white text-clinical-ink shadow-soft'
-                    : 'bg-white/10 text-white hover:bg-white/16'
-                }`}
-              >
-                כלי מדריך
-              </button>
-            )}
           </div>
 
           <button
@@ -375,25 +350,6 @@ function AppContent() {
                   <span>מדדים מהירים</span>
                 </span>
               </button>
-              {enableSyntheticInstructorTools && (
-                <button
-                  onClick={() => {
-                    setViewMode('instructor');
-                    setSecondaryTool('none');
-                    setIsMenuOpen(false);
-                  }}
-                  className={`w-full rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
-                    viewMode === 'instructor'
-                      ? 'bg-slate-950 text-white shadow-soft'
-                      : 'bg-white/75 text-clinical-ink hover:bg-white'
-                  }`}
-                >
-                  <span className="flex items-center justify-center gap-3">
-                    <span className="text-lg">▦</span>
-                    <span>כלי מדריך לקבוצות סינתטיות</span>
-                  </span>
-                </button>
-              )}
 
               <div className="mt-4 border-t border-slate-200/80 pt-4">
                 <UserMenu />
@@ -508,23 +464,6 @@ function AppContent() {
           <PracticeModeBoundary onExit={() => setViewMode('step-by-step')}>
             <PracticeMode onExit={() => setViewMode('step-by-step')} />
           </PracticeModeBoundary>
-        </Suspense>
-      ) : viewMode === 'instructor' && enableSyntheticInstructorTools && InstructorGroupsPanel ? (
-        <Suspense
-          fallback={
-            <div className="mx-auto flex min-h-[420px] w-full max-w-6xl items-center justify-center px-4 py-8 text-center">
-              <div className="surface-card rounded-3xl p-8">
-                <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-[3px] border-clinical-blue/20 border-t-clinical-blue" />
-                <p className="text-sm font-semibold text-clinical-muted">טוען כלי מדריך סינתטי...</p>
-              </div>
-            </div>
-          }
-        >
-          <InstructorGroupsPanel
-            onOpenPractice={() => {
-              if (enablePracticeAndAssessment) setViewMode('practice');
-            }}
-          />
         </Suspense>
       ) : (
         <VitalSignsView />
