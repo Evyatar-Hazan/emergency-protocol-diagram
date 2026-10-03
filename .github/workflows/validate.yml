@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - codex/emergency-safe-release
   pull_request:
 
 jobs:
