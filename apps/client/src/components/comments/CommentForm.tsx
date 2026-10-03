@@ -38,7 +38,7 @@ export const CommentForm: React.FC<CommentFormProps> = ({
       onCommentAdded?.();
     } catch (err) {
       setError('לא הצלחנו לפרסם את ההודעה. אפשר לנסות שוב בעוד רגע.');
-      console.error('Failed to add comment:', err);
+      if (import.meta.env.DEV) console.error('Failed to add comment:', err);
     } finally {
       setIsLoading(false);
     }

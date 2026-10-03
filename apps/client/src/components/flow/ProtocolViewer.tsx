@@ -18,7 +18,6 @@ interface ProtocolViewerProps {
  * - איפוס ואתחול
  */
 export function ProtocolViewer({ protocol }: ProtocolViewerProps) {
-  console.log('[ProtocolViewer] Rendering with protocol:', protocol);
   const {
     currentNode,
     navigationHistory,
@@ -26,11 +25,8 @@ export function ProtocolViewer({ protocol }: ProtocolViewerProps) {
     goBack,
     reset,
   } = useFlowStore();
-  console.log('[ProtocolViewer] currentNode:', currentNode);
-
   // אתחול - מעבר לצומת ההתחלה
   useEffect(() => {
-    console.log('[ProtocolViewer useEffect] protocol.startNode:', protocol.startNode, 'currentNode:', currentNode);
     if (!currentNode && protocol.startNode) {
       navigateToNode(protocol.startNode);
     }

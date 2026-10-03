@@ -1,73 +1,61 @@
-# React + TypeScript + Vite
+# Emergency Protocol Diagram Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This workspace contains the React + TypeScript + Vite client for the Emergency Protocol Diagram learning and review platform.
 
-Currently, two official plugins are available:
+## Product Scope
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The client is designed for guided BLS learning and review. It is not a clinical decision-support system for live incidents and does not replace training, organizational protocols, dispatch instructions, or professional judgment.
 
-## React Compiler
+See [`docs/product/intended-use.md`](../../docs/product/intended-use.md) for the proposed detailed scope. That document remains `draft-for-review` and is not an approved user-facing disclaimer.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Current Role
 
-## Expanding the ESLint configuration
+The client provides:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- a guided, step-by-step learning flow;
+- quick-reference material for learning and review;
+- a secondary full-system diagram;
+- bookmarks and local navigation history;
+- source links and supporting learning content;
+- node-level community comments.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Protocol content is loaded from `src/protocols/`. Client state and navigation live under `src/store/` and the feature components under `src/components/`.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Runtime Architecture
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+For production, the compiled client is served by Cloudflare Pages. Requests under `/api` are handled by Cloudflare Pages Functions with D1. The Express + Prisma workspace under `apps/server` is retained for local/server development and is not the production backend.
+
+The root [`README.md`](../../README.md) is authoritative for local startup, validation, and deployment architecture.
+
+## Local Development
+
+From the repository root:
+
+```bash
+npm ci
+npm run dev:client
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Use the root production-parity workflow when testing the client together with Pages Functions and local D1.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Validation
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+From the repository root:
+
+```bash
+npm run build:client
+npm run lint:client
+npm run test:client
+npm run test:coverage:client
 ```
+
+These commands validate software behavior only. They do not constitute clinical review or content approval.
+
+## Documentation Map
+
+- Product scope: [`docs/product/intended-use.md`](../../docs/product/intended-use.md), `draft-for-review`.
+- Repository status and backlog: [`docs/tracking/project-tracker.md`](../../docs/tracking/project-tracker.md).
+- Clinical source inventory and mappings: [`docs/source-truth/united-hatzalah-bls/`](../../docs/source-truth/united-hatzalah-bls/).
+- [`APP.md`](./APP.md): historical/superseded early vision.
+- [`PROTOCOL_DEVELOPMENT.md`](./PROTOCOL_DEVELOPMENT.md): historical implementation snapshot.
+- [`config/README.md`](./config/README.md): legacy design note for the optional configuration layer.

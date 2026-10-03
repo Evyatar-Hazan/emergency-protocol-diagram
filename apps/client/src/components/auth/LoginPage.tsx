@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { GoogleLoginButton } from './GoogleLoginButton';
+import { SafetyScopeNotice } from '../safety/SafetyScopeNotice';
 
 interface LoginPageProps {
   onLoginSuccess?: () => void;
@@ -30,7 +31,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            פרוטוקולי חירום
+            למידת פרוטוקולי חירום
           </h1>
           <p className="text-gray-600">
             התחבר כדי לשמור נקודות חזרה, לעקוב אחרי הפרוטוקול ולהשתתף בהבהרות מקצועיות
@@ -62,6 +63,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
             <p className="text-gray-600 mt-4">מתחבר...</p>
           </div>
         )}
+
+        <SafetyScopeNotice compact className="mt-8" id="login-safety-scope" />
 
         <div className="mt-8 pt-6 border-t border-gray-200">
           <h3 className="text-sm font-semibold text-gray-700 mb-3">

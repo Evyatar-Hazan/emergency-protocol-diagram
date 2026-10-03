@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bls-protocol.evyatarhazan.com/schemas/task-61-assessment-learning-event.schema.json",
+  "title": "Task 61 input event from Task 60",
+  "description": "Local, identifier-only learning review signal. It contains no learner identifier, free text, patient data, clinical decision, competence claim or certification claim.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "event",
+    "assessmentId",
+    "rubricVersion",
+    "scenarioId",
+    "claim",
+    "outcomes"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "event": { "const": "assessment_learning_result_recorded" },
+    "assessmentId": { "type": "string", "minLength": 1 },
+    "rubricVersion": { "type": "string", "minLength": 1 },
+    "scenarioId": { "type": "string", "pattern": "^SCN-(0[1-9]|1[0-7])$" },
+    "claim": { "const": "learning_feedback_only" },
+    "outcomes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "itemId",
+          "outcomeId",
+          "competencyId",
+          "reviewSignal",
+          "criticalErrorCandidateObserved"
+        ],
+        "properties": {
+          "itemId": { "type": "string", "pattern": "^A60-[0-9]{3,}$" },
+          "outcomeId": { "type": "string", "pattern": "^LO-(0[1-9]|1[0-7])-[0-9]{2}$" },
+          "competencyId": { "type": "string", "pattern": "^BLS-C(0[1-9]|10)$" },
+          "reviewSignal": {
+            "enum": ["revisit", "reinforce", "maintain", "instructor_required"]
+          },
+          "criticalErrorCandidateObserved": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

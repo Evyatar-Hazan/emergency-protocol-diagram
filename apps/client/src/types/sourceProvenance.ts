@@ -52,7 +52,22 @@ export interface ReviewRecordReference {
   review_status: ReviewStatus;
   authority_status: AuthorityStatus;
   source_status: SourceStatus;
+  gaps: Array<{
+    domain: 'source' | 'content_alignment' | 'ui_design' | 'none' | 'unknown';
+    type: string;
+    status: 'open' | 'pending' | 'resolved' | 'accepted' | 'unknown';
+    evidence_paths: string[];
+    owner_role: string;
+  }>;
   source: {
+    source_tier:
+      | 'S1'
+      | 'S1_DERIVED'
+      | 'S2_CANDIDATE'
+      | 'S3_SUPPLEMENTARY'
+      | 'RUNTIME'
+      | 'COMMUNITY'
+      | 'unknown';
     publisher: string;
     title: string;
     version_or_date: string;
@@ -60,6 +75,7 @@ export interface ReviewRecordReference {
     page_section_anchor: string;
     accessed_at: string;
     organizational_status: 'public' | 'organization_approved' | 'unknown';
+    version_currency: 'as_received' | 'current_verified' | 'superseded' | 'conflicting' | 'unknown';
   } | null;
   affected_paths: string[];
   affected_node_ids: string[];
@@ -95,4 +111,38 @@ export interface SourceProvenanceManifest {
   base_sha: string;
   nodes: Record<string, NodeSourceProvenance>;
   review_records: ReviewRecordReference[];
+}
+
+export type RuntimeSourceProvenance = Omit<SourceProvenance, 'label' | 'url' | 'note'>;
+
+export interface RuntimeNodeSourceProvenance {
+  node_content_hash: string;
+  sources: RuntimeSourceProvenance[];
+}
+
+export interface RuntimeSourceCatalogEntry {
+  label: string;
+  url: string;
+}
+
+export interface RuntimeSourceProvenanceManifest {
+  schema_version: '1.0.0';
+  protocol_id: string;
+  protocol_version: string;
+  generated_from: string;
+  base_sha: string;
+  node_count: number;
+  source_count: number;
+  source_catalog: Record<string, RuntimeSourceCatalogEntry>;
+  nodes: Record<string, RuntimeNodeSourceProvenance>;
+  review_records: ReviewRecordReference[];
+}
+
+export type SourceProvenanceLoadStatus = 'loading' | 'ready' | 'error' | 'stale';
+
+export interface SourceProvenanceLoadState {
+  status: SourceProvenanceLoadStatus;
+  manifest: RuntimeSourceProvenanceManifest | null;
+  loadedAt: number | null;
+  error: string | null;
 }

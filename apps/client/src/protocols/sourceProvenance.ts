@@ -1,12 +1,8 @@
-import type { ReferenceSource } from '../types/protocol';
 import type {
   ReviewRecordReference,
   SourceProvenance,
-  SourceProvenanceManifest,
+  SourceProvenanceLoadStatus,
 } from '../types/sourceProvenance';
-import manifestData from './source-provenance.json';
-
-export const sourceProvenanceManifest = manifestData as SourceProvenanceManifest;
 
 const reviewLabels = {
   not_requested: 'טרם התבקשה סקירה',
@@ -28,29 +24,9 @@ const authorityLabels = {
   declined: 'הסמכות נדחתה',
 } as const;
 
-export function getSourceProvenance(
-  protocolId: string,
-  nodeId: string,
-  source: ReferenceSource,
-  sourceIndex: number,
-): SourceProvenance | null {
-  if (protocolId !== sourceProvenanceManifest.protocol_id) {
-    return null;
-  }
-
-  const entry = sourceProvenanceManifest.nodes[nodeId]?.sources.find(
-    (candidate) =>
-      candidate.source_index === sourceIndex &&
-      candidate.label === source.label &&
-      candidate.url === source.url,
-  );
-
-  return entry ?? null;
-}
-
 export function isApprovedForDisplay(
   provenance: SourceProvenance,
-  reviewRecords: ReviewRecordReference[] = sourceProvenanceManifest.review_records,
+  reviewRecords: ReviewRecordReference[] = [],
   today = new Date(),
 ): boolean {
   if (
@@ -109,7 +85,27 @@ export function isApprovedForDisplay(
   return independentApprovals.size >= 2 && endOfReviewDueDate >= today && recordReviewDueDate >= today;
 }
 
-export function getSourceProvenancePresentation(provenance: SourceProvenance | null) {
+export function getSourceProvenancePresentation(
+  provenance: SourceProvenance | null,
+  reviewRecords: ReviewRecordReference[] = [],
+  loadStatus: SourceProvenanceLoadStatus = 'ready',
+) {
+  if (loadStatus !== 'ready') {
+    const reviewLabel = {
+      loading: 'טוען נתוני עקיבות',
+      error: 'עקיבות לא זמינה',
+      stale: 'נתוני עקיבות דורשים רענון',
+    }[loadStatus];
+
+    return {
+      approved: false,
+      reviewLabel,
+      authorityLabel: 'סמכות לא ידועה',
+      versionLabel: 'לא תועדה',
+      reviewedAtLabel: 'טרם נבדק',
+    };
+  }
+
   if (!provenance) {
     return {
       approved: false,
@@ -120,7 +116,7 @@ export function getSourceProvenancePresentation(provenance: SourceProvenance | n
     };
   }
 
-  const approved = isApprovedForDisplay(provenance);
+  const approved = isApprovedForDisplay(provenance, reviewRecords);
 
   return {
     approved,

@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0.0",
+  "generated_from": "apps/client/src/protocols/source-provenance.json",
+  "review_notice": "Mappings provide traceability to existing protocol sources only. They do not approve the vital-sign values.",
+  "pending_defaults": {
+    "version_or_date": null,
+    "source_status": "pending",
+    "review_status": "pending",
+    "authority_status": "unknown",
+    "approved_use": null,
+    "reviewed_at": null,
+    "review_due": null,
+    "review_record_id": null
+  },
+  "sources": {
+    "src_1a68b959fb107ae2": {
+      "label": "איחוד הצלה - יחידה 2-4 מחוסר הכרה נושם: סוכרת והרעלות",
+      "url": "https://drive.google.com/file/d/1e-iuYrHsCA7rOFPlTM6UvblRAEmPd6i1/view?usp=drivesdk"
+    },
+    "src_2d176fd3d056834b": {
+      "label": "איחוד הצלה - יחידה 03 החייאת מבוגר ו-AED",
+      "url": "https://drive.google.com/file/d/18h4-ETo38Gz99xGX22mlm9GO4Cj3GZuB/view"
+    },
+    "src_5411ee99eb7c19b7": {
+      "label": "איחוד הצלה - יחידה 06 אנמנזה וגישה לחולה",
+      "url": "https://drive.google.com/file/d/1rb5_vygiIEB7AZIAfndsg4LtCCnVV7Oq/view"
+    },
+    "src_82fd2028ffec0db5": {
+      "label": "איחוד הצלה - יחידה 19 הלם ועצירת דימומים",
+      "url": "https://drive.google.com/file/d/1vKldvsyRFTi8fgW25nocAaVI3WFMGoP4/view?usp=drivesdk"
+    },
+    "src_8bff2b62019ed215": {
+      "label": "איחוד הצלה - יחידה 15 מצבי חירום נשימתיים",
+      "url": "https://drive.google.com/file/d/1hhx7tt3o36ytK-8cOa_ABxghrZPFPjgA/view"
+    },
+    "src_cdb2db6ab6f35341": {
+      "label": "איחוד הצלה - יחידה 13 מצבי חירום נוירולוגיים",
+      "url": "https://drive.google.com/file/d/11Fpr_Pm25J0f_8uqIv5XypLxrL_nG0nQ/view?usp=drivesdk"
+    },
+    "src_e24e63ce9dab0698": {
+      "label": "מד״א - רפואת חירום (מהדורה ציבורית 2024)",
+      "url": "https://www.mdais.org/Media/file_download/Refuat_Herumpdf_2024.pdf"
+    }
+  },
+  "parameters": {
+    "airway:respiratory_rate": {
+      "related_node_id": "breathing_assessment",
+      "source_id": "src_5411ee99eb7c19b7",
+      "applies_to": ["adult", "child"]
+    },
+    "airway:airway_patency": {
+      "related_node_id": "airway_status",
+      "source_id": "src_5411ee99eb7c19b7",
+      "applies_to": ["adult", "child"]
+    },
+    "breathing:oxygen_saturation": {
+      "related_node_id": "breathing_assessment",
+      "source_id": "src_5411ee99eb7c19b7",
+      "applies_to": ["adult", "child"]
+    },
+    "breathing:breath_sounds": {
+      "related_node_id": "breathing_assessment",
+      "source_id": "src_8bff2b62019ed215",
+      "applies_to": ["adult", "child"]
+    },
+    "breathing:chest_expansion": {
+      "related_node_id": "breathing_assessment",
+      "source_id": "src_8bff2b62019ed215",
+      "applies_to": ["adult", "child"]
+    },
+    "breathing:work_of_breathing": {
+      "related_node_id": "breathing_assessment",
+      "source_id": "src_8bff2b62019ed215",
+      "applies_to": ["adult", "child"]
+    },
+    "circulation:heart_rate": {
+      "related_node_id": "circulation_assessment",
+      "source_id": "src_5411ee99eb7c19b7",
+      "applies_to": ["adult", "child"]
+    },
+    "circulation:blood_pressure": {
+      "related_node_id": "circulation_assessment",
+      "source_id": "src_5411ee99eb7c19b7",
+      "applies_to": ["adult", "child"]
+    },
+    "circulation:capillary_refill": {
+      "related_node_id": "circulation_assessment",
+      "source_id": "src_82fd2028ffec0db5",
+      "applies_to": ["adult", "child"]
+    },
+    "circulation:skin_color": {
+      "related_node_id": "circulation_assessment",
+      "source_id": "src_82fd2028ffec0db5",
+      "applies_to": ["adult", "child"]
+    },
+    "circulation:pulse_quality": {
+      "related_node_id": "circulation_assessment",
+      "source_id": "src_5411ee99eb7c19b7",
+      "applies_to": ["adult", "child"]
+    },
+    "disability:gcs": {
+      "related_node_id": "disability_gcs",
+      "source_id": "src_cdb2db6ab6f35341",
+      "applies_to": ["adult", "child"]
+    },
+    "disability:avpu": {
+      "related_node_id": "avpu_check",
+      "source_id": "src_2d176fd3d056834b",
+      "applies_to": ["adult", "child"]
+    },
+    "disability:pupils": {
+      "related_node_id": "disability_pupils",
+      "source_id": "src_cdb2db6ab6f35341",
+      "applies_to": ["adult", "child"]
+    },
+    "disability:blood_glucose": {
+      "related_node_id": "disability_blood_sugar",
+      "source_id": "src_1a68b959fb107ae2",
+      "applies_to": ["adult", "child"]
+    },
+    "exposure:body_temperature": {
+      "related_node_id": "hypothermia",
+      "source_id": "src_e24e63ce9dab0698",
+      "applies_to": ["adult", "child"]
+    },
+    "exposure:skin_integrity": {
+      "related_node_id": "exposure_assessment",
+      "source_id": "src_5411ee99eb7c19b7",
+      "applies_to": ["adult", "child"]
+    }
+  }
+}

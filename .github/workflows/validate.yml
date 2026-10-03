@@ -38,5 +38,18 @@ jobs:
       - name: Test
         run: npm test
 
+      - name: Reference scenario report
+        run: |
+          mkdir -p artifacts/reference-scenarios
+          npm run test:reference-scenarios -- --reporter=default --reporter=json --outputFile.json=artifacts/reference-scenarios/results.json
+
+      - name: Upload reference scenario report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-scenario-results
+          path: artifacts/reference-scenarios/results.json
+          if-no-files-found: error
+
       - name: Enforce scoped coverage gates
         run: npm run test:coverage

@@ -39,7 +39,7 @@ export function GoogleIdentityManagerProvider({ children }: PropsWithChildren) {
         attempt?.onSuccess?.();
       } catch (error) {
         const loginError = error instanceof Error ? error : new Error('Login failed');
-        console.error('Login error:', loginError);
+        if (import.meta.env.DEV) console.error('Login error:', loginError);
         attempt?.onError?.(loginError);
       }
     },

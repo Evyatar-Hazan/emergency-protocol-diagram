@@ -9,7 +9,7 @@
 - תוכן הצמתים והקישורים: `apps/client/src/protocols/unified-flow.json`.
 - מיפוי העקיבות: `apps/client/src/protocols/source-provenance.json`.
 - חוזה המיפוי: `docs/schemas/node-source-provenance.schema.json`.
-- חוזה החלטת review: תוצר Task 53, ‏`TASK-53-clinical-review.schema.json`.
+- חוזה החלטת review: `docs/governance/schemas/clinical-review.schema.json`.
 
 ## ברירות מחדל בטוחות
 
@@ -46,3 +46,18 @@ npm run generate:source-provenance
 המחולל שומר metadata קיים רק כאשר הצומת והמקור לא השתנו. לכל צומת נשמר `node_content_hash`; שינוי בתוכן הצומת, בקישור, בתווית או בהערה מאפס את השיוך ל־`pending`/`unknown`. רשומות review נשמרות לצורכי audit אך אינן מקושרות עוד אוטומטית למיפוי שהשתנה.
 
 לאחר ההרצה יש לבצע `test`, ‏`build` ו־`lint`. המחולל אינו בודק נכונות קלינית ואינו רשאי למלא גרסה, reviewer או approval ללא evidence מאומת.
+
+## חוזה הטעינה בלקוח
+
+המניפסט הקנוני והסכמה שלו נשארים מקור האמת לבדיקות ול־audit, אך אינם נארזים בתוך JavaScript של הלקוח. לפני כל build, ‏`generate-source-provenance-runtime.mjs` מפיק מהם נכס נגזר ב־`/generated/source-provenance-runtime.json`.
+
+הנכס הנגזר אינו משכפל את `label`, ‏`url`, ‏`note` או `node_id` שכבר קיימים ב־`unified-flow.json`. הוא שומר קטלוג זהויות מקור ייחודי, hashes ונתוני review. בזמן lookup הקטלוג חייב להתאים ל־label ול־URL הפעילים; אי־התאמה נכשלת סגור.
+
+חוזה הטעינה הוא אסינכרוני ובעל ארבעה מצבים:
+
+- `loading` — אין הצגת approval בזמן ההמתנה.
+- `ready` — lookup מותר רק לאחר אימות מבנה הנכס וזהות המקור.
+- `error` — כשל רשת או payload לא תקין מוצג כעקיבות לא זמינה וללא approval.
+- `stale` — cache שפג אינו משמש לאישור אם הרענון נכשל.
+
+ה־cache הוא בזיכרון התהליך בלבד ותוקפו חמש דקות. בכל מצב שאינו `ready`, ‏`resolveSourceProvenance` מחזיר `null` וה־UI נשאר fail-closed. שינוי זה מחייב אינטגרציות שניגשות לעקיבות להשתמש ב־`useSourceProvenanceRuntime` וב־`resolveSourceProvenance`, ולא להניח שמניפסט מלא זמין באופן סינכרוני בזמן import.

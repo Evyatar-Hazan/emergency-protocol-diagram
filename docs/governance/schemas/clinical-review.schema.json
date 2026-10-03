@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bls-protocol.evyatarhazan.com/schemas/clinical-review.schema.json",
+  "title": "Emergency Protocol Diagram clinical review record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "change_id",
+    "title",
+    "intended_use",
+    "content_domain",
+    "risk_tier",
+    "review_status",
+    "authority_status",
+    "source_status",
+    "gaps",
+    "affected_paths",
+    "affected_node_ids",
+    "before_exact",
+    "after_exact",
+    "semantic_diff",
+    "review_assignments",
+    "review_decisions"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "change_id": { "type": "string", "pattern": "^CLIN-[0-9]{4}-[0-9]{3,}$" },
+    "title": { "type": "string", "minLength": 1 },
+    "intended_use": {
+      "enum": ["learning_only", "training_facilitation", "unknown"]
+    },
+    "content_domain": {
+      "enum": [
+        "non_clinical",
+        "product_scope",
+        "bls",
+        "als",
+        "organizational_policy",
+        "legal",
+        "unknown"
+      ]
+    },
+    "risk_tier": { "enum": ["G0", "G1", "G2", "G3", "unknown"] },
+    "review_status": {
+      "enum": [
+        "not_requested",
+        "pending",
+        "in_review",
+        "changes_requested",
+        "scope_blocked",
+        "approved_for_stated_use",
+        "rejected",
+        "expired",
+        "withdrawn"
+      ],
+      "default": "pending"
+    },
+    "authority_status": {
+      "enum": ["unknown", "unassigned", "nominated", "confirmed", "declined"],
+      "default": "unknown"
+    },
+    "source_status": {
+      "enum": ["missing", "pending", "verified", "rejected"],
+      "default": "pending"
+    },
+    "source": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": [
+        "source_tier",
+        "publisher",
+        "title",
+        "version_or_date",
+        "stable_url_or_repo_path",
+        "page_section_anchor",
+        "accessed_at",
+        "organizational_status",
+        "version_currency"
+      ],
+      "properties": {
+        "source_tier": {
+          "enum": [
+            "S1",
+            "S1_DERIVED",
+            "S2_CANDIDATE",
+            "S3_SUPPLEMENTARY",
+            "RUNTIME",
+            "COMMUNITY",
+            "unknown"
+          ]
+        },
+        "publisher": { "type": "string" },
+        "title": { "type": "string" },
+        "version_or_date": { "type": "string" },
+        "stable_url_or_repo_path": { "type": "string" },
+        "page_section_anchor": { "type": "string" },
+        "accessed_at": { "type": "string", "format": "date" },
+        "organizational_status": {
+          "enum": ["public", "organization_approved", "unknown"]
+        },
+        "version_currency": {
+          "enum": ["as_received", "current_verified", "superseded", "conflicting", "unknown"]
+        }
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/gap" },
+      "default": []
+    },
+    "affected_paths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "affected_protocols": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true,
+      "default": []
+    },
+    "affected_node_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "before_exact": { "type": "string" },
+    "after_exact": { "type": "string" },
+    "semantic_diff": { "type": "string" },
+    "reason": { "type": "string", "default": "" },
+    "known_ambiguities": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "tests_required": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "rollback": { "type": "string", "default": "" },
+    "review_assignments": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/reviewAssignment" }
+    },
+    "review_decisions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/reviewDecision" }
+    },
+    "approved_use": { "type": ["string", "null"], "default": null },
+    "decided_at": { "type": ["string", "null"], "format": "date-time", "default": null },
+    "review_due": { "type": ["string", "null"], "format": "date", "default": null },
+    "release_sha": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{40}$",
+      "default": null
+    },
+    "publication_status": {
+      "enum": ["draft", "blocked", "release_ready", "published", "superseded", "withdrawn"],
+      "default": "draft"
+    },
+    "production_readback": { "type": ["string", "null"], "default": null }
+  },
+  "$defs": {
+    "gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "type", "status", "evidence_paths", "owner_role"],
+      "properties": {
+        "domain": {
+          "enum": ["source", "content_alignment", "ui_design", "none", "unknown"]
+        },
+        "type": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["open", "pending", "resolved", "accepted", "unknown"] },
+        "evidence_paths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "owner_role": { "$ref": "#/$defs/reviewRole" }
+      }
+    },
+    "reviewRole": {
+      "enum": [
+        "product_owner",
+        "change_author",
+        "source_curator",
+        "bls_reviewer",
+        "clinical_approver",
+        "organizational_approver",
+        "legal_reviewer",
+        "release_owner"
+      ]
+    },
+    "reviewAssignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "assignee_status", "assignee_name", "authority_basis", "scope_statement"],
+      "properties": {
+        "role": { "$ref": "#/$defs/reviewRole" },
+        "assignee_status": {
+          "enum": ["unknown", "unassigned", "nominated", "confirmed", "declined"],
+          "default": "unknown"
+        },
+        "assignee_name": { "type": ["string", "null"], "default": null },
+        "authority_basis": {
+          "enum": [
+            "user_attested_certification",
+            "verified_certification",
+            "documented_appointment",
+            "organization_mandate",
+            "professional_license",
+            "unknown"
+          ],
+          "default": "unknown"
+        },
+        "scope_statement": { "type": ["string", "null"], "default": null },
+        "independent_of_author": { "type": ["boolean", "null"], "default": null }
+      }
+    },
+    "reviewDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "decision", "reviewer_name", "scope_statement", "notes"],
+      "properties": {
+        "role": { "$ref": "#/$defs/reviewRole" },
+        "decision": {
+          "enum": ["pending", "approved", "changes_requested", "scope_blocked", "rejected"],
+          "default": "pending"
+        },
+        "reviewer_name": { "type": ["string", "null"], "default": null },
+        "scope_statement": { "type": ["string", "null"], "default": null },
+        "notes": { "type": "string" },
+        "decided_at": { "type": ["string", "null"], "format": "date-time", "default": null }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "review_status": { "const": "approved_for_stated_use" } },
+        "required": ["review_status"]
+      },
+      "then": {
+        "required": ["source", "approved_use", "decided_at", "review_due"],
+        "properties": {
+          "source_status": { "const": "verified" },
+          "authority_status": { "const": "confirmed" },
+          "source": { "type": "object" },
+          "approved_use": { "type": "string", "minLength": 1 },
+          "decided_at": { "type": "string", "format": "date-time" },
+          "review_due": { "type": "string", "format": "date" },
+          "review_decisions": {
+            "minItems": 1,
+            "contains": {
+              "type": "object",
+              "properties": { "decision": { "const": "approved" } },
+              "required": ["decision"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "publication_status": { "const": "published" } },
+        "required": ["publication_status"]
+      },
+      "then": {
+        "required": ["release_sha", "production_readback"],
+        "properties": {
+          "release_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+          "production_readback": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  ]
+}

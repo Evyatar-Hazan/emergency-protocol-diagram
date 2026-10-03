@@ -1,12 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import unifiedFlow from './unified-flow.json';
+import manifestData from './source-provenance.json';
 import {
-  getSourceProvenance,
   getSourceProvenancePresentation,
   isApprovedForDisplay,
-  sourceProvenanceManifest,
 } from './sourceProvenance';
-import type { ReviewRecordReference, SourceProvenance } from '../types/sourceProvenance';
+import type {
+  ReviewRecordReference,
+  SourceProvenance,
+  SourceProvenanceManifest,
+} from '../types/sourceProvenance';
+
+const sourceProvenanceManifest = manifestData as SourceProvenanceManifest;
 
 describe('source provenance manifest', () => {
   it('covers every unified-flow node and every declared source without changing source content', () => {
@@ -25,7 +30,7 @@ describe('source provenance manifest', () => {
       expect(mappedNode?.node_content_hash).toMatch(/^[0-9a-f]{64}$/);
       expect(mappedSources).toHaveLength(sources.length);
       sources.forEach((source, sourceIndex) => {
-        expect(getSourceProvenance('unified_flow', nodeId, source, sourceIndex)).toMatchObject({
+        expect(mappedSources[sourceIndex]).toMatchObject({
           label: source.label,
           url: source.url,
           source_index: sourceIndex,
@@ -67,7 +72,9 @@ describe('source provenance manifest', () => {
       review_status: 'approved_for_stated_use',
       authority_status: 'confirmed',
       source_status: 'verified',
+      gaps: [],
       source: {
+        source_tier: 'S3_SUPPLEMENTARY',
         publisher: 'Synthetic publisher',
         title: 'Synthetic source',
         version_or_date: 'synthetic-v1',
@@ -75,6 +82,7 @@ describe('source provenance manifest', () => {
         page_section_anchor: 'synthetic-section',
         accessed_at: '2026-01-01',
         organizational_status: 'unknown',
+        version_currency: 'current_verified',
       },
       affected_paths: ['synthetic/path'],
       affected_node_ids: ['synthetic-node'],

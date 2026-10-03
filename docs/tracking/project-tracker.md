@@ -79,6 +79,39 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 
 כל המשימות להלן נפתחו על בסיס ה-audit העובדתי מ-`2026-08-14` ועומדות ב-[REM-003 Audit Gate](./rem-003-audit-gate.md).
 
+### Jarvis 62 — Synthetic instructor groups candidate — 2026-10-02
+
+- מומש ב־branch מבודד כלי feature-gated להקצאת `SCN-01` לקבוצות סינתטיות ולצפייה בתוצאות מצרפיות בלבד; הוא כבוי כברירת מחדל ואינו נחשף ללא `VITE_ENABLE_SYNTHETIC_INSTRUCTOR_TOOLS=true`.
+- הרשאות השרת fail-closed: נדרשת רשומת `training_roles` מפורשת ב־scope ‏`synthetic_only`; אין endpoint להענקת role, אין grant בסכמת הבסיס, ו־instructor אינו יכול לנהל קבוצה של instructor אחר.
+- אין טבלת לומדים או תוצאות אישיות. נשמרים רק group metadata, assignment ואגרגטים; חתך קטן מ־10 השלמות מוסתר ללא counts.
+- fixture הבדיקה משתמש רק בזהויות `.invalid`; לא נוצרו חשבונות אמיתיים ולא שונו הרשאות production.
+- הוכחות מקומיות: client ‏`113/113`, server ‏`49/49`, lint ו־build עברו; coverage client ‏`94.25/88.70/100/98.43`, server ‏`81.62/72.62/81.81/84.07`; schema+fixture עברו SQLite; Playwright עבר desktop והתאמה ל־`390×844`, כולל assignment, suppression ומעבר למצב תרגול.
+- פירוט: [task-62-synthetic-instructor-groups.md](./task-62-synthetic-instructor-groups.md). אין merge, push, deployment או אישור פיילוט.
+
+### Jarvis 66 — Community trust and moderation candidate — 2026-10-02
+
+- מומש בענף מבודד `codex/jarvis-66-community-safety` על בסיס
+  `4a3a1b20bc955cc6be633ad61b3668c3b482a524`; טרם שולב, נדחף או נפרס.
+- נוספו תוויות fail-closed: `תוכן קהילתי — לא מאושר` ו־
+  `נבדק לפי מדיניות הקהילה — לא אישור קליני`. אין פעולה או badge בשם `approve`.
+- נוספו דיווח בסיבה סגורה בלבד, תור סקירה לאדמין, soft hide/restore ו־audit trail.
+  ברירת המחדל לכל תגובה קיימת נשארת `community_unreviewed + visible`; אין שינוי תוכן.
+- בדיקות סינתטיות מכסות guest/user/admin, חסימת שדות חופשיים, הרשאות תור/פעולות,
+  וחסימת ניסיון `approve` גם מאדמין. client `75/75`, server `41/41`, ‏17 תרחישי
+  הייחוס עברו במסגרת `20/20` assertions; build, typecheck ו־lint עברו תחת Node `22.23.2`.
+- build עדיין מציג את אזהרת chunk התקציב הקיימת; Jarvis 66 אינו טוען לסגירת ביצועים.
+- deployment דורש תחילה החלטת retention לפרטי moderation, review של migration וגיבוי/readback
+  בסביבה מורשית. אין שימוש בנתוני מטופלים, תגובות חיות או ספק analytics.
+- מדיניות מלאה: [community-moderation-policy.md](../governance/community-moderation-policy.md).
+
+### Task 68 — סביבת עריכת תוכן מקומית
+
+- מומשה סביבת טיוטות מקומית לצמתים עם preview diff, validation, workflow סקירה, revisions ו־rollback append-only.
+- הטיוטות נשמרות ב־`localStorage` בלבד ואינן משנות את `unified-flow.json`; אין פעולת publish, merge או deploy.
+- ה־review gates משתמשים בחוזה runtime של provenance ממשימה 69 ונכשלים סגור בכל מצב שאינו `ready`, וכן על `pending`, ‏`unknown`, מקור ששונה או היעדר reviewer בלתי תלוי.
+- השלמת התשתית אינה מאשרת תוכן רפואי כלשהו ואינה סוגרת את `CONTENT-001`, ‏`CLIN-001` או `CLIN-002`.
+- תיעוד: [content-editor-workflow.md](../development/content-editor-workflow.md).
+
 ### CONTENT-001 remediation snapshot — 2026-10-01
 
 - הוחלפו מקומית חמש כתובות Drive שגויות בכתובות המודולים התואמים בריפו: יחידות `03`, `06`, `10`, `15` ו-`45`. השינוי מתקן `47` הופעות בלי לשנות תוכן או משמעות קלינית.
@@ -89,13 +122,21 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 - אין להחליף בשקט את מקורות ההחייאה משנת `2020` או מקור רפואי אחר. מעבר ל-AHA 2025, לעמוד איחוד הצלה המעודכן מ-`2025-12-29`, או למקור חלופי אחר דורש מפת שינוי ואישור בעל תוכן קליני לפני פרסום.
 - השינוי טרם פורסם, לא נדחף ולא נפרס לפרודקשן.
 
+### FLOW-001 technical audit snapshot — 2026-10-02
+
+- בדיקת גרף אוטומטית משחזרת 205 צמתים, 358 קשתות מוצהרות, 357 קשתות ניווט אפקטיביות, 193 צמתים נגישים ו-12 צמתים לא נגישים.
+- 12 הצמתים מתחלקים ל-4 רכיבים מנותקים: `pulse_check`; ‏`airway_check_cpr -> ventilations`; ‏`pneumothorax`; ורכיב `cardiovascular_problem` עם שבעת צמתי ההמשך שלו.
+- אין dangling targets ואין אי-התאמות בין מפתח צומת ל-`id`.
+- החלטת מוצר מ-2026-10-02 סיווגה 7 צמתים קרדיולוגיים מתקדמים כחומר העשרה נפרד ממסלול הפעולה. נוספו manifest, סימון UI ו-guardrails; לא שונו קשתות או תוכן קליני.
+- 5 צמתים נשארים `unresolved`: `pulse_check`, ‏`airway_check_cpr`, ‏`ventilations`, ‏`pneumothorax`, ‏`hypertensive_emergency`. בדיקות regression מפורטות ב-[FLOW-001 graph integrity audit](./flow-001-graph-integrity-audit.md).
+
 ### P1 — אמינות קלינית, כיסוי תרחישים ו-parity
 
 | ID | סטטוס | ממצא עובדתי | פעולה נדרשת | Definition of Done | אימות |
 |---|---|---|---|---|---|
 | `CONTENT-001` | Open — partial remediation local | חמש כתובות Drive שגויות ושתי וריאציות URL משובשות תוקנו מקומית ב-55 הופעות. נשארו קישורי `404`, חריגי `gov.il`/מד"א ומקורות החייאה ישנים שדורשים הכרעה קלינית; ראו snapshot מ-`2026-10-01`. | לאמת ידנית את החריגים, לאשר מפת מקורות קלינית, לתקן את יתר הקישורים ולתעד כתובת וגרסה מאושרות לכל מקור. | אין `404/400` במקורות המאושרים; לכל חסימת בודק יש תוצאת בדיקה ידנית מתועדת; מקורות ההחייאה תואמים לגרסה שאושרה; אין אובדן מקור קליני. | סריקת כל 51 הכתובות + בדיקה ידנית לחריגים + review בעל תוכן + spot-check ב-UI מקומי ובפרודקשן. |
-| `FLOW-001` | Open | 12 צמתים אינם נגישים מ-`report_departure`: `pulse_check`, `airway_check_cpr`, `ventilations`, `pneumothorax`, `cardiovascular_problem`, `mi_stemi`, `arrhythmia_vt`, `arrhythmia_svt`, `arrhythmia_afib`, `arrhythmia_bradycardia`, `aortic_dissection`, `hypertensive_emergency`. | בעל התוכן יחליט עבור כל צומת אם לחבר לזרימה או להסיר כ-legacy, ואז לעדכן את הגרף. | אין צומת production יתום ללא החלטה מתועדת; 0 dangling edges; מסלולים מחוברים תואמים להחלטה הקלינית. | בדיקת reachability אוטומטית + מעבר ידני בכל מסלול ששונה. |
-| `QA-005` | Open | קיימים 17 תרחישי ייחוס כתובים, אך אין suite E2E בר-הרצה. | לממש E2E אוטומטי לתרחישים, כולל navigation, back, cross-protocol ונתיבי קצה. | כל 17 התרחישים רצים באופן דטרמיניסטי מקומית וב-CI, עם artifacts בכשל. | פקודת E2E מתועדת + ריצת CI ירוקה + דוח 17/17. |
+| `FLOW-001` | Open — 7 reference, 5 unresolved | 12 צמתים אינם נגישים מ-`report_departure`. שבעת הנושאים הקרדיולוגיים המתקדמים שאושרו מוצגים כחומר העשרה נפרד עם guardrails; `pulse_check`, `airway_check_cpr`, `ventilations`, `pneumothorax`, `hypertensive_emergency` נשארים ללא הכרעה. | בעל התוכן יכריע עבור 5 הצמתים שנותרו אם לחבר לזרימה, להסיר כ-legacy או לסמן במפורש כ-reference; אין לשנות קישור קליני ללא הכרעה. | אין צומת production יתום ללא החלטה מתועדת; 0 dangling edges; מסלולים מחוברים תואמים להחלטה הקלינית. | בדיקות reachability וגבול reference ב-`protocolGraphAudit.test.ts` וב-`advancedReferences.test.ts`; ראו [דוח audit](./flow-001-graph-integrity-audit.md). |
+| `QA-005` | Technical suite implemented locally — CI pending; clinical review pending | כל 17 תרחישי הייחוס מקודדים כמקרי בדיקה דטרמיניסטיים מול נתוני הזרימה הפעילים. המנוע מאמת reachability לפי סדר checkpoints, הסתעפויות מפורשות, back, יעד cross-protocol ונתיב כשל; מעבר טכני מופרד מ-`clinicalReviewStatus: pending`. | להריץ את ענף האינטגרציה ב-CI ולקבל artifact תקין; להעביר בנפרד את משמעות התוצאות והנתיבים ל-review קליני מוסמך. | כל 17 התרחישים רצים באופן דטרמיניסטי מקומית וב-CI, עם artifact בכשל; אישור קליני מתועד בנפרד ואינו נגזר מתוצאת הבדיקה. | מקומית: `npm run test:reference-scenarios` עבר עם 20/20 בדיקות (17 תרחישים + 3 חוזי suite) ו-JSON report; `67/67` בדיקות client, build, lint ושני coverage gates עברו. CI טרם רץ על השינוי ולכן המשימה אינה Closed. |
 | `DEV-001` | Open | Pages+D1 מקומי נכשל ללא schema ועם API base שגוי; README מתאר בעיקר Vite+Express. | להוסיף setup/script מתועד ל-Cloudflare Pages+D1 עם migration ו-`VITE_API_URL=/api`. | checkout חדש יכול להרים סביבת parity, לקבל `200` מ-health/comments וללא שגיאת comments בקונסול. | לבצע את המדריך מסביבה נקייה ולשמור פקודות ותוצאות ב-tracker/audit. |
 | `CLIN-001` | Open | סף adult בקוד הוא `>8 years`; AHA 2025 משתמש בסימני התבגרות. זו אי-התאמה הדורשת הכרעת בעל תוכן מול פרוטוקול ישראלי/איחוד הצלה. | לבצע review קליני מתועד לסף הגיל ולמדגם צמתים בסיכון גבוה, עם גרסת מקור ובעל אישור. | קיימת החלטה קלינית חתומה/מתועדת; התוכן והבדיקות תואמים לה; אין שינוי רפואי על בסיס הנחה. | השוואת תוכן מול המקור המאושר + review בעל תוכן + regression לתרחישים שהושפעו. |
 | `CLIN-002` | Open | אין בזרימה הראשית disclaimer גלובלי; disclaimer קיים רק באזור Vital Signs. | לאשר נוסח scope שמבהיר שזה כלי למידה ולא הוראות טיפול, ולהציגו בנקודות המתאימות. | הנוסח המאושר נגיש וברור בכניסה ובממשק, ללא פגיעה בשימושיות או נגישות. | review קליני/משפטי לפי הצורך + בדיקת desktop/mobile + axe/Lighthouse. |
