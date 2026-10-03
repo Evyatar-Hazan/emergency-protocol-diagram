@@ -1099,17 +1099,17 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
             </div>
 
             <div className="-mx-0.5 overflow-x-auto pb-0.5">
-              <div className="flex min-w-max items-center gap-1.5 px-0.5">
+              <div className="flex min-w-max items-center gap-1 px-0.5">
                 <button
                   onClick={restart}
-                  className="flex h-11 min-w-[88px] items-center justify-center gap-1.5 rounded-2xl bg-clinical-blue px-3 text-[11px] font-semibold text-white shadow-sm transition-colors hover:bg-clinical-deep"
+                  className="flex h-11 min-w-[76px] items-center justify-center gap-1 rounded-2xl bg-clinical-blue px-2 text-[11px] font-semibold text-white shadow-sm transition-colors hover:bg-clinical-deep"
                 >
                   <span>🔄</span>
                   <span>חדש</span>
                 </button>
                 <button
                   onClick={() => toggleBookmark(currentNodeId)}
-                  className={`flex h-11 min-w-[88px] items-center justify-center gap-1.5 rounded-2xl px-3 text-[11px] font-medium transition-all ${
+                  className={`flex h-11 min-w-[76px] items-center justify-center gap-1 rounded-2xl px-2 text-[11px] font-medium transition-all ${
                     hasBookmark
                       ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
                       : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -1123,14 +1123,14 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
                 <button
                   onClick={goBack}
                   disabled={history.length === 0}
-                  className="flex h-11 min-w-[88px] items-center justify-center gap-1.5 rounded-2xl bg-gray-200 px-3 text-[11px] font-medium transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-11 min-w-[76px] items-center justify-center gap-1 rounded-2xl bg-gray-200 px-2 text-[11px] font-medium transition-colors hover:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <span>←</span>
                   <span>חזור</span>
                 </button>
                 <button
                   onClick={(event) => openSidebar(event.currentTarget)}
-                  className="flex h-11 min-w-[108px] items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-3 text-[11px] font-medium text-white transition-all hover:shadow-lg"
+                  className="flex h-11 min-w-[92px] items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-purple-600 to-clinical-blue px-2 text-[11px] font-medium text-white transition-all hover:shadow-lg"
                   title="פתח כלי עזר מהירים"
                   aria-label="כלים: פתח תור חזרה, קפיצות לסכמות וסימניות"
                 >
