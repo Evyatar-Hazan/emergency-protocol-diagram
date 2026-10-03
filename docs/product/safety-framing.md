@@ -58,5 +58,5 @@ updated: 2026-10-02
 ## מקורות קלט
 
 - Task 51: `docs/product/intended-use.md` — תוצר חיצוני מבודד, `draft-for-review`.
-- Task 53: `TASK-53-clinical-governance.md` ו־`TASK-53-clinical-review.schema.json` — תוצרי תהליך מבודדים.
+- Task 53: `docs/governance/clinical-review-process.md` ו־`docs/governance/schemas/clinical-review.schema.json` — תהליך הסקירה והחוזה הקנוניים.
 - `docs/tracking/project-tracker.md` — הגדרת `CLIN-002` ושערי הפרויקט.

@@ -247,7 +247,10 @@
         "properties": {
           "source_status": { "const": "verified" },
           "authority_status": { "const": "confirmed" },
+          "source": { "type": "object" },
           "approved_use": { "type": "string", "minLength": 1 },
+          "decided_at": { "type": "string", "format": "date-time" },
+          "review_due": { "type": "string", "format": "date" },
           "review_decisions": {
             "minItems": 1,
             "contains": {

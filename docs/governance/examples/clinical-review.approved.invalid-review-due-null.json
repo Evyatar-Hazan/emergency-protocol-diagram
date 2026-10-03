@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0.0",
+  "change_id": "CLIN-2026-993",
+  "title": "Invalid approved fixture: null review_due",
+  "intended_use": "learning_only",
+  "content_domain": "non_clinical",
+  "risk_tier": "G0",
+  "review_status": "approved_for_stated_use",
+  "authority_status": "confirmed",
+  "source_status": "verified",
+  "source": {
+    "source_tier": "S3_SUPPLEMENTARY",
+    "publisher": "Synthetic fixture publisher",
+    "title": "Synthetic non-clinical fixture source",
+    "version_or_date": "fixture-v1",
+    "stable_url_or_repo_path": "docs/governance/examples/clinical-review.approved.valid.json",
+    "page_section_anchor": "synthetic",
+    "accessed_at": "2026-10-02",
+    "organizational_status": "unknown",
+    "version_currency": "current_verified"
+  },
+  "gaps": [],
+  "affected_paths": [
+    "docs/governance/examples/clinical-review.approved.valid.json"
+  ],
+  "affected_protocols": [
+    "synthetic_fixture"
+  ],
+  "affected_node_ids": [
+    "synthetic_node"
+  ],
+  "before_exact": "synthetic-before",
+  "after_exact": "synthetic-after",
+  "semantic_diff": "Synthetic non-clinical schema fixture only.",
+  "reason": "Positive validation fixture; not a clinical approval.",
+  "known_ambiguities": [],
+  "tests_required": ["Draft 2020-12 schema validation"],
+  "rollback": "Remove the synthetic fixture.",
+  "review_assignments": [
+    {
+      "role": "product_owner",
+      "assignee_status": "confirmed",
+      "assignee_name": "Synthetic reviewer",
+      "authority_basis": "documented_appointment",
+      "scope_statement": "Synthetic fixture validation only.",
+      "independent_of_author": true
+    }
+  ],
+  "review_decisions": [
+    {
+      "role": "product_owner",
+      "decision": "approved",
+      "reviewer_name": "Synthetic reviewer",
+      "scope_statement": "Synthetic fixture validation only.",
+      "notes": "This fixture does not approve any clinical content.",
+      "decided_at": "2026-10-02T13:00:00Z"
+    }
+  ],
+  "approved_use": "synthetic-schema-test-only",
+  "decided_at": "2026-10-02T13:00:00Z",
+  "review_due": null,
+  "release_sha": null,
+  "publication_status": "draft",
+  "production_readback": null
+}

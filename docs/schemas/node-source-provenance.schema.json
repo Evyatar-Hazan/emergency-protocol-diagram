@@ -25,7 +25,7 @@
     },
     "review_records": {
       "type": "array",
-      "description": "Full review records must also validate against TASK-53-clinical-review.schema.json.",
+      "description": "Full review records must also validate against docs/governance/schemas/clinical-review.schema.json.",
       "items": { "$ref": "#/$defs/reviewRecordReference" }
     }
   },
