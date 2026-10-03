@@ -226,9 +226,9 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                   <span className="text-sm font-bold text-slate-900">
                     {author.name || author.email.split('@')[0]}
                   </span>
-                  <span className="text-xs text-slate-400">{authorHandle}</span>
-                  <span className="text-xs text-slate-300">·</span>
-                  <span className="text-xs text-slate-400">{formatRelativeTime(createdAt)}</span>
+                  <span className="text-xs text-slate-600">{authorHandle}</span>
+                  <span className="text-xs text-slate-500" aria-hidden="true">·</span>
+                  <span className="text-xs text-slate-600">{formatRelativeTime(createdAt)}</span>
                   {author.isAdmin && (
                     <span className="rounded-full bg-clinical-blue/10 px-2.5 py-1 text-[11px] font-bold text-clinical-blue">
                       מנהל
@@ -238,7 +238,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
               </div>
               <button
                 type="button"
-                className="rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                className="rounded-full p-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-800"
                 aria-label="פעולות נוספות"
               >
                 <MoreIcon />
@@ -247,7 +247,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
 
             <p className="mt-1.5 whitespace-pre-line text-sm leading-7 text-slate-800">{parsedContent.body}</p>
 
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600">
               <div className="flex flex-wrap items-center gap-1">
               <button
                 type="button"
