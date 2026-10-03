@@ -52,7 +52,7 @@
       "content": {
         "sources": [
           {
-            "label": "מד\"א - חנק / אספיקסיה",
+            "label": "מד\"א - כיצד לטפל בחנק מגוף זר",
             "url": "https://www.mdais.org/101/asphyxia",
             "note": "הבדלה בין חסימה חלקית למלאה ועקרונות טיפול ראשוני."
           },
@@ -103,7 +103,7 @@
         ],
         "sources": [
           {
-            "label": "מד\"א - חנק / אספיקסיה",
+            "label": "מד\"א - כיצד לטפל בחנק מגוף זר",
             "url": "https://www.mdais.org/101/asphyxia",
             "note": "עקרונות טיפול בחנק מגוף זר במבוגר, ילד ותינוק."
           },
@@ -139,7 +139,7 @@
           },
           {
             "label": "משרד הבריאות - אנפילקסיס לאחר מתן חיסונים",
-            "url": "https://www.gov.il/BlobFolder/policy/anaphylaxi/he/files_publications_units_epidemiology_vaccine_guidelines_190_anaphylaxis.pdf",
+            "url": "https://www.gov.il/he/pages/anaphylaxi",
             "note": "עקרונות חירום של אנפילקסיס, כולל אפינפרין IM ומעקב אחר נשימה ולחץ דם."
           }
         ]
@@ -462,7 +462,7 @@
           },
           {
             "label": "משרד הבריאות - אנפילקסיס לאחר מתן חיסונים",
-            "url": "https://www.gov.il/BlobFolder/policy/anaphylaxi/he/files_publications_units_epidemiology_vaccine_guidelines_190_anaphylaxis.pdf",
+            "url": "https://www.gov.il/he/pages/anaphylaxi",
             "note": "עקרונות חירום של אנפילקסיס עם אפינפרין IM ומעקב."
           }
         ]
@@ -508,7 +508,7 @@
         ],
         "sources": [
           {
-            "label": "מד\"א - חנק / אספיקסיה",
+            "label": "מד\"א - כיצד לטפל בחנק מגוף זר",
             "url": "https://www.mdais.org/101/asphyxia",
             "note": "בחסימה חלקית מעודדים שיעול ולא מבצעים היימליך כל עוד יש זרימת אוויר."
           }
@@ -906,8 +906,8 @@
             "note": "תמיכה נשימתית ופינוי בהרעלה עם שינוי הכרה."
           },
           {
-            "label": "משרד הבריאות - נלוקסון תרופה מצילת חיים",
-            "url": "https://www.gov.il/BlobFolder/reports/naloxone/he/PDF_%D7%A0%D7%9C%D7%95%D7%A7%D7%A1%D7%95%D7%9F-%D7%AA%D7%A8%D7%95%D7%A4%D7%94%20%D7%9E%D7%A6%D7%99%D7%9C%D7%AA%20%D7%97%D7%99%D7%99%D7%9D%21.pdf",
+            "label": "הרשות הלאומית לביטחון קהילתי - נלוקסון: תרופה לטיפול במנת יתר של אופיואידים",
+            "url": "https://www.gov.il/he/pages/naloxone",
             "note": "זיהוי מנת יתר מאופיואידים והעיקרון שנלוקסון רלוונטי רק בהרשאה ובפרוטוקול מקומי."
           }
         ]
@@ -1050,8 +1050,8 @@
         ],
         "sources": [
           {
-            "label": "משרד הבריאות - נלוקסון תרופה מצילת חיים",
-            "url": "https://www.gov.il/BlobFolder/reports/naloxone/he/PDF_%D7%A0%D7%9C%D7%95%D7%A7%D7%A1%D7%95%D7%9F-%D7%AA%D7%A8%D7%95%D7%A4%D7%94%20%D7%9E%D7%A6%D7%99%D7%9C%D7%AA%20%D7%97%D7%99%D7%99%D7%9D%21.pdf",
+            "label": "הרשות הלאומית לביטחון קהילתי - נלוקסון: תרופה לטיפול במנת יתר של אופיואידים",
+            "url": "https://www.gov.il/he/pages/naloxone",
             "note": "נלוקסון פועל בהרעלת אופיואידים ואינו מחליף תמיכה נשימתית."
           },
           {
@@ -1134,8 +1134,8 @@
             "note": "חשיפה מבוקרת, בדיקה שיטתית ושמירה על חום הגוף כחלק מהערכת המטופל."
           },
           {
-            "label": "משרד הבריאות - התגוננות ממכת חום",
-            "url": "https://www.gov.il/he/pages/heat_stroke",
+            "label": "משרד הבריאות - המלצות להתמודדות עם מזג אוויר חם",
+            "url": "https://www.gov.il/he/pages/heat_injuries",
             "note": "זיהוי עומס חום והחשיבות של קירור/הגנה מסביבה חמה."
           }
         ]

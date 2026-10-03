@@ -68,6 +68,25 @@ interface CommentsThreadProps {
   nodeId: string;
 }
 
+interface CommentsLoadErrorProps {
+  onRetry: () => void;
+}
+
+export const CommentsLoadError: React.FC<CommentsLoadErrorProps> = ({ onRetry }) => (
+  <div role="alert" className="mx-4 my-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 sm:mx-6">
+    <p className="text-sm font-medium text-red-700">
+      לא הצלחנו לטעון את התגובות כרגע. אפשר לנסות שוב בעוד רגע.
+    </p>
+    <button
+      type="button"
+      onClick={onRetry}
+      className="mt-3 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-red-700 transition hover:bg-red-100"
+    >
+      נסה שוב
+    </button>
+  </div>
+);
+
 const aggregateStats = (items: Comment[]) =>
   items.reduce(
     (acc, comment) => {
@@ -177,20 +196,10 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
       {showComposer && (
         <div className="border-b border-slate-200/80 px-4 py-4 sm:px-6">
           <CommentForm nodeId={nodeId} onCommentAdded={handleCommentAdded} />
-
-          {error && (
-            <div className="mt-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3">
-              <p className="text-sm font-medium text-red-700">{error}</p>
-              <button
-                onClick={() => void loadComments()}
-                className="mt-3 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-red-700 transition hover:bg-red-100"
-              >
-                נסה שוב
-              </button>
-            </div>
-          )}
         </div>
       )}
+
+      {error && <CommentsLoadError onRetry={() => void loadComments()} />}
 
       {isLoading && hasVisibleThread ? (
         <div className="px-5 py-10 text-center sm:px-6">

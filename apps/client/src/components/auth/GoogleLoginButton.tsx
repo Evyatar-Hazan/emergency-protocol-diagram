@@ -1,7 +1,5 @@
-import React from 'react';
-import { GoogleLogin } from '@react-oauth/google';
-import type { CredentialResponse } from '@react-oauth/google';
-import { useAuthStore } from '../../store/authStore';
+import React, { useEffect, useRef } from 'react';
+import { useGoogleIdentityManager } from './googleIdentityManagerContext';
 
 interface GoogleLoginButtonProps {
   onSuccess?: () => void;
@@ -16,27 +14,24 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
   className = '',
   variant = 'default',
 }) => {
-  const { loginWithGoogle } = useAuthStore();
+  const googleIdentity = useGoogleIdentityManager();
+  const buttonContainerRef = useRef<HTMLDivElement>(null);
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
-  const handleSuccess = async (credentialResponse: CredentialResponse) => {
-    try {
-      if (credentialResponse.credential) {
-        await loginWithGoogle(credentialResponse.credential);
-        onSuccess?.();
-      }
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error('Login failed');
-      console.error('Login error:', err);
-      onError?.(err);
+  useEffect(() => {
+    if (!googleIdentity?.isReady || !buttonContainerRef.current) {
+      return;
     }
-  };
 
-  const handleError = () => {
-    const error = new Error('Login with Google failed');
-    console.error('Login error:', error);
-    onError?.(error);
-  };
+    return googleIdentity.renderButton(
+      buttonContainerRef.current,
+      { text: 'signin_with' },
+      {
+        onSuccess,
+        onError,
+      }
+    );
+  }, [googleIdentity, onError, onSuccess]);
 
   if (!googleClientId || googleClientId.includes('your_google_client_id_here')) {
     return (
@@ -152,11 +147,7 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({
         `}
       `}</style>
       <div className="google-login-container">
-        <GoogleLogin
-          onSuccess={handleSuccess}
-          onError={handleError}
-          text="signin_with"
-        />
+        <div ref={buttonContainerRef} className="h-10" />
       </div>
     </div>
   );
