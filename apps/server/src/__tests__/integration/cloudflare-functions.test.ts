@@ -179,7 +179,6 @@ describe('Cloudflare Pages Functions', () => {
           content: 'Readable comment',
           author_id: 'user-1',
           parent_comment_id: null,
-          moderation_status: 'community_unreviewed',
           created_at: '2026-07-28 10:00:00',
           updated_at: '2026-07-28 10:00:00',
           author_email: 'user@example.com',
@@ -207,13 +206,11 @@ describe('Cloudflare Pages Functions', () => {
           likesCount: 2,
           viewsCount: 3,
           viewerHasLiked: false,
-          trustStatus: 'community_unreviewed',
         },
       ],
     });
     expect(response.status).toBe(200);
     expect(env.DB.prepare).toHaveBeenCalledTimes(1);
-    expect(env.DB.prepare).toHaveBeenCalledWith(expect.stringContaining("visibility_status = 'visible'"));
   });
 
   it('allows a Google user to create a comment and returns the inserted row', async () => {
@@ -466,178 +463,5 @@ describe('Cloudflare Pages Functions', () => {
     await expect(response.json()).resolves.toEqual({ message: 'Comment deleted' });
     expect(response.status).toBe(200);
     expect(env.DB.prepare).toHaveBeenCalledTimes(2);
-  });
-
-  it('blocks a guest from reporting a comment', async () => {
-    const env = createEnv();
-    const response = await handleCommentPost({
-      env,
-      request: new Request('https://example.com/api/comments/comment-1/report', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ reason: 'potentially_unsafe' }),
-      }),
-    });
-
-    await expect(response.json()).resolves.toEqual({ message: 'Access token required' });
-    expect(response.status).toBe(401);
-    expect(env.DB.prepare).not.toHaveBeenCalled();
-  });
-
-  it('queues a fixed-reason report from a Google user without changing the comment', async () => {
-    const env = createEnv(
-      { first: { googleId: 'google-user-1' } },
-      { first: { id: 'comment-1' } },
-      {},
-    );
-    const response = await handleCommentPost({
-      env,
-      request: new Request('https://example.com/api/comments/comment-1/report', {
-        method: 'POST',
-        headers: {
-          authorization: await createAuthHeader({ id: 'user-1' }),
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ reason: 'potentially_unsafe' }),
-      }),
-    });
-
-    await expect(response.json()).resolves.toEqual({ status: 'queued' });
-    expect(response.status).toBe(202);
-    expect(env.DB.prepare).toHaveBeenCalledTimes(3);
-  });
-
-  it('rejects free text and unsupported fields in a report', async () => {
-    const env = createEnv({ first: { googleId: 'google-user-1' } });
-    const response = await handleCommentPost({
-      env,
-      request: new Request('https://example.com/api/comments/comment-1/report', {
-        method: 'POST',
-        headers: {
-          authorization: await createAuthHeader({ id: 'user-1' }),
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ reason: 'misleading', details: 'synthetic free text' }),
-      }),
-    });
-
-    await expect(response.json()).resolves.toEqual({
-      message: 'A supported report reason is required',
-    });
-    expect(response.status).toBe(400);
-    expect(env.DB.prepare).toHaveBeenCalledTimes(1);
-  });
-
-  it('blocks a regular user from reading the moderation queue', async () => {
-    const env = createEnv();
-    const response = await handleCommentGet({
-      env,
-      request: new Request('https://example.com/api/comments/moderation/queue', {
-        headers: { authorization: await createAuthHeader({ id: 'user-1' }) },
-      }),
-    });
-
-    await expect(response.json()).resolves.toEqual({ message: 'Admin access required' });
-    expect(response.status).toBe(403);
-    expect(env.DB.prepare).not.toHaveBeenCalled();
-  });
-
-  it('allows an admin to read the synthetic moderation queue', async () => {
-    const env = createEnv({
-      all: [
-        {
-          commentId: 'comment-1',
-          nodeId: 'synthetic-node',
-          content: 'Synthetic community content',
-          moderationStatus: 'community_unreviewed',
-          visibilityStatus: 'visible',
-          createdAt: '2026-10-02 12:00:00',
-          reportCount: 1,
-          reportReasons: 'potentially_unsafe',
-        },
-      ],
-    });
-    const response = await handleCommentGet({
-      env,
-      request: new Request('https://example.com/api/comments/moderation/queue', {
-        headers: { authorization: await createAuthHeader({ id: 'admin-1', isAdmin: true }) },
-      }),
-    });
-
-    await expect(response.json()).resolves.toEqual({
-      items: [
-        expect.objectContaining({
-          commentId: 'comment-1',
-          moderationStatus: 'community_unreviewed',
-          reportReasons: ['potentially_unsafe'],
-        }),
-      ],
-    });
-    expect(response.status).toBe(200);
-    expect(env.DB.prepare).toHaveBeenCalledTimes(1);
-  });
-
-  it('blocks a regular user from moderating a comment', async () => {
-    const env = createEnv();
-    const response = await handleCommentPost({
-      env,
-      request: new Request('https://example.com/api/comments/comment-1/moderate', {
-        method: 'POST',
-        headers: {
-          authorization: await createAuthHeader({ id: 'user-1' }),
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'hide', reason: 'potentially_unsafe' }),
-      }),
-    });
-
-    await expect(response.json()).resolves.toEqual({ message: 'Admin access required' });
-    expect(response.status).toBe(403);
-    expect(env.DB.prepare).not.toHaveBeenCalled();
-  });
-
-  it('lets an admin hide a synthetic comment and records an audit event', async () => {
-    const env = createEnv({ first: { id: 'comment-1' } }, {}, {}, {});
-    const response = await handleCommentPost({
-      env,
-      request: new Request('https://example.com/api/comments/comment-1/moderate', {
-        method: 'POST',
-        headers: {
-          authorization: await createAuthHeader({ id: 'admin-1', isAdmin: true }),
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'hide', reason: 'potentially_unsafe' }),
-      }),
-    });
-
-    await expect(response.json()).resolves.toEqual({
-      status: 'moderated',
-      action: 'hide',
-      trustStatus: 'moderation_reviewed',
-      approvalStatus: 'not_approved',
-    });
-    expect(response.status).toBe(200);
-    expect(env.DB.prepare).toHaveBeenCalledTimes(4);
-  });
-
-  it('does not accept an approval action even from an admin', async () => {
-    const env = createEnv();
-    const response = await handleCommentPost({
-      env,
-      request: new Request('https://example.com/api/comments/comment-1/moderate', {
-        method: 'POST',
-        headers: {
-          authorization: await createAuthHeader({ id: 'admin-1', isAdmin: true }),
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({ action: 'approve', reason: 'community_guidelines' }),
-      }),
-    });
-
-    await expect(response.json()).resolves.toEqual({
-      message: 'A supported moderation action and reason are required',
-    });
-    expect(response.status).toBe(400);
-    expect(env.DB.prepare).not.toHaveBeenCalled();
   });
 });

@@ -8,49 +8,6 @@ type Context = {
   env: Env;
 };
 
-const reportReasons = new Set([
-  'potentially_unsafe',
-  'misleading',
-  'spam',
-  'harassment',
-  'other_policy',
-]);
-
-const moderationActions = new Set([
-  'mark_reviewed',
-  'hide',
-  'restore',
-  'dismiss_reports',
-]);
-
-const moderationReasons = new Set([
-  'community_guidelines',
-  'potentially_unsafe',
-  'misleading',
-  'spam',
-  'harassment',
-  'report_unsubstantiated',
-]);
-
-function hasExactKeys(value: Record<string, unknown>, keys: string[]): boolean {
-  const actual = Object.keys(value).sort();
-  const expected = [...keys].sort();
-  return actual.length === expected.length && actual.every((key, index) => key === expected[index]);
-}
-
-async function authenticateAdmin(context: Context) {
-  const authResult = await authenticate(context.request, context.env);
-  if (authResult instanceof Response) {
-    return authResult;
-  }
-
-  if (!authResult.isAdmin) {
-    return json({ message: 'Admin access required' }, { status: 403 });
-  }
-
-  return authResult;
-}
-
 async function createComment(context: Context): Promise<Response> {
   const authResult = await authenticateGoogleUser(context.request, context.env);
   if (authResult instanceof Response) {
@@ -88,7 +45,6 @@ async function createComment(context: Context): Promise<Response> {
         c.content,
         c.author_id AS authorId,
         c.parent_comment_id AS parentCommentId,
-        c.moderation_status AS moderationStatus,
         c.created_at AS createdAt,
         c.updated_at AS updatedAt,
         u.id AS userId,
@@ -116,10 +72,6 @@ async function createComment(context: Context): Promise<Response> {
         parentCommentId: row.parentCommentId ? String(row.parentCommentId) : null,
         createdAt: String(row.createdAt),
         updatedAt: String(row.updatedAt),
-        trustStatus:
-          row.moderationStatus === 'moderation_reviewed'
-            ? 'moderation_reviewed'
-            : 'community_unreviewed',
         author: {
           id: String(row.userId),
           email: String(row.email),
@@ -131,155 +83,6 @@ async function createComment(context: Context): Promise<Response> {
     },
     { status: 201 }
   );
-}
-
-async function reportComment(context: Context, commentId: string): Promise<Response> {
-  const authResult = await authenticateGoogleUser(context.request, context.env);
-  if (authResult instanceof Response) {
-    return authResult;
-  }
-
-  const body = (await context.request.json().catch(() => null)) as Record<string, unknown> | null;
-  if (!body || !hasExactKeys(body, ['reason']) || !reportReasons.has(String(body.reason))) {
-    return json({ message: 'A supported report reason is required' }, { status: 400 });
-  }
-
-  const comment = await context.env.DB.prepare(
-    "SELECT id FROM comments WHERE id = ?1 AND visibility_status = 'visible'"
-  )
-    .bind(commentId)
-    .first<{ id: string }>();
-
-  if (!comment) {
-    return json({ message: 'Comment not found' }, { status: 404 });
-  }
-
-  await context.env.DB.prepare(
-    `
-      INSERT OR IGNORE INTO comment_reports
-        (id, comment_id, reporter_id, reason, status, created_at)
-      VALUES (?1, ?2, ?3, ?4, 'pending', datetime('now'))
-    `
-  )
-    .bind(crypto.randomUUID(), commentId, authResult.id, String(body.reason))
-    .run();
-
-  return json({ status: 'queued' }, { status: 202 });
-}
-
-async function getModerationQueue(context: Context): Promise<Response> {
-  const authResult = await authenticateAdmin(context);
-  if (authResult instanceof Response) {
-    return authResult;
-  }
-
-  const { results } = await context.env.DB.prepare(
-    `
-      SELECT
-        c.id AS commentId,
-        c.node_id AS nodeId,
-        c.content,
-        c.moderation_status AS moderationStatus,
-        c.visibility_status AS visibilityStatus,
-        c.created_at AS createdAt,
-        COUNT(r.id) AS reportCount,
-        GROUP_CONCAT(DISTINCT r.reason) AS reportReasons
-      FROM comment_reports r
-      INNER JOIN comments c ON c.id = r.comment_id
-      WHERE r.status = 'pending'
-      GROUP BY c.id, c.node_id, c.content, c.moderation_status,
-        c.visibility_status, c.created_at
-      ORDER BY MIN(r.created_at) ASC
-    `
-  ).all<Record<string, string | number | null>>();
-
-  return json({
-    items: results.map((row) => ({
-      commentId: String(row.commentId),
-      nodeId: String(row.nodeId),
-      content: String(row.content),
-      moderationStatus: String(row.moderationStatus),
-      visibilityStatus: String(row.visibilityStatus),
-      createdAt: String(row.createdAt),
-      reportCount: Number(row.reportCount || 0),
-      reportReasons: row.reportReasons ? String(row.reportReasons).split(',') : [],
-    })),
-  });
-}
-
-async function moderateComment(context: Context, commentId: string): Promise<Response> {
-  const authResult = await authenticateAdmin(context);
-  if (authResult instanceof Response) {
-    return authResult;
-  }
-
-  const body = (await context.request.json().catch(() => null)) as Record<string, unknown> | null;
-  if (
-    !body ||
-    !hasExactKeys(body, ['action', 'reason']) ||
-    !moderationActions.has(String(body.action)) ||
-    !moderationReasons.has(String(body.reason))
-  ) {
-    return json({ message: 'A supported moderation action and reason are required' }, { status: 400 });
-  }
-
-  const comment = await context.env.DB.prepare('SELECT id FROM comments WHERE id = ?1')
-    .bind(commentId)
-    .first<{ id: string }>();
-
-  if (!comment) {
-    return json({ message: 'Comment not found' }, { status: 404 });
-  }
-
-  const action = String(body.action);
-  const reason = String(body.reason);
-
-  if (action === 'hide') {
-    await context.env.DB.prepare(
-      `UPDATE comments
-       SET visibility_status = 'hidden', moderation_status = 'moderation_reviewed',
-           moderated_by = ?2, moderated_at = datetime('now'), moderation_reason = ?3,
-           updated_at = datetime('now')
-       WHERE id = ?1`
-    ).bind(commentId, authResult.id, reason).run();
-  } else if (action === 'restore') {
-    await context.env.DB.prepare(
-      `UPDATE comments
-       SET visibility_status = 'visible', moderation_status = 'moderation_reviewed',
-           moderated_by = ?2, moderated_at = datetime('now'), moderation_reason = ?3,
-           updated_at = datetime('now')
-       WHERE id = ?1`
-    ).bind(commentId, authResult.id, reason).run();
-  } else if (action === 'mark_reviewed') {
-    await context.env.DB.prepare(
-      `UPDATE comments
-       SET moderation_status = 'moderation_reviewed', moderated_by = ?2,
-           moderated_at = datetime('now'), moderation_reason = ?3, updated_at = datetime('now')
-       WHERE id = ?1`
-    ).bind(commentId, authResult.id, reason).run();
-  }
-
-  const reportStatus = action === 'dismiss_reports' || action === 'mark_reviewed'
-    ? 'dismissed'
-    : 'actioned';
-  await context.env.DB.prepare(
-    `UPDATE comment_reports
-     SET status = ?2, resolved_by = ?3, resolved_at = datetime('now')
-     WHERE comment_id = ?1 AND status = 'pending'`
-  ).bind(commentId, reportStatus, authResult.id).run();
-
-  await context.env.DB.prepare(
-    `INSERT INTO comment_moderation_audit
-      (id, comment_id, actor_id, action, reason, created_at)
-     VALUES (?1, ?2, ?3, ?4, ?5, datetime('now'))`
-  ).bind(crypto.randomUUID(), commentId, authResult.id, action, reason).run();
-
-  return json({
-    status: 'moderated',
-    action,
-    trustStatus: action === 'dismiss_reports' ? 'community_unreviewed' : 'moderation_reviewed',
-    approvalStatus: 'not_approved',
-  });
 }
 
 async function toggleCommentLike(context: Context, commentId: string): Promise<Response> {
@@ -397,11 +200,6 @@ export async function onRequestOptions(): Promise<Response> {
 
 export async function onRequestGet(context: Context): Promise<Response> {
   const pathname = new URL(context.request.url).pathname;
-
-  if (pathname === '/api/comments/moderation/queue') {
-    return getModerationQueue(context);
-  }
-
   const nodeId = decodeURIComponent(pathname.replace(/^\/api\/comments\//, '')).trim();
 
   if (!nodeId) {
@@ -423,14 +221,6 @@ export async function onRequestPost(context: Context): Promise<Response> {
 
   if (segments.length === 2 && segments[1] === 'view') {
     return trackCommentView(context, segments[0]);
-  }
-
-  if (segments.length === 2 && segments[1] === 'report') {
-    return reportComment(context, segments[0]);
-  }
-
-  if (segments.length === 2 && segments[1] === 'moderate') {
-    return moderateComment(context, segments[0]);
   }
 
   return createComment(context);

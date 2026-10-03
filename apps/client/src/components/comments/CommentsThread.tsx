@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { commentService, type CommentTrustStatus } from '../../services/api';
+import { commentService } from '../../services/api';
 import { CommentForm } from './CommentForm';
 import { CommentItem } from './CommentItem';
 import { GoogleLoginButton } from '../auth/GoogleLoginButton';
 import { useAuthStore } from '../../store/authStore';
-import { ModerationQueue } from './ModerationQueue';
 
 const ReplyIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current stroke-[1.8]">
@@ -62,7 +61,6 @@ interface Comment {
   likesCount?: number;
   viewsCount?: number;
   viewerHasLiked?: boolean;
-  trustStatus: CommentTrustStatus;
   replies?: Comment[];
 }
 
@@ -109,7 +107,7 @@ const aggregateStats = (items: Comment[]) =>
   );
 
 export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -147,7 +145,6 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
 
   return (
     <section className="overflow-hidden rounded-b-[22px] border border-t-0 border-slate-200/80 bg-white">
-      {user?.isAdmin && <ModerationQueue />}
       <div className={`${hasVisibleThread ? 'border-b border-slate-200/80' : ''} px-4 py-2 sm:px-6`}>
         <div className={`grid items-center gap-1 text-slate-500 ${isAuthenticated ? 'grid-cols-4' : 'grid-cols-5'}`}>
           <button
