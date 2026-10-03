@@ -1,13 +1,13 @@
 export const SAFETY_SCOPE_COPY = {
-  reviewStatus: 'review-required',
-  reviewLabel: 'טיוטת מסגור — נדרשת סקירה',
+  reviewStatus: 'reviewed-for-educational-bls-scope',
+  reviewLabel: 'נבדק להתאמה לימודית בתחום BLS',
   title: 'כלי למידה ורענון ל־BLS',
   summary:
     'המערכת מיועדת להבנה, לתרגול ולחזרה על רצפי חשיבה קלינית. היא אינה מיועדת לקבלת החלטות או לטיפול בזמן אירוע חי.',
   operatingBoundary:
     'בזמן אירוע יש לפעול לפי ההכשרה, הפרוטוקול הארגוני העדכני והנחיות הגורם המוסמך.',
   approvalBoundary:
-    'הנוסח ממתין לסקירה המתאימה ואינו טענה לאישור קליני, משפטי או ארגוני.',
+    'הנוסח נבדק להתאמה לימודית בתחום BLS. אין בכך אישור משפטי, ארגוני או היתר לשימוש בזמן טיפול.',
 } as const;
 
 interface SafetyScopeNoticeProps {
