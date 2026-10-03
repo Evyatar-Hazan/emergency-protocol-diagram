@@ -1,8 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '../../store/authStore';
-import { commentService } from '../../services/api';
+import {
+  commentService,
+  type CommentReportReason,
+  type CommentTrustStatus,
+} from '../../services/api';
 import { CommentForm } from './CommentForm';
 import { parseCommentContent } from './commentTaxonomy';
+import { getCommentTrustCopy } from './commentTrust';
 
 const CommentIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current stroke-[1.8]">
@@ -63,6 +68,20 @@ const MoreIcon = () => (
   </svg>
 );
 
+const ReportIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current stroke-[1.8]">
+    <path d="M6 21V4m0 1h10l-2 3 2 3H6" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const reportReasonLabels: Record<CommentReportReason, string> = {
+  potentially_unsafe: 'עלול להיות לא בטוח',
+  misleading: 'מטעה או לא מדויק',
+  spam: 'ספאם',
+  harassment: 'פוגעני',
+  other_policy: 'הפרת מדיניות אחרת',
+};
+
 interface CommentItemProps {
   id: string;
   nodeId: string;
@@ -79,6 +98,7 @@ interface CommentItemProps {
   likesCount?: number;
   viewsCount?: number;
   viewerHasLiked?: boolean;
+  trustStatus?: CommentTrustStatus;
   replies?: CommentItemProps[];
   onCommentDeleted?: () => void;
   onCommentUpdated?: () => void;
@@ -94,6 +114,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   likesCount = 0,
   viewsCount = 0,
   viewerHasLiked = false,
+  trustStatus = 'community_unreviewed',
   replies = [],
   onCommentDeleted,
   onCommentUpdated,
@@ -108,6 +129,9 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   const [likeOverride, setLikeOverride] = useState<number | null>(null);
   const [viewOverride, setViewOverride] = useState<number | null>(null);
   const [likedOverride, setLikedOverride] = useState<boolean | null>(null);
+  const [showReportForm, setShowReportForm] = useState(false);
+  const [reportReason, setReportReason] = useState<CommentReportReason>('potentially_unsafe');
+  const [reportStatus, setReportStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
   const articleRef = useRef<HTMLElement | null>(null);
 
   const canDelete = Boolean(user && (user.id === author.id || user.isAdmin));
@@ -117,6 +141,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   const displayViewsCount = viewOverride ?? viewsCount;
   const displayViewerHasLiked = likedOverride ?? viewerHasLiked;
   const authorHandle = `@${(author.email.split('@')[0] || 'user').replace(/\s+/g, '').toLowerCase()}`;
+  const trustCopy = getCommentTrustCopy(trustStatus);
 
   const handleDelete = async () => {
     if (!window.confirm('למחוק את התגובה הזו?')) return;
@@ -128,7 +153,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
       onCommentDeleted?.();
     } catch (err) {
       setError('לא הצלחנו למחוק את התגובה. אפשר לנסות שוב.');
-      console.error('Failed to delete comment:', err);
+      if (import.meta.env.DEV) console.error('Failed to delete comment:', err);
     } finally {
       setIsLoading(false);
     }
@@ -148,9 +173,28 @@ export const CommentItem: React.FC<CommentItemProps> = ({
       setLikedOverride(result.liked);
     } catch (err) {
       setError('לא הצלחנו לעדכן את הלייק. אפשר לנסות שוב.');
-      console.error('Failed to toggle like:', err);
+      if (import.meta.env.DEV) console.error('Failed to toggle like:', err);
     } finally {
       setIsLikeLoading(false);
+    }
+  };
+
+  const handleReport = async () => {
+    if (!isAuthenticated || !user) {
+      setError('צריך להתחבר עם Google כדי לדווח על תוכן.');
+      return;
+    }
+
+    try {
+      setReportStatus('sending');
+      setError(null);
+      await commentService.reportComment(id, reportReason);
+      setReportStatus('sent');
+      setShowReportForm(false);
+    } catch (err) {
+      setReportStatus('idle');
+      setError('לא הצלחנו להעביר את הדיווח. אפשר לנסות שוב.');
+      if (import.meta.env.DEV) console.error('Failed to report comment:', err);
     }
   };
 
@@ -189,7 +233,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
             setViewOverride(result.viewsCount);
           })
           .catch((err) => {
-            console.error('Failed to track comment view:', err);
+            if (import.meta.env.DEV) console.error('Failed to track comment view:', err);
           });
       },
       { threshold: 0.6 }
@@ -236,13 +280,30 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                   )}
                 </div>
               </div>
-              <button
-                type="button"
-                className="rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
-                aria-label="פעולות נוספות"
+              {isAuthenticated ? (
+                <button
+                  type="button"
+                  onClick={() => setShowReportForm((current) => !current)}
+                  className="rounded-full p-2 text-slate-400 transition hover:bg-amber-50 hover:text-amber-800"
+                  aria-label="דווח על התגובה"
+                  aria-expanded={showReportForm}
+                >
+                  <ReportIcon />
+                </button>
+              ) : (
+                <span className="rounded-full p-2 text-slate-300" aria-hidden="true">
+                  <MoreIcon />
+                </span>
+              )}
+            </div>
+
+            <div className="mt-2">
+              <span
+                className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-bold ${trustCopy.className}`}
+                title={trustCopy.description}
               >
-                <MoreIcon />
-              </button>
+                {trustCopy.label}
+              </span>
             </div>
 
             <p className="mt-1.5 whitespace-pre-line text-sm leading-7 text-slate-800">{parsedContent.body}</p>
@@ -300,6 +361,49 @@ export const CommentItem: React.FC<CommentItemProps> = ({
             </div>
 
             {error && <p className="mt-3 text-sm font-medium text-red-700">{error}</p>}
+            {reportStatus === 'sent' && (
+              <p className="mt-3 text-sm font-medium text-emerald-700" role="status">
+                הדיווח הועבר לתור הסקירה. לא שונתה התגובה.
+              </p>
+            )}
+
+            {showReportForm && (
+              <div className="mt-3 rounded-2xl border border-amber-200 bg-amber-50 p-3">
+                <label className="block text-xs font-bold text-amber-950" htmlFor={`report-${id}`}>
+                  סיבת הדיווח
+                </label>
+                <select
+                  id={`report-${id}`}
+                  value={reportReason}
+                  onChange={(event) => setReportReason(event.target.value as CommentReportReason)}
+                  className="mt-2 w-full rounded-xl border border-amber-300 bg-white px-3 py-2 text-sm text-slate-800"
+                >
+                  {Object.entries(reportReasonLabels).map(([value, label]) => (
+                    <option key={value} value={value}>{label}</option>
+                  ))}
+                </select>
+                <p className="mt-2 text-xs leading-5 text-amber-900">
+                  אין להוסיף פרטי מטופל או אירוע אמיתי. הדיווח כולל סיבה קבועה בלבד.
+                </p>
+                <div className="mt-3 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => void handleReport()}
+                    disabled={reportStatus === 'sending'}
+                    className="rounded-full bg-amber-900 px-3 py-1.5 text-xs font-bold text-white disabled:opacity-50"
+                  >
+                    {reportStatus === 'sending' ? 'שולח...' : 'שלח דיווח'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowReportForm(false)}
+                    className="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-amber-900"
+                  >
+                    ביטול
+                  </button>
+                </div>
+              </div>
+            )}
 
             {showReplyForm && (
               <div className="mt-4 rounded-2xl bg-slate-50/70 p-3">

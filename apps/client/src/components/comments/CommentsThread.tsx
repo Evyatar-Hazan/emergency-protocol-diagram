@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { commentService } from '../../services/api';
+import { commentService, type CommentTrustStatus } from '../../services/api';
 import { CommentForm } from './CommentForm';
 import { CommentItem } from './CommentItem';
 import { GoogleLoginButton } from '../auth/GoogleLoginButton';
 import { useAuthStore } from '../../store/authStore';
+import { ModerationQueue } from './ModerationQueue';
 
 const ReplyIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current stroke-[1.8]">
@@ -61,6 +62,7 @@ interface Comment {
   likesCount?: number;
   viewsCount?: number;
   viewerHasLiked?: boolean;
+  trustStatus: CommentTrustStatus;
   replies?: Comment[];
 }
 
@@ -107,7 +109,7 @@ const aggregateStats = (items: Comment[]) =>
   );
 
 export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -121,7 +123,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
       setComments(data || []);
     } catch (err) {
       setError('לא הצלחנו לטעון את התגובות כרגע. אפשר לנסות שוב בעוד רגע.');
-      console.error('Failed to load comments:', err);
+      if (import.meta.env.DEV) console.error('Failed to load comments:', err);
     } finally {
       setIsLoading(false);
     }
@@ -145,6 +147,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
 
   return (
     <section className="overflow-hidden rounded-b-[22px] border border-t-0 border-slate-200/80 bg-white">
+      {user?.isAdmin && <ModerationQueue />}
       <div className={`${hasVisibleThread ? 'border-b border-slate-200/80' : ''} px-4 py-2 sm:px-6`}>
         <div className={`grid items-center gap-1 text-slate-500 ${isAuthenticated ? 'grid-cols-4' : 'grid-cols-5'}`}>
           <button
@@ -156,7 +159,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
               setShowComposer((current) => !current);
             }}
             className="flex items-center justify-center gap-2 rounded-full py-2 text-sm transition hover:bg-sky-50 hover:text-sky-700"
-            aria-label="תגובות"
+            aria-label={`תגובות: ${stats.comments}`}
           >
             <ReplyIcon />
             <span className="text-xs font-medium tabular-nums">{stats.comments}</span>
@@ -164,7 +167,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
           <button
             type="button"
             className="flex items-center justify-center gap-2 rounded-full py-2 text-sm transition hover:bg-emerald-50 hover:text-emerald-700"
-            aria-label="שרשורים"
+            aria-label={`שרשורים: ${comments.length}`}
           >
             <ThreadsIcon />
             <span className="text-xs font-medium tabular-nums">{comments.length}</span>
@@ -172,7 +175,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
           <button
             type="button"
             className="flex items-center justify-center gap-2 rounded-full py-2 text-sm transition hover:bg-rose-50 hover:text-rose-600"
-            aria-label="לייקים"
+            aria-label={`לייקים: ${stats.likes}`}
           >
             <LikeIcon />
             <span className="text-xs font-medium tabular-nums">{stats.likes}</span>
@@ -180,7 +183,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
           <button
             type="button"
             className="flex items-center justify-center gap-2 rounded-full py-2 text-sm transition hover:bg-slate-100 hover:text-slate-700"
-            aria-label="צפיות"
+            aria-label={`צפיות: ${stats.views}`}
           >
             <ViewIcon />
             <span className="text-xs font-medium tabular-nums">{stats.views}</span>

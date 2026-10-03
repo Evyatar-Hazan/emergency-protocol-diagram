@@ -1,12 +1,14 @@
 import { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 import type { Node } from '../../types/protocol';
+import { ADVANCED_REFERENCE_SCOPE, isAdvancedReferenceNode } from '../../protocols/advancedReferences';
 
 interface CustomNodeProps {
   data: {
     node: Node;
     label: string;
     severity: string;
+    protocolId?: string;
     categoryLabel?: string;
     isHeaderNode?: boolean;
     parentHeaderId?: string;
@@ -21,6 +23,9 @@ interface CustomNodeProps {
  */
 export const CustomNode = memo(({ data }: CustomNodeProps) => {
   const { node, isHeaderNode, onToggleCollapse, isCollapsed } = data;
+  const isAdvancedReference = Boolean(
+    data.protocolId && isAdvancedReferenceNode(data.protocolId, node.id),
+  );
   
   // אם זה צומת כותרת - הצג עיצוב מיוחד
   if (isHeaderNode) {
@@ -109,13 +114,19 @@ export const CustomNode = memo(({ data }: CustomNodeProps) => {
           <span className="text-3xl">{icons[node.type]}</span>
           <div className="flex-1">
             <div className="text-xs font-semibold opacity-70 mb-1">
-              {typeLabels[node.type]}
+              {isAdvancedReference ? ADVANCED_REFERENCE_SCOPE.badge : typeLabels[node.type]}
             </div>
             <div className="font-bold text-base leading-tight">
               {node.title}
             </div>
           </div>
         </div>
+
+        {isAdvancedReference && (
+          <div className="mb-3 rounded border border-violet-300 bg-violet-50 p-2 text-xs leading-relaxed text-violet-950">
+            {ADVANCED_REFERENCE_SCOPE.title}. אינו מסלול פעולה, כלי אבחון או אישור קליני.
+          </div>
+        )}
 
         {/* Description */}
         {node.description && (

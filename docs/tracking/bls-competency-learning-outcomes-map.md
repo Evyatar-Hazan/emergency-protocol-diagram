@@ -112,7 +112,7 @@ Task 60 יכולה לבנות הערכה ומשוב על שליטה רק כך:
 ## מקורות
 
 - Task 51: `intended-use.md` — learning-first ושימושים אסורים.
-- Task 53: `TASK-53-clinical-governance.md` ו־`TASK-53-clinical-review.schema.json` — סטטוסים, סמכות ושערי review.
+- Task 53: `docs/governance/clinical-review-process.md` ו־`docs/governance/schemas/clinical-review.schema.json` — סטטוסים, סמכות ושערי review.
 - `docs/tracking/reference-scenarios-e2e.md` — 17 תרחישי baseline.
 - `docs/source-truth/united-hatzalah-bls/source-to-flow-mapping.md` — מיפוי 46 מודולים לצמתים.
 - `apps/client/src/protocols/unified-flow.json` — 205 צמתי flow.

@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0.0",
+  "change_id": "CLIN-2026-001",
+  "title": "הגדרת מבוגר/ילד בהחייאה ובמדבקות AED",
+  "intended_use": "learning_only",
+  "content_domain": "bls",
+  "risk_tier": "G2",
+  "review_status": "pending",
+  "authority_status": "unknown",
+  "source_status": "pending",
+  "source": {
+    "source_tier": "S1_DERIVED",
+    "publisher": "חומר הקורס הקיים",
+    "title": "1-9 החייאת ילדים תינוקות וחנק 2025.pdf",
+    "version_or_date": "2025",
+    "stable_url_or_repo_path": "docs/source-truth/united-hatzalah-bls/modules/05-pediatric-cpr-and-choking.md",
+    "page_section_anchor": "חלוקה לגילים, שורות 31-34",
+    "accessed_at": "2026-10-02",
+    "organizational_status": "unknown",
+    "version_currency": "as_received"
+  },
+  "gaps": [
+    {
+      "domain": "content_alignment",
+      "type": "runtime_conflicts_with_primary_course_reference",
+      "status": "open",
+      "evidence_paths": [
+        "apps/client/src/protocols/unified-flow.json:923",
+        "apps/client/src/protocols/unified-flow.json:966",
+        "docs/source-truth/united-hatzalah-bls/modules/05-pediatric-cpr-and-choking.md:31"
+      ],
+      "owner_role": "bls_reviewer"
+    },
+    {
+      "domain": "source",
+      "type": "source_version_currency_unknown",
+      "status": "open",
+      "evidence_paths": [
+        "docs/source-truth/united-hatzalah-bls/modules/05-pediatric-cpr-and-choking.md:5"
+      ],
+      "owner_role": "source_curator"
+    },
+    {
+      "domain": "ui_design",
+      "type": "how_to_present_age_group_boundary",
+      "status": "pending",
+      "evidence_paths": [],
+      "owner_role": "product_owner"
+    }
+  ],
+  "affected_paths": [
+    "apps/client/src/protocols/unified-flow.json"
+  ],
+  "affected_protocols": [
+    "unified_flow"
+  ],
+  "affected_node_ids": [
+    "attach_defib",
+    "start_compressions"
+  ],
+  "before_exact": "מבוגר (>8 שנים או >25 ק״ג); מבוגר (>8 שנים)",
+  "after_exact": "מועמד בלבד: ילד — שנה עד הופעת סימני בגרות מינית; הגדרת מבוגר תיקבע לאחר review",
+  "semantic_diff": "החלפת גבול גיל/משקל קבוע בגבול המבוסס על סימני בגרות מינית עשויה לשנות סיווג קבוצת החייאה, בחירת מדבקות וטכניקת עיסויים.",
+  "reason": "יישור runtime למקור הייחוס הראשוני שהוגדר בידי המשתמש, בלי להסיק עדכניות או אישור גורף.",
+  "known_ambiguities": [
+    "טרם אומתה נאמנות התמלול מול ה-PDF המקורי.",
+    "טרם הוכרע אם אותו גבול חל גם על מדבקות AED וגם על טכניקת עיסויים.",
+    "לא הוגדר מקור ארגוני מחייב או מאשר ארגוני."
+  ],
+  "tests_required": [
+    "בדיקות תרחיש לגבולות קבוצות גיל לאחר הכרעת התוכן.",
+    "בדיקת כל מופעי הסיווג ב-runtime, backup ו-reference."
+  ],
+  "rollback": "שחזור הטקסט הקודם והחזרת הרשומה ל-pending אם review או regression נכשלים.",
+  "review_assignments": [
+    {
+      "role": "bls_reviewer",
+      "assignee_status": "nominated",
+      "assignee_name": null,
+      "authority_basis": "user_attested_certification",
+      "scope_statement": "סקירת BLS נקודתית בתחום ההכשרה בלבד; ללא סמכות ארגונית, משפטית או ALS.",
+      "independent_of_author": null
+    },
+    {
+      "role": "source_curator",
+      "assignee_status": "unassigned",
+      "assignee_name": null,
+      "authority_basis": "unknown",
+      "scope_statement": "אימות ה-PDF, הגרסה ונאמנות התמלול.",
+      "independent_of_author": null
+    }
+  ],
+  "review_decisions": [
+    {
+      "role": "bls_reviewer",
+      "decision": "pending",
+      "reviewer_name": null,
+      "scope_statement": "BLS learning-only",
+      "notes": "לא בוצעה סקירה קלינית במסגרת Task 53.",
+      "decided_at": null
+    }
+  ],
+  "approved_use": null,
+  "decided_at": null,
+  "review_due": null,
+  "release_sha": null,
+  "publication_status": "draft",
+  "production_readback": null
+}

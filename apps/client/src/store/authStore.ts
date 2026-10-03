@@ -43,7 +43,7 @@ function readStoredUser(): User | null {
       return parsedUser as User;
     }
   } catch (error) {
-    console.warn('Failed to parse stored user:', error);
+    if (import.meta.env.DEV) console.warn('Failed to parse stored user:', error);
   }
 
   localStorage.removeItem('user');
@@ -76,7 +76,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         isLoading: false,
       });
     } catch (error) {
-      console.error('Login failed:', error);
+      if (import.meta.env.DEV) console.error('Login failed:', error);
       set({ isLoading: false });
       throw error;
     }
@@ -105,7 +105,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
           isAuthenticated: true,
         });
       } catch (error) {
-        console.warn('Stored auth is no longer valid, logging out:', error);
+        if (import.meta.env.DEV) console.warn('Stored auth is no longer valid, logging out:', error);
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
         set({

@@ -1,0 +1,11 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui; }
+.reader-shell { width: min(900px, calc(100% - 1rem)); margin: auto; }
+.reader-hero, .reader-card, .reader-version, .reader-message, .reader-search {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #789;
+}
+.reader-version { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 1rem; }
+.reader-search { display: block; }
+input { width: 100%; padding: .75rem; font: inherit; }

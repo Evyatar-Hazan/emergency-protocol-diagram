@@ -1,5 +1,11 @@
 # Emergency Protocol Diagram Server
 
+> **Status: local/legacy API workspace — not the production backend.**
+>
+> The live application uses Cloudflare Pages Functions under `/functions` with D1. This Express + Prisma workspace is retained for local/server development, domain-model reference, and regression coverage. The root [`README.md`](../../README.md) is authoritative for production-parity setup and deployment architecture.
+>
+> Commands and feature descriptions below apply only to this workspace and must be verified against its code before use. They do not describe the production API unless the root documentation explicitly says so.
+
 A Node.js/Express backend server for the Emergency Protocol Diagram application with Google OAuth authentication and nested comments system.
 
 ## Features
@@ -108,7 +114,7 @@ Format code:
 npm run format
 ```
 
-## Building
+## Standalone Workspace Build
 
 Build for production:
 
@@ -161,7 +167,11 @@ npm start
 
 ## Deployment
 
-### Deploy to Render
+### Historical Render Notes
+
+The following notes are retained as deployment history. Render is not a current or approved deployment target for this project. Do not use these steps as production instructions; use the Cloudflare Pages workflow in the root README.
+
+#### Historical procedure
 
 1. Push code to GitHub
 2. Create a new Web Service on Render

@@ -1,9 +1,26 @@
-import { describe, expect, it, vi, type Mock } from 'vitest';
+import type { Express } from 'express';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import request from 'supertest';
-import app from '../../index';
-import * as commentService from '../../services/commentService';
 
-vi.mock('../../services/commentService');
+const commentServiceMock = vi.hoisted(() => ({
+  getCommentsByNodeId: vi.fn(),
+  createComment: vi.fn(),
+  deleteComment: vi.fn(),
+  getCommentById: vi.fn(),
+}));
+
+vi.mock('../../services/commentService', () => commentServiceMock);
+
+let app: Express;
+
+beforeAll(async () => {
+  vi.resetModules();
+  app = (await import('../../index')).default;
+});
+
+beforeEach(() => {
+  for (const mock of Object.values(commentServiceMock)) mock.mockReset();
+});
 
 describe('Comment Routes', () => {
   describe('GET /api/comments/:nodeId', () => {
@@ -28,7 +45,7 @@ describe('Comment Routes', () => {
         },
       ];
 
-      (commentService.getCommentsByNodeId as Mock).mockResolvedValue(mockComments);
+      commentServiceMock.getCommentsByNodeId.mockResolvedValue(mockComments);
 
       const response = await request(app).get('/api/comments/asthma_attack');
 

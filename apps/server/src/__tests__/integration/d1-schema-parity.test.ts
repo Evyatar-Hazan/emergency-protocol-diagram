@@ -15,11 +15,27 @@ const tableColumns = {
     'content',
     'author_id',
     'parent_comment_id',
+    'moderation_status',
+    'visibility_status',
+    'moderated_by',
+    'moderated_at',
+    'moderation_reason',
     'created_at',
     'updated_at',
   ],
   comment_likes: ['id', 'comment_id', 'user_id', 'created_at'],
   comment_views: ['id', 'comment_id', 'viewer_key', 'created_at'],
+  comment_reports: [
+    'id',
+    'comment_id',
+    'reporter_id',
+    'reason',
+    'status',
+    'resolved_by',
+    'resolved_at',
+    'created_at',
+  ],
+  comment_moderation_audit: ['id', 'comment_id', 'actor_id', 'action', 'reason', 'created_at'],
 } as const;
 
 function tableDefinition(tableName: string) {
@@ -53,6 +69,9 @@ describe('local D1 schema parity', () => {
     );
     expect(tableDefinition('comment_likes')).toContain('UNIQUE(comment_id, user_id)');
     expect(tableDefinition('comment_views')).toContain('UNIQUE(comment_id, viewer_key)');
+    expect(tableDefinition('comment_reports')).toContain('UNIQUE(comment_id, reporter_id, reason)');
+    expect(tableDefinition('comments')).toContain("DEFAULT 'community_unreviewed'");
+    expect(tableDefinition('comments')).toContain("DEFAULT 'visible'");
   });
 
   it('uses rerunnable index declarations for automatic local setup', () => {
