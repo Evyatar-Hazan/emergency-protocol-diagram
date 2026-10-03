@@ -95,11 +95,13 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
   בסביבה מורשית. אין שימוש בנתוני מטופלים, תגובות חיות או ספק analytics.
 - מדיניות מלאה: [community-moderation-policy.md](../governance/community-moderation-policy.md).
 
-### Task 68 — סביבת עריכת תוכן מקומית
+### Task 68 — סביבת עריכת תוכן מקומית — integrated and deployed 2026-10-03
 
 - מומשה סביבת טיוטות מקומית לצמתים עם preview diff, validation, workflow סקירה, revisions ו־rollback append-only.
-- הטיוטות נשמרות ב־`localStorage` בלבד ואינן משנות את `unified-flow.json`; אין פעולת publish, merge או deploy.
+- הטיוטות נשמרות ב־`localStorage` בלבד ואינן משנות את `unified-flow.json`; אין פעולת publish, והכניסה לעורך נשארת feature-gated וכבויה כברירת מחדל בקוד.
 - ה־review gates משתמשים בחוזה runtime של provenance ממשימה 69 ונכשלים סגור בכל מצב שאינו `ready`, וכן על `pending`, ‏`unknown`, מקור ששונה או היעדר reviewer בלתי תלוי.
+- המימוש שולב ב־`main` ב־commit ‏`3ee3587`; ‏GitHub Actions `Validate` ריצה `37148085335` עברה על `9b7a1323961f87847ee86f2eede3c2fd5b07d97c`.
+- Cloudflare Production deployment ‏`5afe3b67-926f-483f-a6cf-2f7cf38a21a5` נבנה מ־`9b7a132`; הדומיין החי וכתובת ה־deployment החזירו `200`, ו־`/api/health` החזיר `{"status":"ok","database":"ready"}` בשניהם.
 - השלמת התשתית אינה מאשרת תוכן רפואי כלשהו ואינה סוגרת את `CONTENT-001`, ‏`CLIN-001` או `CLIN-002`.
 - תיעוד: [content-editor-workflow.md](../development/content-editor-workflow.md).
 
