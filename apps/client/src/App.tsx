@@ -17,6 +17,7 @@ const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 const hasGoogleClientId =
   Boolean(googleClientId) && !googleClientId.includes('your_google_client_id_here');
 const contentEditorEnabled = import.meta.env.DEV || import.meta.env.VITE_ENABLE_CONTENT_EDITOR === 'true';
+const enablePracticeAndAssessment = import.meta.env.VITE_ENABLE_PRACTICE_MODE === 'true';
 const enableSyntheticInstructorTools =
   import.meta.env.VITE_ENABLE_SYNTHETIC_INSTRUCTOR_TOOLS === 'true';
 
@@ -26,11 +27,13 @@ const FullFlowDiagram = lazy(() =>
   }))
 );
 
-const PracticeMode = lazy(() =>
-  import('./components/PracticeMode/PracticeMode').then((module) => ({
-    default: module.PracticeMode,
-  }))
-);
+const PracticeMode = enablePracticeAndAssessment
+  ? lazy(() =>
+      import('./components/PracticeMode/PracticeMode').then((module) => ({
+        default: module.PracticeMode,
+      })),
+    )
+  : null;
 
 class PracticeModeBoundary extends Component<
   { children: ReactNode; onExit: () => void },
@@ -189,19 +192,21 @@ function AppContent() {
             >
               פרוטוקול ראשי
             </button>
-            <button
-              onClick={() => {
-                setViewMode('practice');
-                setSecondaryTool('none');
-              }}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition-all ${
-                viewMode === 'practice'
-                  ? 'bg-white text-clinical-ink shadow-soft'
-                  : 'bg-white/10 text-white hover:bg-white/16'
-              }`}
-            >
-              מצב תרגול
-            </button>
+            {enablePracticeAndAssessment && (
+              <button
+                onClick={() => {
+                  setViewMode('practice');
+                  setSecondaryTool('none');
+                }}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                  viewMode === 'practice'
+                    ? 'bg-white text-clinical-ink shadow-soft'
+                    : 'bg-white/10 text-white hover:bg-white/16'
+                }`}
+              >
+                מצב תרגול
+              </button>
+            )}
             <button
               onClick={() => setViewMode('vital-signs')}
               className={`rounded-full px-4 py-2 text-sm font-semibold transition-all ${
@@ -275,23 +280,25 @@ function AppContent() {
                   <span>מסלול למידה צעד־אחר־צעד</span>
                 </span>
               </button>
-              <button
-                onClick={() => {
-                  setViewMode('practice');
-                  setSecondaryTool('none');
-                  setIsMenuOpen(false);
-                }}
-                className={`w-full rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
-                  viewMode === 'practice'
-                    ? 'bg-clinical-blue text-white shadow-soft'
-                    : 'bg-white/75 text-clinical-ink hover:bg-white'
-                }`}
-              >
-                <span className="flex items-center justify-center gap-3">
-                  <span className="text-lg">◇</span>
-                  <span>מצב תרגול מדורג</span>
-                </span>
-              </button>
+              {enablePracticeAndAssessment && (
+                <button
+                  onClick={() => {
+                    setViewMode('practice');
+                    setSecondaryTool('none');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full rounded-2xl px-4 py-3 text-sm font-semibold transition-all ${
+                    viewMode === 'practice'
+                      ? 'bg-clinical-blue text-white shadow-soft'
+                      : 'bg-white/75 text-clinical-ink hover:bg-white'
+                  }`}
+                >
+                  <span className="flex items-center justify-center gap-3">
+                    <span className="text-lg">◇</span>
+                    <span>מצב תרגול מדורג</span>
+                  </span>
+                </button>
+              )}
               <button
                 onClick={() => {
                   setShowDiagramTools(!showDiagramTools);
@@ -487,7 +494,7 @@ function AppContent() {
         </div>
       ) : viewMode === 'step-by-step' ? (
         <StepByStepView protocols={flowData.protocols} />
-      ) : viewMode === 'practice' ? (
+      ) : viewMode === 'practice' && enablePracticeAndAssessment && PracticeMode ? (
         <Suspense
           fallback={
             <div className="mx-auto flex min-h-[420px] w-full max-w-6xl items-center justify-center px-4 py-8 text-center">
@@ -513,7 +520,11 @@ function AppContent() {
             </div>
           }
         >
-          <InstructorGroupsPanel onOpenPractice={() => setViewMode('practice')} />
+          <InstructorGroupsPanel
+            onOpenPractice={() => {
+              if (enablePracticeAndAssessment) setViewMode('practice');
+            }}
+          />
         </Suspense>
       ) : (
         <VitalSignsView />

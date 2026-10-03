@@ -13,11 +13,14 @@ import {
   isAdvancedReferenceNode,
 } from '../../protocols/advancedReferences';
 
-const ReviewQueuePanel = lazy(() =>
-  import('../ReviewQueue/ReviewQueuePanel').then((module) => ({
-    default: module.ReviewQueuePanel,
-  })),
-);
+const enablePersonalReviewQueue = import.meta.env.VITE_ENABLE_PERSONAL_REVIEW_QUEUE === 'true';
+const ReviewQueuePanel = enablePersonalReviewQueue
+  ? lazy(() =>
+      import('../ReviewQueue/ReviewQueuePanel').then((module) => ({
+        default: module.ReviewQueuePanel,
+      })),
+    )
+  : null;
 
 interface StepByStepViewProps {
   protocols: Record<string, Protocol>;
@@ -938,21 +941,23 @@ export const StepByStepView = ({ protocols }: StepByStepViewProps) => {
           </div>
 
           <div className="flex-1 overflow-y-auto">
-            <Suspense
-              fallback={(
-                <div className="border-b border-slate-200 bg-[#fffaf3] p-5 text-sm text-slate-600" role="status">
-                  טוען את תור החזרות המקומי…
-                </div>
-              )}
-            >
-              <ReviewQueuePanel
-                key={bookmarkedNodeIds.join('|')}
-                protocols={protocols}
-                bookmarkedNodeIds={bookmarkedNodeIds}
-                onOpenNode={jumpToNode}
-                onRemoveBookmark={toggleBookmark}
-              />
-            </Suspense>
+            {ReviewQueuePanel && (
+              <Suspense
+                fallback={(
+                  <div className="border-b border-slate-200 bg-[#fffaf3] p-5 text-sm text-slate-600" role="status">
+                    טוען את תור החזרות המקומי…
+                  </div>
+                )}
+              >
+                <ReviewQueuePanel
+                  key={bookmarkedNodeIds.join('|')}
+                  protocols={protocols}
+                  bookmarkedNodeIds={bookmarkedNodeIds}
+                  onOpenNode={jumpToNode}
+                  onRemoveBookmark={toggleBookmark}
+                />
+              </Suspense>
+            )}
 
             {availableSchemaShortcutGroups.length > 0 && (
               <div className="border-b border-slate-200 bg-slate-50/80 p-4 sm:p-5">
