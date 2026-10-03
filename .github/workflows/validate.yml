@@ -40,7 +40,7 @@ jobs:
 
       - name: Reference scenario report
         run: |
-          mkdir -p artifacts/reference-scenarios
+          mkdir -p apps/client/artifacts/reference-scenarios
           npm run test:reference-scenarios -- --reporter=default --reporter=json --outputFile.json=artifacts/reference-scenarios/results.json
 
       - name: Upload reference scenario report
@@ -48,7 +48,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: reference-scenario-results
-          path: artifacts/reference-scenarios/results.json
+          path: apps/client/artifacts/reference-scenarios/results.json
           if-no-files-found: error
 
       - name: Enforce scoped coverage gates
