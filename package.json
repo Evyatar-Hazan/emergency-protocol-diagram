@@ -17,7 +17,8 @@
     "lint": "npm run lint --workspaces",
     "lint:client": "npm run lint --workspace @emergency-protocol-diagram/client",
     "lint:server": "npm run lint --workspace @emergency-protocol-diagram/server",
-    "test": "npm run test:client && npm run test:server",
+    "test": "npm run test:clinical-schema && npm run test:client && npm run test:server",
+    "test:clinical-schema": "node scripts/validate-clinical-review-schema.mjs",
     "test:client": "npm run test --workspace @emergency-protocol-diagram/client",
     "test:coverage": "npm run test:coverage:client && npm run test:coverage:production",
     "test:coverage:client": "npm run test:coverage --workspace @emergency-protocol-diagram/client",
@@ -26,5 +27,9 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
   }
 }

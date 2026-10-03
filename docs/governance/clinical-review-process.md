@@ -83,7 +83,7 @@ draft
 
 חתימה פרטנית נדרשת רק כדי להעביר רשומת תוכן מסוימת ל־`approved_for_stated_use` או לפרסם טענה שהיא נבדקה/אושרה. אין לבצע migration שמסמן תוכן קיים כמאושר כברירת מחדל.
 
-חוזה המכונה המומלץ למשימה 54 נמצא ב־`TASK-53-clinical-review.schema.json`. כל שדה סמכות חסר מקבל `unknown`; כל review שטרם הושלם מקבל `pending`.
+חוזה המכונה הקנוני נמצא ב־`docs/governance/schemas/clinical-review.schema.json`. כל שדה סמכות חסר מקבל `unknown`; כל review שטרם הושלם מקבל `pending`.
 
 ## 6. חוזה קלט לשינוי קליני
 
