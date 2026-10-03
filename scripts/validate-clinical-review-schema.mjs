@@ -16,6 +16,7 @@ const validate = ajv.compile(schema);
 
 const fixtures = [
   { file: 'clinical-review.approved.valid.json', valid: true },
+  { file: 'clinical-review.pending.valid.json', valid: true },
   { file: 'clinical-review.example.json', valid: true },
   { file: 'clinical-review.approved.invalid-source-null.json', valid: false, path: '/source' },
   { file: 'clinical-review.approved.invalid-decided-at-null.json', valid: false, path: '/decided_at' },

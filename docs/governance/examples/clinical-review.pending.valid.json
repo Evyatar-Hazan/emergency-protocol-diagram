@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "change_id": "CLIN-2026-994",
+  "title": "Synthetic pending schema fixture",
+  "intended_use": "learning_only",
+  "content_domain": "non_clinical",
+  "risk_tier": "G0",
+  "review_status": "pending",
+  "authority_status": "unknown",
+  "source_status": "pending",
+  "source": null,
+  "affected_paths": [
+    "docs/governance/examples/clinical-review.pending.valid.json"
+  ],
+  "affected_node_ids": [
+    "synthetic_node"
+  ],
+  "before_exact": "synthetic-before",
+  "after_exact": "synthetic-after",
+  "semantic_diff": "Synthetic non-clinical pending fixture only.",
+  "review_assignments": [],
+  "review_decisions": [],
+  "approved_use": null,
+  "decided_at": null,
+  "review_due": null,
+  "publication_status": "draft"
+}
