@@ -9,6 +9,7 @@
   "authority_status": "unknown",
   "source_status": "pending",
   "source": null,
+  "gaps": [],
   "affected_paths": [
     "docs/governance/examples/clinical-review.pending.valid.json"
   ],
