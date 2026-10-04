@@ -95,6 +95,9 @@ describe('local D1 schema parity', () => {
     expect(moderationMigration).toContain(
       "ALTER TABLE comments ADD COLUMN visibility_status TEXT NOT NULL DEFAULT 'visible'"
     );
+    expect(moderationMigration).toMatch(
+      /ALTER TABLE comments ADD COLUMN moderated_by TEXT\s+REFERENCES users\(id\) ON DELETE SET NULL;/i
+    );
     expect(moderationMigration).toContain('CREATE TABLE IF NOT EXISTS comment_reports');
     expect(moderationMigration).toContain('CREATE TABLE IF NOT EXISTS comment_moderation_audit');
     expect(moderationMigration).not.toMatch(/^\s*(?:UPDATE|DELETE|DROP)\b/im);

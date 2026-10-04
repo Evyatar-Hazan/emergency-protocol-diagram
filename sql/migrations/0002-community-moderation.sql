@@ -2,7 +2,8 @@ ALTER TABLE comments ADD COLUMN moderation_status TEXT NOT NULL DEFAULT 'communi
   CHECK (moderation_status IN ('community_unreviewed', 'moderation_reviewed'));
 ALTER TABLE comments ADD COLUMN visibility_status TEXT NOT NULL DEFAULT 'visible'
   CHECK (visibility_status IN ('visible', 'hidden'));
-ALTER TABLE comments ADD COLUMN moderated_by TEXT;
+ALTER TABLE comments ADD COLUMN moderated_by TEXT
+  REFERENCES users(id) ON DELETE SET NULL;
 ALTER TABLE comments ADD COLUMN moderated_at TEXT;
 ALTER TABLE comments ADD COLUMN moderation_reason TEXT;
 

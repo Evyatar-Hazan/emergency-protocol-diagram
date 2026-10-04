@@ -19,6 +19,7 @@
     "lint:server": "npm run lint --workspace @emergency-protocol-diagram/server",
     "test": "npm run test:clinical-schema && npm run test:client && npm run test:server",
     "test:clinical-schema": "node scripts/validate-clinical-review-schema.mjs",
+    "test:migration:community": "bash scripts/test-community-moderation-migration.sh",
     "test:client": "npm run test --workspace @emergency-protocol-diagram/client",
     "test:reference-scenarios": "npm run test:reference-scenarios --workspace @emergency-protocol-diagram/client --",
     "test:coverage": "npm run test:coverage:client && npm run test:coverage:production",
