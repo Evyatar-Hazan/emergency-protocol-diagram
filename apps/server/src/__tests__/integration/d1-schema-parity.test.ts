@@ -10,6 +10,18 @@ const migrationPath = fileURLToPath(
   new URL('../../../../../sql/migrations/0002-community-moderation.sql', import.meta.url)
 );
 const moderationMigration = readFileSync(migrationPath, 'utf8');
+const retentionMigrationPath = fileURLToPath(
+  new URL('../../../../../sql/migrations/0003-community-audit-retention.sql', import.meta.url)
+);
+const retentionMigration = readFileSync(retentionMigrationPath, 'utf8');
+const auditPurgePath = fileURLToPath(
+  new URL('../../../../../sql/maintenance/purge-expired-community-audit.sql', import.meta.url)
+);
+const auditPurge = readFileSync(auditPurgePath, 'utf8');
+const auditPurgePreviewPath = fileURLToPath(
+  new URL('../../../../../sql/maintenance/preview-expired-community-audit.sql', import.meta.url)
+);
+const auditPurgePreview = readFileSync(auditPurgePreviewPath, 'utf8');
 
 const tableColumns = {
   users: ['id', 'email', 'google_id', 'name', 'picture', 'is_admin', 'created_at', 'updated_at'],
@@ -39,7 +51,15 @@ const tableColumns = {
     'resolved_at',
     'created_at',
   ],
-  comment_moderation_audit: ['id', 'comment_id', 'actor_id', 'action', 'reason', 'created_at'],
+  comment_moderation_audit: [
+    'id',
+    'comment_id',
+    'actor_id',
+    'action',
+    'reason',
+    'created_at',
+    'expires_at',
+  ],
 } as const;
 
 function tableDefinition(tableName: string) {
@@ -101,5 +121,29 @@ describe('local D1 schema parity', () => {
     expect(moderationMigration).toContain('CREATE TABLE IF NOT EXISTS comment_reports');
     expect(moderationMigration).toContain('CREATE TABLE IF NOT EXISTS comment_moderation_audit');
     expect(moderationMigration).not.toMatch(/^\s*(?:UPDATE|DELETE|DROP)\b/im);
+  });
+
+  it('retains minimized audit events for 90 days without content or required direct references', () => {
+    const auditDefinition = tableDefinition('comment_moderation_audit');
+
+    expect(auditDefinition).toContain("expires_at TEXT NOT NULL DEFAULT (datetime('now', '+90 days'))");
+    expect(auditDefinition).toContain(
+      'FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE SET NULL'
+    );
+    expect(auditDefinition).toContain(
+      'FOREIGN KEY (actor_id) REFERENCES users(id) ON DELETE SET NULL'
+    );
+    expect(auditDefinition).not.toMatch(/\b(?:content|email|name|picture)\b/i);
+    expect(schema).toContain('CREATE TRIGGER IF NOT EXISTS scrub_moderation_audit_before_comment_delete');
+    expect(schema).toContain('CREATE TRIGGER IF NOT EXISTS scrub_moderation_audit_before_actor_delete');
+
+    expect(retentionMigration).toContain('INSERT INTO comment_moderation_audit');
+    expect(retentionMigration).toContain("datetime(created_at, '+90 days')");
+    expect(retentionMigration).toMatch(
+      /SET comment_id = NULL,\s+actor_id = NULL,\s+expires_at = datetime\('now', '\+90 days'\)/i
+    );
+    expect(auditPurge).toMatch(/DELETE FROM comment_moderation_audit[\s\S]+LIMIT 500/i);
+    expect(auditPurgePreview).toContain('COUNT(*) AS eligible_count');
+    expect(auditPurgePreview).not.toMatch(/^\s*(?:DELETE|DROP|UPDATE|ALTER)\b/im);
   });
 });
