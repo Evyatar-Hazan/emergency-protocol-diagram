@@ -38,6 +38,7 @@ function createEnv(...statementResults: StatementResult[]): Env {
       prepare: vi.fn(() => statements.shift() ?? statement),
     },
     JWT_SECRET: 'test-secret',
+    COMMUNITY_MODERATION_ENABLED: 'true',
   } as unknown as Env;
 }
 
@@ -88,8 +89,10 @@ describe('Cloudflare Pages Functions', () => {
       new Response(null, { status: 401 })
     );
 
+    const env = createEnv();
+    env.GOOGLE_CLIENT_ID = 'client-id';
     const response = await handleAuthPost({
-      env: createEnv(),
+      env,
       request: new Request('https://example.com/api/auth/google-login', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -100,6 +103,26 @@ describe('Cloudflare Pages Functions', () => {
     await expect(response.json()).resolves.toEqual({ message: 'Invalid token' });
     expect(response.status).toBe(401);
     expect(fetchMock).toHaveBeenCalledOnce();
+    fetchMock.mockRestore();
+  });
+
+  it('fails closed before token validation when the Google client ID is missing', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch');
+    const env = createEnv();
+
+    const response = await handleAuthPost({
+      env,
+      request: new Request('https://example.com/api/auth/google-login', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ idToken: 'synthetic-token' }),
+      }),
+    });
+
+    await expect(response.json()).resolves.toEqual({ message: 'Invalid token' });
+    expect(response.status).toBe(401);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(env.DB.prepare).not.toHaveBeenCalled();
     fetchMock.mockRestore();
   });
 
@@ -214,6 +237,23 @@ describe('Cloudflare Pages Functions', () => {
     expect(response.status).toBe(200);
     expect(env.DB.prepare).toHaveBeenCalledTimes(1);
     expect(env.DB.prepare).toHaveBeenCalledWith(expect.stringContaining("visibility_status = 'visible'"));
+  });
+
+  it('keeps legacy comment reads working while moderation is disabled', async () => {
+    const env = createEnv({ all: [] });
+    delete env.COMMUNITY_MODERATION_ENABLED;
+
+    const response = await handleCommentGet({
+      env,
+      request: new Request('https://example.com/api/comments/primary'),
+    });
+
+    await expect(response.json()).resolves.toEqual({ comments: [] });
+    expect(response.status).toBe(200);
+    const query = vi.mocked(env.DB.prepare).mock.calls[0]?.[0] ?? '';
+    expect(query).not.toContain('c.moderation_status');
+    expect(query).not.toContain('c.visibility_status');
+    expect(query).toContain("'community_unreviewed' AS moderation_status");
   });
 
   it('allows a Google user to create a comment and returns the inserted row', async () => {
@@ -484,6 +524,30 @@ describe('Cloudflare Pages Functions', () => {
     expect(env.DB.prepare).not.toHaveBeenCalled();
   });
 
+  it('fails closed before auth or D1 when moderation is not enabled', async () => {
+    const env = createEnv();
+    delete env.COMMUNITY_MODERATION_ENABLED;
+
+    const reportResponse = await handleCommentPost({
+      env,
+      request: new Request('https://example.com/api/comments/comment-1/report', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ reason: 'potentially_unsafe' }),
+      }),
+    });
+    const queueResponse = await handleCommentGet({
+      env,
+      request: new Request('https://example.com/api/comments/moderation/queue'),
+    });
+
+    await expect(reportResponse.json()).resolves.toEqual({ message: 'Not found' });
+    await expect(queueResponse.json()).resolves.toEqual({ message: 'Not found' });
+    expect(reportResponse.status).toBe(404);
+    expect(queueResponse.status).toBe(404);
+    expect(env.DB.prepare).not.toHaveBeenCalled();
+  });
+
   it('queues a fixed-reason report from a Google user without changing the comment', async () => {
     const env = createEnv(
       { first: { googleId: 'google-user-1' } },
@@ -543,20 +607,23 @@ describe('Cloudflare Pages Functions', () => {
   });
 
   it('allows an admin to read the synthetic moderation queue', async () => {
-    const env = createEnv({
-      all: [
-        {
-          commentId: 'comment-1',
-          nodeId: 'synthetic-node',
-          content: 'Synthetic community content',
-          moderationStatus: 'community_unreviewed',
-          visibilityStatus: 'visible',
-          createdAt: '2026-10-02 12:00:00',
-          reportCount: 1,
-          reportReasons: 'potentially_unsafe',
-        },
-      ],
-    });
+    const env = createEnv(
+      { first: { isAdmin: 1, googleId: 'google-admin-1' } },
+      {
+        all: [
+          {
+            commentId: 'comment-1',
+            nodeId: 'synthetic-node',
+            content: 'Synthetic community content',
+            moderationStatus: 'community_unreviewed',
+            visibilityStatus: 'visible',
+            createdAt: '2026-10-02 12:00:00',
+            reportCount: 1,
+            reportReasons: 'potentially_unsafe',
+          },
+        ],
+      },
+    );
     const response = await handleCommentGet({
       env,
       request: new Request('https://example.com/api/comments/moderation/queue', {
@@ -574,6 +641,20 @@ describe('Cloudflare Pages Functions', () => {
       ],
     });
     expect(response.status).toBe(200);
+    expect(env.DB.prepare).toHaveBeenCalledTimes(2);
+  });
+
+  it('rejects a stale admin token when the current D1 role is not admin', async () => {
+    const env = createEnv({ first: { isAdmin: 0, googleId: 'google-admin-1' } });
+    const response = await handleCommentGet({
+      env,
+      request: new Request('https://example.com/api/comments/moderation/queue', {
+        headers: { authorization: await createAuthHeader({ id: 'admin-1', isAdmin: true }) },
+      }),
+    });
+
+    await expect(response.json()).resolves.toEqual({ message: 'Admin access required' });
+    expect(response.status).toBe(403);
     expect(env.DB.prepare).toHaveBeenCalledTimes(1);
   });
 
@@ -597,7 +678,13 @@ describe('Cloudflare Pages Functions', () => {
   });
 
   it('lets an admin hide a synthetic comment and records an audit event', async () => {
-    const env = createEnv({ first: { id: 'comment-1' } }, {}, {}, {});
+    const env = createEnv(
+      { first: { isAdmin: 1, googleId: 'google-admin-1' } },
+      { first: { id: 'comment-1' } },
+      {},
+      {},
+      {},
+    );
     const response = await handleCommentPost({
       env,
       request: new Request('https://example.com/api/comments/comment-1/moderate', {
@@ -617,11 +704,11 @@ describe('Cloudflare Pages Functions', () => {
       approvalStatus: 'not_approved',
     });
     expect(response.status).toBe(200);
-    expect(env.DB.prepare).toHaveBeenCalledTimes(4);
+    expect(env.DB.prepare).toHaveBeenCalledTimes(5);
   });
 
   it('does not accept an approval action even from an admin', async () => {
-    const env = createEnv();
+    const env = createEnv({ first: { isAdmin: 1, googleId: 'google-admin-1' } });
     const response = await handleCommentPost({
       env,
       request: new Request('https://example.com/api/comments/comment-1/moderate', {
@@ -638,6 +725,6 @@ describe('Cloudflare Pages Functions', () => {
       message: 'A supported moderation action and reason are required',
     });
     expect(response.status).toBe(400);
-    expect(env.DB.prepare).not.toHaveBeenCalled();
+    expect(env.DB.prepare).toHaveBeenCalledTimes(1);
   });
 });

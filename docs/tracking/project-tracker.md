@@ -79,20 +79,33 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 
 כל המשימות להלן נפתחו על בסיס ה-audit העובדתי מ-`2026-08-14` ועומדות ב-[REM-003 Audit Gate](./rem-003-audit-gate.md).
 
-### Jarvis 66 — Community trust and moderation candidate — 2026-10-02
+### Jarvis 66 — Community trust and moderation candidate — 2026-10-04
 
-- מומש בענף מבודד `codex/jarvis-66-community-safety` על בסיס
-  `4a3a1b20bc955cc6be633ad61b3668c3b482a524`; טרם שולב, נדחף או נפרס.
+- המועמד המקורי `58f1ed2` הוכנס זמנית כ־`12f907a` ובוטל לפני ה־safe release
+  ב־`5eac393`. סיבת ה־revert אינה כתובה בהודעת הקומיט; רצף ההיסטוריה והחסמים
+  מצביעים על הוצאה מהשחרור לפני אישור migration/מדיניות ושער fail-closed.
+- המימוש שולב מחדש בענף המבודד `codex/jarvis-66-community-safety-v2` על בסיס
+  `ee3ecb2622d1844f2c0e8546076bb1fae3088b1e`; טרם נדחף, מוזג או נפרס.
 - נוספו תוויות fail-closed: `תוכן קהילתי — לא מאושר` ו־
   `נבדק לפי מדיניות הקהילה — לא אישור קליני`. אין פעולה או badge בשם `approve`.
 - נוספו דיווח בסיבה סגורה בלבד, תור סקירה לאדמין, soft hide/restore ו־audit trail.
   ברירת המחדל לכל תגובה קיימת נשארת `community_unreviewed + visible`; אין שינוי תוכן.
+- נוסף שער כפול וכבוי כברירת מחדל: `VITE_ENABLE_COMMUNITY_MODERATION=false` ב־client
+  ו־`COMMUNITY_MODERATION_ENABLED=false` ב־Pages Function. כשהשער סגור, נתיבי
+  moderation מחזירים `404` לפני auth/D1 וקריאת תגובות ממשיכה לעבוד מול הסכמה הישנה.
+- פעולות moderation מאמתות מחדש את תפקיד האדמין ואת חשבון Google מול D1; טוקן ישן
+  עם claim של אדמין אינו מספיק אם התפקיד הנוכחי הוסר.
+- אימות Google דורש `GOOGLE_CLIENT_ID` מפורש ותואם audience; קונפיגורציה חסרה או
+  placeholder נכשלת סגור לפני פנייה ל־Google או ל־D1.
 - בדיקות סינתטיות מכסות guest/user/admin, חסימת שדות חופשיים, הרשאות תור/פעולות,
-  וחסימת ניסיון `approve` גם מאדמין. client `75/75`, server `41/41`, ‏17 תרחישי
-  הייחוס עברו במסגרת `20/20` assertions; build, typecheck ו־lint עברו תחת Node `22.23.2`.
-- build עדיין מציג את אזהרת chunk התקציב הקיימת; Jarvis 66 אינו טוען לסגירת ביצועים.
-- deployment דורש תחילה החלטת retention לפרטי moderation, review של migration וגיבוי/readback
-  בסביבה מורשית. אין שימוש בנתוני מטופלים, תגובות חיות או ספק analytics.
+  gate כבוי, תאימות לסכמה הישנה, טוקן אדמין מיושן וחסימת `approve`. עברו client
+  `169/169`, server `46/46`, שישה fixtures של clinical schema ו־20/20 תרחישי ייחוס.
+  ‏lint, typecheck, build ושני coverage gates עברו תחת Node `22.23.2`; תקציב CSS הכולל
+  עבר עם `11,951/12,288` gzip bytes.
+- ה־audit נכתב לכל פעולת moderation, אך אינו מוגדר כראיה בלתי־מחיקה: hard delete קיים
+  עשוי למחוק רשומות קשורות לפי FK. deployment דורש החלטת retention/deletion, בעלים/SLA,
+  הכרעת מודל admin ו־review של migration עם גיבוי, rollback ו־schema readback.
+- לא נעשה שימוש בנתוני מטופלים, תגובות חיות או ספק analytics; לא בוצע migration חי.
 - מדיניות מלאה: [community-moderation-policy.md](../governance/community-moderation-policy.md).
 
 ### Task 68 — סביבת עריכת תוכן מקומית — integrated and deployed 2026-10-03

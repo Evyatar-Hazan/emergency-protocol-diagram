@@ -1,4 +1,5 @@
 import type { Env } from './types';
+import { isCommunityModerationEnabled } from './communityModeration';
 
 interface CommentRow {
   id: string;
@@ -71,6 +72,7 @@ export async function getCommentsByNodeId(
   nodeId: string,
   viewerId?: string | null
 ): Promise<CommentRecord[]> {
+  const moderationEnabled = isCommunityModerationEnabled(env);
   const { results } = await env.DB.prepare(
     `
       SELECT
@@ -79,7 +81,11 @@ export async function getCommentsByNodeId(
         c.content,
         c.author_id,
         c.parent_comment_id,
-        c.moderation_status,
+        ${
+          moderationEnabled
+            ? 'c.moderation_status'
+            : "'community_unreviewed' AS moderation_status"
+        },
         c.created_at,
         c.updated_at,
         u.email AS author_email,
@@ -110,7 +116,7 @@ export async function getCommentsByNodeId(
       FROM comments c
       INNER JOIN users u ON u.id = c.author_id
       WHERE c.node_id = ?1
-        AND c.visibility_status = 'visible'
+        ${moderationEnabled ? "AND c.visibility_status = 'visible'" : ''}
       ORDER BY c.created_at DESC
     `
   )

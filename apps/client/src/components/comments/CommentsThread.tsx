@@ -5,6 +5,7 @@ import { CommentItem } from './CommentItem';
 import { GoogleLoginButton } from '../auth/GoogleLoginButton';
 import { useAuthStore } from '../../store/authStore';
 import { ModerationQueue } from './ModerationQueue';
+import { communityModerationEnabled } from './communityModerationConfig';
 
 const ReplyIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-none stroke-current stroke-[1.8]">
@@ -147,7 +148,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
 
   return (
     <section className="overflow-hidden rounded-b-[22px] border border-t-0 border-slate-200/80 bg-white">
-      {user?.isAdmin && <ModerationQueue />}
+      {communityModerationEnabled && user?.isAdmin && <ModerationQueue />}
       <div className={`${hasVisibleThread ? 'border-b border-slate-200/80' : ''} px-4 py-2 sm:px-6`}>
         <div className={`grid items-center gap-1 text-slate-500 ${isAuthenticated ? 'grid-cols-4' : 'grid-cols-5'}`}>
           <button
@@ -215,6 +216,7 @@ export const CommentsThread: React.FC<CommentsThreadProps> = ({ nodeId }) => {
             <CommentItem
               key={comment.id}
               {...comment}
+              moderationEnabled={communityModerationEnabled}
               onCommentDeleted={handleCommentAdded}
               onCommentUpdated={handleCommentAdded}
             />

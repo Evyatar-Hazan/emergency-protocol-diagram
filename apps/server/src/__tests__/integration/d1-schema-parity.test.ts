@@ -6,6 +6,10 @@ const schemaPath = fileURLToPath(
   new URL('../../../../../sql/d1-community-schema.sql', import.meta.url)
 );
 const schema = readFileSync(schemaPath, 'utf8');
+const migrationPath = fileURLToPath(
+  new URL('../../../../../sql/migrations/0002-community-moderation.sql', import.meta.url)
+);
+const moderationMigration = readFileSync(migrationPath, 'utf8');
 
 const tableColumns = {
   users: ['id', 'email', 'google_id', 'name', 'picture', 'is_admin', 'created_at', 'updated_at'],
@@ -82,5 +86,17 @@ describe('local D1 schema parity', () => {
       indexDeclarations.every((declaration) => /CREATE INDEX IF NOT EXISTS/i.test(declaration))
     ).toBe(true);
     expect(schema).not.toMatch(/^\s*(?:DROP|ALTER|DELETE)\b/im);
+  });
+
+  it('keeps the pending moderation migration additive and leaves live content untouched', () => {
+    expect(moderationMigration).toContain(
+      "ALTER TABLE comments ADD COLUMN moderation_status TEXT NOT NULL DEFAULT 'community_unreviewed'"
+    );
+    expect(moderationMigration).toContain(
+      "ALTER TABLE comments ADD COLUMN visibility_status TEXT NOT NULL DEFAULT 'visible'"
+    );
+    expect(moderationMigration).toContain('CREATE TABLE IF NOT EXISTS comment_reports');
+    expect(moderationMigration).toContain('CREATE TABLE IF NOT EXISTS comment_moderation_audit');
+    expect(moderationMigration).not.toMatch(/^\s*(?:UPDATE|DELETE|DROP)\b/im);
   });
 });

@@ -1,4 +1,5 @@
 import { authenticate, authenticateGoogleUser, authenticateOptional } from '../../_lib/auth';
+import { isCommunityModerationEnabled } from '../../_lib/communityModeration';
 import { getCommentsByNodeId } from '../../_lib/comments';
 import { empty, json } from '../../_lib/json';
 import type { Env } from '../../_lib/types';
@@ -48,6 +49,16 @@ async function authenticateAdmin(context: Context) {
     return json({ message: 'Admin access required' }, { status: 403 });
   }
 
+  const actor = await context.env.DB.prepare(
+    'SELECT is_admin AS isAdmin, google_id AS googleId FROM users WHERE id = ?1'
+  )
+    .bind(authResult.id)
+    .first<{ isAdmin: number; googleId: string | null }>();
+
+  if (!actor?.isAdmin || !actor.googleId || actor.googleId.startsWith('guest:')) {
+    return json({ message: 'Admin access required' }, { status: 403 });
+  }
+
   return authResult;
 }
 
@@ -70,6 +81,7 @@ async function createComment(context: Context): Promise<Response> {
   }
 
   const id = crypto.randomUUID();
+  const moderationEnabled = isCommunityModerationEnabled(context.env);
 
   await context.env.DB.prepare(
     `
@@ -88,7 +100,11 @@ async function createComment(context: Context): Promise<Response> {
         c.content,
         c.author_id AS authorId,
         c.parent_comment_id AS parentCommentId,
-        c.moderation_status AS moderationStatus,
+        ${
+          moderationEnabled
+            ? 'c.moderation_status AS moderationStatus'
+            : "'community_unreviewed' AS moderationStatus"
+        },
         c.created_at AS createdAt,
         c.updated_at AS updatedAt,
         u.id AS userId,
@@ -399,6 +415,9 @@ export async function onRequestGet(context: Context): Promise<Response> {
   const pathname = new URL(context.request.url).pathname;
 
   if (pathname === '/api/comments/moderation/queue') {
+    if (!isCommunityModerationEnabled(context.env)) {
+      return json({ message: 'Not found' }, { status: 404 });
+    }
     return getModerationQueue(context);
   }
 
@@ -426,10 +445,16 @@ export async function onRequestPost(context: Context): Promise<Response> {
   }
 
   if (segments.length === 2 && segments[1] === 'report') {
+    if (!isCommunityModerationEnabled(context.env)) {
+      return json({ message: 'Not found' }, { status: 404 });
+    }
     return reportComment(context, segments[0]);
   }
 
   if (segments.length === 2 && segments[1] === 'moderate') {
+    if (!isCommunityModerationEnabled(context.env)) {
+      return json({ message: 'Not found' }, { status: 404 });
+    }
     return moderateComment(context, segments[0]);
   }
 

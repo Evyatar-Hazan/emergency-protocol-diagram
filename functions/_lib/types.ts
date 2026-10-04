@@ -3,6 +3,7 @@ export interface Env {
   JWT_SECRET?: string;
   GOOGLE_CLIENT_ID?: string;
   ADMIN_EMAIL?: string;
+  COMMUNITY_MODERATION_ENABLED?: string;
 }
 
 export interface SessionUser {

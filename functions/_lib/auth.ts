@@ -69,6 +69,11 @@ export async function authenticateGoogleUser(
 }
 
 export async function verifyGoogleIdToken(idToken: string, env: Env): Promise<GoogleTokenPayload | null> {
+  const clientId = env.GOOGLE_CLIENT_ID?.trim();
+  if (!clientId || clientId.includes('your_google_client_id_here')) {
+    return null;
+  }
+
   const response = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`);
 
   if (!response.ok) {
@@ -77,7 +82,7 @@ export async function verifyGoogleIdToken(idToken: string, env: Env): Promise<Go
 
   const payload = (await response.json()) as GoogleTokenPayload;
 
-  if (env.GOOGLE_CLIENT_ID && payload.aud !== env.GOOGLE_CLIENT_ID) {
+  if (payload.aud !== clientId) {
     return null;
   }
 
