@@ -79,13 +79,14 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 
 כל המשימות להלן נפתחו על בסיס ה-audit העובדתי מ-`2026-08-14` ועומדות ב-[REM-003 Audit Gate](./rem-003-audit-gate.md).
 
-### Jarvis 66 — Community trust and moderation candidate — 2026-10-04
+### Jarvis 66 — Community trust and moderation integrated and deployed (gated) — 2026-10-04
 
 - המועמד המקורי `58f1ed2` הוכנס זמנית כ־`12f907a` ובוטל לפני ה־safe release
   ב־`5eac393`. סיבת ה־revert אינה כתובה בהודעת הקומיט; רצף ההיסטוריה והחסמים
   מצביעים על הוצאה מהשחרור לפני אישור migration/מדיניות ושער fail-closed.
 - המימוש שולב מחדש בענף המבודד `codex/jarvis-66-community-safety-v2` על בסיס
-  `ee3ecb2622d1844f2c0e8546076bb1fae3088b1e`; טרם נדחף, מוזג או נפרס.
+  `ee3ecb2622d1844f2c0e8546076bb1fae3088b1e`, עבר review ו־CI ב־[PR #7](https://github.com/Evyatar-Hazan/emergency-protocol-diagram/pull/7),
+  ומוזג ל־`main` ב־`88199b30177040df8d2e2bcf40f18662a3eec1c8`.
 - נוספו תוויות fail-closed: `תוכן קהילתי — לא מאושר` ו־
   `נבדק לפי מדיניות הקהילה — לא אישור קליני`. אין פעולה או badge בשם `approve`.
 - נוספו דיווח בסיבה סגורה בלבד, תור סקירה לאדמין, soft hide/restore ו־audit trail.
@@ -103,8 +104,15 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
   ‏lint, typecheck, build ושני coverage gates עברו תחת Node `22.23.2`; תקציב CSS הכולל
   עבר עם `11,951/12,288` gzip bytes.
 - ה־audit נכתב לכל פעולת moderation, אך אינו מוגדר כראיה בלתי־מחיקה: hard delete קיים
-  עשוי למחוק רשומות קשורות לפי FK. deployment דורש החלטת retention/deletion, בעלים/SLA,
-  הכרעת מודל admin ו־review של migration עם גיבוי, rollback ו־schema readback.
+  עשוי למחוק רשומות קשורות לפי FK. dry-run ו־rollback טרנזקציוני עברו על SQLite סינתטי,
+  כולל schema/FK/cascade parity; הפעלת המוצר והמיגרציה החיה עדיין דורשות החלטת
+  retention/deletion, בעלים/SLA, הכרעת מודל admin, גיבוי ו־schema readback.
+- GitHub Actions `Validate` ריצה `37210668828` עברה על merge commit ‏`88199b3`.
+  Cloudflare Production deployment ‏`6f5ec361-5b31-4fc3-89d4-c9d31fe2a4c2` נבנה מאותו commit.
+  הדומיין החי וכתובת ה־deployment החזירו `200`; ‏`/api/health` החזיר
+  `{"status":"ok","database":"ready"}`, קריאת legacy comments החזירה `200`, ונתיבי
+  report ו־moderation queue החזירו `404` לפני auth/D1. Google client/server config אומת
+  ללא חשיפת ערכים, ו־token סינתטי נדחה ב־`401`.
 - לא נעשה שימוש בנתוני מטופלים, תגובות חיות או ספק analytics; לא בוצע migration חי.
 - מדיניות מלאה: [community-moderation-policy.md](../governance/community-moderation-policy.md).
 
