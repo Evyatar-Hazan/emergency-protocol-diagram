@@ -1,4 +1,5 @@
 import type { Env } from './types';
+import { isCommunityModerationEnabled } from './communityModeration';
 
 interface CommentRow {
   id: string;
@@ -6,6 +7,7 @@ interface CommentRow {
   content: string;
   author_id: string;
   parent_comment_id: string | null;
+  moderation_status: 'community_unreviewed' | 'moderation_reviewed';
   created_at: string;
   updated_at: string;
   author_email: string;
@@ -35,6 +37,7 @@ interface CommentRecord {
   likesCount: number;
   viewsCount: number;
   viewerHasLiked: boolean;
+  trustStatus: 'community_unreviewed' | 'moderation_reviewed';
   replies: CommentRecord[];
 }
 
@@ -57,6 +60,9 @@ function toComment(row: CommentRow): CommentRecord {
     likesCount: Number(row.likes_count || 0),
     viewsCount: Number(row.views_count || 0),
     viewerHasLiked: Boolean(row.viewer_has_liked),
+    trustStatus: row.moderation_status === 'moderation_reviewed'
+      ? 'moderation_reviewed'
+      : 'community_unreviewed',
     replies: [],
   };
 }
@@ -66,6 +72,7 @@ export async function getCommentsByNodeId(
   nodeId: string,
   viewerId?: string | null
 ): Promise<CommentRecord[]> {
+  const moderationEnabled = isCommunityModerationEnabled(env);
   const { results } = await env.DB.prepare(
     `
       SELECT
@@ -74,6 +81,11 @@ export async function getCommentsByNodeId(
         c.content,
         c.author_id,
         c.parent_comment_id,
+        ${
+          moderationEnabled
+            ? 'c.moderation_status'
+            : "'community_unreviewed' AS moderation_status"
+        },
         c.created_at,
         c.updated_at,
         u.email AS author_email,
@@ -104,6 +116,7 @@ export async function getCommentsByNodeId(
       FROM comments c
       INNER JOIN users u ON u.id = c.author_id
       WHERE c.node_id = ?1
+        ${moderationEnabled ? "AND c.visibility_status = 'visible'" : ''}
       ORDER BY c.created_at DESC
     `
   )

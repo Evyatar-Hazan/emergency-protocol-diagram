@@ -6,6 +6,10 @@ const schemaPath = fileURLToPath(
   new URL('../../../../../sql/d1-community-schema.sql', import.meta.url)
 );
 const schema = readFileSync(schemaPath, 'utf8');
+const migrationPath = fileURLToPath(
+  new URL('../../../../../sql/migrations/0002-community-moderation.sql', import.meta.url)
+);
+const moderationMigration = readFileSync(migrationPath, 'utf8');
 
 const tableColumns = {
   users: ['id', 'email', 'google_id', 'name', 'picture', 'is_admin', 'created_at', 'updated_at'],
@@ -15,11 +19,27 @@ const tableColumns = {
     'content',
     'author_id',
     'parent_comment_id',
+    'moderation_status',
+    'visibility_status',
+    'moderated_by',
+    'moderated_at',
+    'moderation_reason',
     'created_at',
     'updated_at',
   ],
   comment_likes: ['id', 'comment_id', 'user_id', 'created_at'],
   comment_views: ['id', 'comment_id', 'viewer_key', 'created_at'],
+  comment_reports: [
+    'id',
+    'comment_id',
+    'reporter_id',
+    'reason',
+    'status',
+    'resolved_by',
+    'resolved_at',
+    'created_at',
+  ],
+  comment_moderation_audit: ['id', 'comment_id', 'actor_id', 'action', 'reason', 'created_at'],
 } as const;
 
 function tableDefinition(tableName: string) {
@@ -53,6 +73,9 @@ describe('local D1 schema parity', () => {
     );
     expect(tableDefinition('comment_likes')).toContain('UNIQUE(comment_id, user_id)');
     expect(tableDefinition('comment_views')).toContain('UNIQUE(comment_id, viewer_key)');
+    expect(tableDefinition('comment_reports')).toContain('UNIQUE(comment_id, reporter_id, reason)');
+    expect(tableDefinition('comments')).toContain("DEFAULT 'community_unreviewed'");
+    expect(tableDefinition('comments')).toContain("DEFAULT 'visible'");
   });
 
   it('uses rerunnable index declarations for automatic local setup', () => {
@@ -63,5 +86,20 @@ describe('local D1 schema parity', () => {
       indexDeclarations.every((declaration) => /CREATE INDEX IF NOT EXISTS/i.test(declaration))
     ).toBe(true);
     expect(schema).not.toMatch(/^\s*(?:DROP|ALTER|DELETE)\b/im);
+  });
+
+  it('keeps the pending moderation migration additive and leaves live content untouched', () => {
+    expect(moderationMigration).toContain(
+      "ALTER TABLE comments ADD COLUMN moderation_status TEXT NOT NULL DEFAULT 'community_unreviewed'"
+    );
+    expect(moderationMigration).toContain(
+      "ALTER TABLE comments ADD COLUMN visibility_status TEXT NOT NULL DEFAULT 'visible'"
+    );
+    expect(moderationMigration).toMatch(
+      /ALTER TABLE comments ADD COLUMN moderated_by TEXT\s+REFERENCES users\(id\) ON DELETE SET NULL;/i
+    );
+    expect(moderationMigration).toContain('CREATE TABLE IF NOT EXISTS comment_reports');
+    expect(moderationMigration).toContain('CREATE TABLE IF NOT EXISTS comment_moderation_audit');
+    expect(moderationMigration).not.toMatch(/^\s*(?:UPDATE|DELETE|DROP)\b/im);
   });
 });
