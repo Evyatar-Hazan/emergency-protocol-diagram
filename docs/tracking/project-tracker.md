@@ -179,12 +179,12 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
 | `SEC-003` | Open | בפרודקשן לא נצפו CSP, HSTS, X-Frame-Options או Permissions-Policy. | להגדיר מדיניות headers תואמת Cloudflare ו-Google OAuth, תחילה ב-report-only כאשר מתאים. | headers מאושרים מופיעים בתגובות בלי לשבור OAuth, assets, navigation או API. | `curl -I` + CSP report review + login/smoke + security headers scan. |
 | `ENV-002` | Open | validation תחת Node 20 עבר, אך shell אוטומטי לא-login הציג בתחילת ה-audit Node 22.23.2 בניגוד ל-`.nvmrc`. | ליישר או לתעד במפורש את טעינת Node עבור CI, automation ו-shell לא-interactive. | פקודות הפרויקט משתמשות ב-Node 20.20.2 בכל נתיב נתמך, או נכשלות מוקדם עם הודעה ברורה. | `node -v` ב-login/non-login/CI + full validation. |
 | `ENV-003` | Open | `npm ci` ו-`npm install --ignore-scripts` נתקעו מקומית ב-2026-08-18; ב-2026-08-26 `npm ci --dry-run` עבר אך עדיין זיהה aliases/packages `extraneous`, ו-`npm ls --depth=0` חזר `0` עם packages `extraneous`. | לבדוק למה npm משאיר/מייצר packages `extraneous`, לנקות install state מקומי בלי לפגוע ב-lockfile, ולתעד פקודת התקנה אמינה. | `npm ci` מלא מסתיים בזמן סביר; `npm ls --depth=0` ללא `extraneous`; validation מלא נשאר ירוק. | `npm ci` מסביבה נקייה + `npm ls --depth=0` + build/lint/test/coverage/audit. |
-| `DOC-001` | Open | בכספת קיים קובץ לא-קנוני `tasks 3.md` לצד `tasks.md`, עם תוכן ישן וסיכון לסתירה. | לבדוק אם יש בו מידע ייחודי, למזג רק מידע תקף ואז לארכב/להסיר את כפילות הסנכרון באישור מתאים. | קיים קובץ tasks קנוני אחד בלבד ואין אובדן מידע תקף. | השוואת diff + חיפוש קישורים + בדיקת Git/Obsidian לאחר הטיפול. |
 
 ## הושלם לאחרונה
 
 | ID | נסגר | תוצאה | הוכחה |
 |---|---|---|---|
+| `DOC-001` | `2026-09-10` | התוכן הייחודי של `tasks 3.md` מוזג ל־`10_ENTITIES/Projects/Emergency-Protocol-Diagram/tasks.md` תחת הקשר היסטורי הדורש אימות ריפו, ורק לאחר מכן הקובץ הכפול הוסר. | `10_ENTITIES/Projects/AI-Memory-OS/vault-scan-catalog.md`, רישום ריצה 2026-09-10: ‏5/5 בדיקות ממוקדות עברו, `validate_vault_notes.py` עבר על 209 notes, ‏`find_fuzzy_dupes.py` עבר על 186 notes ו־`scripts/sync_indexes.py --check` עבר; התיעוד נקרא חזרה ב־vault commit `578158f6dd20224c70b122a8da434a2680cb4825`. |
 | `QA-004` | `2026-08-14` | נוסף client test harness עם 12 בדיקות ו-gate ממוקד ללוגיקה קריטית | [QA Coverage Gate Audit](./qa-coverage-gate-audit.md), CI `31800392473` |
 | `QA-003` | `2026-08-14` | back navigation משחזר protocol ו-node לאחר מעבר חוצה-פרוטוקולים | unit regression + forward/back בדפדפן המקומי |
 | `QA-002` | `2026-08-14` | נוספו ארבע בדיקות ל-Cloudflare Auth production handlers | 30 בדיקות server עברו; production API coverage כולל auth |
