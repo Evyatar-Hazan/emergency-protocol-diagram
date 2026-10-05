@@ -705,6 +705,9 @@ describe('Cloudflare Pages Functions', () => {
     });
     expect(response.status).toBe(200);
     expect(env.DB.prepare).toHaveBeenCalledTimes(5);
+    expect(env.DB.prepare).toHaveBeenCalledWith(
+      expect.stringContaining("expires_at = datetime('now', '+90 days')")
+    );
   });
 
   it('does not accept an approval action even from an admin', async () => {

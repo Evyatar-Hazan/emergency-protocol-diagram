@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS comment_reports (
     CHECK (status IN ('pending', 'dismissed', 'actioned')),
   resolved_by TEXT,
   resolved_at TEXT,
+  expires_at TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
   FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -80,6 +81,7 @@ CREATE TABLE IF NOT EXISTS comment_reports (
 
 CREATE INDEX IF NOT EXISTS idx_comment_reports_status ON comment_reports(status);
 CREATE INDEX IF NOT EXISTS idx_comment_reports_comment_id ON comment_reports(comment_id);
+CREATE INDEX IF NOT EXISTS idx_comment_reports_expires_at ON comment_reports(expires_at);
 
 CREATE TABLE IF NOT EXISTS comment_moderation_audit (
   id TEXT PRIMARY KEY,
@@ -121,3 +123,19 @@ BEGIN
       expires_at = datetime('now', '+90 days')
   WHERE actor_id = OLD.id;
 END;
+
+CREATE TABLE IF NOT EXISTS community_moderation_maintenance_log (
+  id TEXT PRIMARY KEY,
+  operation TEXT NOT NULL CHECK (operation IN ('purge')),
+  status TEXT NOT NULL CHECK (status IN ('completed')),
+  preview_fingerprint TEXT NOT NULL,
+  eligible_count INTEGER NOT NULL CHECK (eligible_count >= 0),
+  selected_count INTEGER NOT NULL CHECK (selected_count BETWEEN 0 AND 500),
+  affected_count INTEGER NOT NULL CHECK (affected_count BETWEEN 0 AND selected_count),
+  backup_sha256 TEXT NOT NULL,
+  executed_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL DEFAULT (datetime('now', '+90 days'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_community_moderation_maintenance_log_expires_at
+  ON community_moderation_maintenance_log(expires_at);

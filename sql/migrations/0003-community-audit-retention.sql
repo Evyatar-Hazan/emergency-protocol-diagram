@@ -1,4 +1,7 @@
 DROP INDEX IF EXISTS idx_comment_moderation_audit_comment_id;
+ALTER TABLE comment_reports ADD COLUMN expires_at TEXT;
+CREATE INDEX idx_comment_reports_expires_at ON comment_reports(expires_at);
+
 ALTER TABLE comment_moderation_audit RENAME TO comment_moderation_audit_legacy;
 
 CREATE TABLE comment_moderation_audit (
@@ -50,3 +53,19 @@ BEGIN
       expires_at = datetime('now', '+90 days')
   WHERE actor_id = OLD.id;
 END;
+
+CREATE TABLE community_moderation_maintenance_log (
+  id TEXT PRIMARY KEY,
+  operation TEXT NOT NULL CHECK (operation IN ('purge')),
+  status TEXT NOT NULL CHECK (status IN ('completed')),
+  preview_fingerprint TEXT NOT NULL,
+  eligible_count INTEGER NOT NULL CHECK (eligible_count >= 0),
+  selected_count INTEGER NOT NULL CHECK (selected_count BETWEEN 0 AND 500),
+  affected_count INTEGER NOT NULL CHECK (affected_count BETWEEN 0 AND selected_count),
+  backup_sha256 TEXT NOT NULL,
+  executed_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL DEFAULT (datetime('now', '+90 days'))
+);
+
+CREATE INDEX idx_community_moderation_maintenance_log_expires_at
+  ON community_moderation_maintenance_log(expires_at);

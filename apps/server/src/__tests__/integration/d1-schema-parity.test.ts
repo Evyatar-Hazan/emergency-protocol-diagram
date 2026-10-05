@@ -22,6 +22,14 @@ const auditPurgePreviewPath = fileURLToPath(
   new URL('../../../../../sql/maintenance/preview-expired-community-audit.sql', import.meta.url)
 );
 const auditPurgePreview = readFileSync(auditPurgePreviewPath, 'utf8');
+const maintenanceLogPurgePath = fileURLToPath(
+  new URL('../../../../../sql/maintenance/purge-expired-community-maintenance-log.sql', import.meta.url)
+);
+const maintenanceLogPurge = readFileSync(maintenanceLogPurgePath, 'utf8');
+const maintenanceLogPreviewPath = fileURLToPath(
+  new URL('../../../../../sql/maintenance/preview-expired-community-maintenance-log.sql', import.meta.url)
+);
+const maintenanceLogPreview = readFileSync(maintenanceLogPreviewPath, 'utf8');
 
 const tableColumns = {
   users: ['id', 'email', 'google_id', 'name', 'picture', 'is_admin', 'created_at', 'updated_at'],
@@ -49,6 +57,7 @@ const tableColumns = {
     'status',
     'resolved_by',
     'resolved_at',
+    'expires_at',
     'created_at',
   ],
   comment_moderation_audit: [
@@ -58,6 +67,18 @@ const tableColumns = {
     'action',
     'reason',
     'created_at',
+    'expires_at',
+  ],
+  community_moderation_maintenance_log: [
+    'id',
+    'operation',
+    'status',
+    'preview_fingerprint',
+    'eligible_count',
+    'selected_count',
+    'affected_count',
+    'backup_sha256',
+    'executed_at',
     'expires_at',
   ],
 } as const;
@@ -138,12 +159,26 @@ describe('local D1 schema parity', () => {
     expect(schema).toContain('CREATE TRIGGER IF NOT EXISTS scrub_moderation_audit_before_actor_delete');
 
     expect(retentionMigration).toContain('INSERT INTO comment_moderation_audit');
+    expect(retentionMigration).toContain('ALTER TABLE comment_reports ADD COLUMN expires_at TEXT');
     expect(retentionMigration).toContain("datetime(created_at, '+90 days')");
     expect(retentionMigration).toMatch(
       /SET comment_id = NULL,\s+actor_id = NULL,\s+expires_at = datetime\('now', '\+90 days'\)/i
     );
-    expect(auditPurge).toMatch(/DELETE FROM comment_moderation_audit[\s\S]+LIMIT 500/i);
+    expect(auditPurge).toContain('LIMIT 500');
+    expect(auditPurge).toContain('DELETE FROM comment_moderation_audit');
+    expect(auditPurge).toContain('DELETE FROM comment_reports');
+    expect(auditPurge).toContain('approved_community_audit_purge');
     expect(auditPurgePreview).toContain('COUNT(*) AS eligible_count');
     expect(auditPurgePreview).not.toMatch(/^\s*(?:DELETE|DROP|UPDATE|ALTER)\b/im);
+
+    const maintenanceDefinition = tableDefinition('community_moderation_maintenance_log');
+    expect(maintenanceDefinition).toContain('selected_count INTEGER NOT NULL CHECK (selected_count BETWEEN 0 AND 500)');
+    expect(maintenanceDefinition).toContain("expires_at TEXT NOT NULL DEFAULT (datetime('now', '+90 days'))");
+    expect(maintenanceDefinition).not.toMatch(/\b(?:content|comment_id|actor_id|email|name|picture)\b/i);
+    expect(retentionMigration).toContain('CREATE TABLE community_moderation_maintenance_log');
+    expect(maintenanceLogPurge).toMatch(/DELETE FROM community_moderation_maintenance_log[\s\S]+LIMIT 500/i);
+    expect(maintenanceLogPurge).toContain('approved_community_maintenance_log_purge');
+    expect(maintenanceLogPreview).toContain('COUNT(*) AS eligible_count');
+    expect(maintenanceLogPreview).not.toMatch(/^\s*(?:DELETE|DROP|UPDATE|ALTER)\b/im);
   });
 });

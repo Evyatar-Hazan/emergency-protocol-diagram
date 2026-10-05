@@ -7,6 +7,8 @@ moderation_migration="$repo_root/sql/migrations/0002-community-moderation.sql"
 retention_migration="$repo_root/sql/migrations/0003-community-audit-retention.sql"
 purge_sql="$repo_root/sql/maintenance/purge-expired-community-audit.sql"
 purge_preview_sql="$repo_root/sql/maintenance/preview-expired-community-audit.sql"
+maintenance_log_purge_sql="$repo_root/sql/maintenance/purge-expired-community-maintenance-log.sql"
+maintenance_log_preview_sql="$repo_root/sql/maintenance/preview-expired-community-maintenance-log.sql"
 current_schema="$repo_root/sql/d1-community-schema.sql"
 work_dir="$(mktemp -d "$repo_root/.tmp-community-migration.XXXXXX")"
 trap 'rm -rf "$work_dir"' EXIT
@@ -43,6 +45,7 @@ cp "$db" "$retention_rollback_db"
 
 sqlite3 "$retention_rollback_db" "PRAGMA foreign_keys=ON; BEGIN;" ".read $retention_migration" "ROLLBACK;"
 assert_eq "0" "$(sqlite3 "$retention_rollback_db" "SELECT COUNT(*) FROM pragma_table_info('comment_moderation_audit') WHERE name='expires_at';")" "retention rollback restores prior audit shape"
+assert_eq "0" "$(sqlite3 "$retention_rollback_db" "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='community_moderation_maintenance_log';")" "retention rollback removes the maintenance log"
 assert_eq "1" "$(sqlite3 "$retention_rollback_db" "SELECT COUNT(*) FROM comment_moderation_audit WHERE id='audit-legacy' AND comment_id='parent' AND actor_id='admin';")" "retention rollback preserves prior audit rows"
 
 sqlite3 "$db" "PRAGMA foreign_keys=ON;" ".read $retention_migration"
@@ -53,7 +56,7 @@ assert_eq "2" "$(sqlite3 "$db" "SELECT COUNT(*) FROM comments WHERE moderation_s
 assert_eq "1" "$(sqlite3 "$db" "SELECT COUNT(*) FROM pragma_foreign_key_list('comments') WHERE \"from\"='moderated_by' AND \"table\"='users' AND on_delete='SET NULL';")" "migrated moderated_by matches fresh-schema foreign key"
 assert_eq "1" "$(sqlite3 "$db" "SELECT COUNT(*) FROM comment_moderation_audit WHERE id='audit-legacy' AND expires_at='2026-04-01 00:00:00';")" "existing audit receives a 90-day expiry without content backfill"
 
-for table in comments comment_reports comment_moderation_audit; do
+for table in comments comment_reports comment_moderation_audit community_moderation_maintenance_log; do
   migrated_columns="$(sqlite3 "$db" "SELECT name||'|'||type||'|'||\"notnull\"||'|'||COALESCE(dflt_value,'')||'|'||pk FROM pragma_table_info('$table') ORDER BY name;")"
   fresh_columns="$(sqlite3 "$fresh_db" "SELECT name||'|'||type||'|'||\"notnull\"||'|'||COALESCE(dflt_value,'')||'|'||pk FROM pragma_table_info('$table') ORDER BY name;")"
   assert_eq "$fresh_columns" "$migrated_columns" "$table columns match fresh schema"
@@ -88,13 +91,27 @@ assert_eq "2" "$(sqlite3 "$db" "SELECT (SELECT COUNT(*) FROM comments WHERE id='
 assert_eq "90.0" "$(sqlite3 "$db" "SELECT printf('%.1f', julianday(expires_at)-julianday(created_at)) FROM comment_moderation_audit WHERE id='audit-admin';")" "new audit defaults to exactly 90 days"
 
 cp "$db" "$purge_db"
-sqlite3 "$purge_db" "WITH RECURSIVE seq(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM seq WHERE n<501) INSERT INTO comment_moderation_audit (id,action,reason,created_at,expires_at) SELECT printf('audit-expired-%03d',n),'hide','spam','2025-01-01 00:00:00','2025-04-01 00:00:00' FROM seq; INSERT INTO comment_moderation_audit (id,action,reason,created_at,expires_at) VALUES ('audit-future','restore','community_guidelines','2099-01-01 00:00:00','2099-04-01 00:00:00');"
+sqlite3 "$purge_db" "WITH RECURSIVE seq(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM seq WHERE n<501) INSERT INTO comment_moderation_audit (id,action,reason,created_at,expires_at) SELECT printf('audit-expired-%03d',n),'hide','spam','2025-01-01 00:00:00','2025-04-01 00:00:00' FROM seq; INSERT INTO comment_moderation_audit (id,action,reason,created_at,expires_at) VALUES ('audit-future','restore','community_guidelines','2099-01-01 00:00:00','2099-04-01 00:00:00'); INSERT INTO comment_reports (id,comment_id,reporter_id,reason,status,resolved_at,expires_at) VALUES ('report-expired','reporter-case','author','spam','dismissed','2024-12-01 00:00:00','2025-03-01 00:00:00');"
 preview_output="$(sqlite3 "$purge_db" ".read $purge_preview_sql")"
 preview_count="${preview_output%%|*}"
 assert_eq "501" "$preview_count" "read-only purge preview counts all eligible synthetic audit rows"
 sqlite3 "$purge_db" ".read $purge_sql"
-assert_eq "1" "$(sqlite3 "$purge_db" "SELECT COUNT(*) FROM comment_moderation_audit WHERE id LIKE 'audit-expired-%';")" "bounded purge removes at most 500 eligible audit rows"
+assert_eq "501" "$(sqlite3 "$purge_db" "SELECT COUNT(*) FROM comment_moderation_audit WHERE id LIKE 'audit-expired-%';")" "direct purge without in-connection approval fails closed"
+assert_eq "1" "$(sqlite3 "$purge_db" "SELECT COUNT(*) FROM comment_reports WHERE id='report-expired';")" "direct purge leaves the expired report untouched without approval"
+sqlite3 "$purge_db" "CREATE TEMP TABLE approved_community_audit_purge (confirmation TEXT PRIMARY KEY CHECK (confirmation = 'PURGE APPROVED')); INSERT INTO approved_community_audit_purge VALUES ('PURGE APPROVED');" ".read $purge_sql"
+assert_eq "2" "$(sqlite3 "$purge_db" "SELECT COUNT(*) FROM comment_moderation_audit WHERE id LIKE 'audit-expired-%';")" "bounded purge removes at most 500 eligible moderation rows across tables"
+assert_eq "0" "$(sqlite3 "$purge_db" "SELECT COUNT(*) FROM comment_reports WHERE id='report-expired';")" "approved bounded purge removes the selected expired report"
 assert_eq "1" "$(sqlite3 "$purge_db" "SELECT COUNT(*) FROM comment_moderation_audit WHERE id='audit-future';")" "explicit purge preserves non-expired synthetic audit"
+assert_eq "1" "$(sqlite3 "$purge_db" "SELECT COUNT(*) FROM pragma_table_info('community_moderation_maintenance_log') WHERE name='expires_at';")" "maintenance log carries an explicit 90-day expiry"
+assert_eq "0" "$(sqlite3 "$purge_db" "SELECT COUNT(*) FROM pragma_table_info('community_moderation_maintenance_log') WHERE name IN ('content','comment_id','actor_id','email');")" "maintenance log excludes content and direct user/comment identifiers"
+sqlite3 "$purge_db" "INSERT INTO community_moderation_maintenance_log (id,operation,status,preview_fingerprint,eligible_count,selected_count,affected_count,backup_sha256,executed_at,expires_at) VALUES ('expired-run','purge','completed','synthetic-fingerprint',500,500,500,'synthetic-sha256','2025-01-01 00:00:00','2025-04-01 00:00:00');"
+maintenance_preview_output="$(sqlite3 "$purge_db" ".read $maintenance_log_preview_sql")"
+maintenance_preview_count="${maintenance_preview_output%%|*}"
+assert_eq "1" "$maintenance_preview_count" "maintenance-log preview finds the expired synthetic run"
+sqlite3 "$purge_db" ".read $maintenance_log_purge_sql"
+assert_eq "1" "$(sqlite3 "$purge_db" "SELECT COUNT(*) FROM community_moderation_maintenance_log WHERE id='expired-run';")" "maintenance-log purge without approval fails closed"
+sqlite3 "$purge_db" "CREATE TEMP TABLE approved_community_maintenance_log_purge (confirmation TEXT PRIMARY KEY CHECK (confirmation = 'PURGE LOGS APPROVED')); INSERT INTO approved_community_maintenance_log_purge VALUES ('PURGE LOGS APPROVED');" ".read $maintenance_log_purge_sql"
+assert_eq "0" "$(sqlite3 "$purge_db" "SELECT COUNT(*) FROM community_moderation_maintenance_log WHERE id='expired-run';")" "approved maintenance-log purge removes the expired synthetic run"
 
 if sqlite3 "$db" ".read $moderation_migration" >"$work_dir/reapply.log" 2>&1; then
   echo "FAIL: direct second apply unexpectedly succeeded" >&2
