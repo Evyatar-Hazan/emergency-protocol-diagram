@@ -280,7 +280,8 @@ async function moderateComment(context: Context, commentId: string): Promise<Res
     : 'actioned';
   await context.env.DB.prepare(
     `UPDATE comment_reports
-     SET status = ?2, resolved_by = ?3, resolved_at = datetime('now')
+     SET status = ?2, resolved_by = ?3, resolved_at = datetime('now'),
+         expires_at = datetime('now', '+90 days')
      WHERE comment_id = ?1 AND status = 'pending'`
   ).bind(commentId, reportStatus, authResult.id).run();
 

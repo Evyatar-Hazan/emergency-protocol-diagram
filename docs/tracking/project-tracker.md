@@ -114,7 +114,19 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
   report ו־moderation queue החזירו `404` לפני auth/D1. Google client/server config אומת
   ללא חשיפת ערכים, ו־token סינתטי נדחה ב־`401`.
 - לא נעשה שימוש בנתוני מטופלים, תגובות חיות או ספק analytics; לא בוצע migration חי.
+- עדכון מקומי מ־2026-10-05 על בסיס `main` ‏`36cfc831589f7e4090bd340faa078faae1a67458`:
+  כל הכרעות התכנון אושרו. `pending` נשמר עד הכרעה; `dismissed`/`actioned` מקבלים
+  `expires_at` של 90 יום. בקר התחזוקה המקומי קושר preview פסאודונימי לגיבוי
+  AES-256-GCM מוגבל ל־7 ימים ולאישור purge מפורש, מוחק לכל היותר 500 רשומות
+  audit/report בהרצה, ומתעד רק digest וספירות ל־90 יום. אין קובץ SQL מקביל שעוקף
+  את בקר הגיבוי והאישור. נוסף גם דוח יומי מצטבר read-only,
+  פרטי וללא מזהים; היעד נשאר `not_configured`, ללא automation או גישה חדשה.
+- אימות העדכון המקומי משתמש רק ב־SQLite סינתטי. לא שונו admin, ‏Pages secrets,
+  D1 חי, תגובות חיות או הרשאות; לא בוצעו purge, push, PR, merge או deployment.
+- נותרו שערי הפעלה, לא הכרעות תכנון: review לקוד ולמיגרציה, פרסום כשהשערים כבויים,
+  גיבוי/schema readback בסביבה מאושרת, bootstrap בעלים, smoke והרשאת הפעלה נקודתית.
 - מדיניות מלאה: [community-moderation-policy.md](../governance/community-moderation-policy.md).
+- runbook להפעלה עתידית: [community-moderation-activation-runbook.md](../governance/community-moderation-activation-runbook.md).
 
 ### Task 68 — סביבת עריכת תוכן מקומית — integrated and deployed 2026-10-03
 
