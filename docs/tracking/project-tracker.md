@@ -118,8 +118,8 @@ commit תיעוד עשוי ליצור CI ו-deployment חדשים בלי לשנ�
   כל הכרעות התכנון אושרו. `pending` נשמר עד הכרעה; `dismissed`/`actioned` מקבלים
   `expires_at` של 90 יום. בקר התחזוקה המקומי קושר preview פסאודונימי לגיבוי
   AES-256-GCM מוגבל ל־7 ימים ולאישור purge מפורש, מוחק לכל היותר 500 רשומות
-  audit/report בהרצה, ומתעד רק digest וספירות ל־90 יום. הרצה ישירה של primitives
-  ללא אישור באותו connection מוחקת 0 רשומות. נוסף גם דוח יומי מצטבר read-only,
+  audit/report בהרצה, ומתעד רק digest וספירות ל־90 יום. אין קובץ SQL מקביל שעוקף
+  את בקר הגיבוי והאישור. נוסף גם דוח יומי מצטבר read-only,
   פרטי וללא מזהים; היעד נשאר `not_configured`, ללא automation או גישה חדשה.
 - אימות העדכון המקומי משתמש רק ב־SQLite סינתטי. לא שונו admin, ‏Pages secrets,
   D1 חי, תגובות חיות או הרשאות; לא בוצעו purge, push, PR, merge או deployment.

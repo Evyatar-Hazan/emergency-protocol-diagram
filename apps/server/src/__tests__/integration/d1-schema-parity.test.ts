@@ -14,10 +14,6 @@ const retentionMigrationPath = fileURLToPath(
   new URL('../../../../../sql/migrations/0003-community-audit-retention.sql', import.meta.url)
 );
 const retentionMigration = readFileSync(retentionMigrationPath, 'utf8');
-const auditPurgePath = fileURLToPath(
-  new URL('../../../../../sql/maintenance/purge-expired-community-audit.sql', import.meta.url)
-);
-const auditPurge = readFileSync(auditPurgePath, 'utf8');
 const auditPurgePreviewPath = fileURLToPath(
   new URL('../../../../../sql/maintenance/preview-expired-community-audit.sql', import.meta.url)
 );
@@ -164,10 +160,6 @@ describe('local D1 schema parity', () => {
     expect(retentionMigration).toMatch(
       /SET comment_id = NULL,\s+actor_id = NULL,\s+expires_at = datetime\('now', '\+90 days'\)/i
     );
-    expect(auditPurge).toContain('LIMIT 500');
-    expect(auditPurge).toContain('DELETE FROM comment_moderation_audit');
-    expect(auditPurge).toContain('DELETE FROM comment_reports');
-    expect(auditPurge).toContain('approved_community_audit_purge');
     expect(auditPurgePreview).toContain('COUNT(*) AS eligible_count');
     expect(auditPurgePreview).not.toMatch(/^\s*(?:DELETE|DROP|UPDATE|ALTER)\b/im);
 
